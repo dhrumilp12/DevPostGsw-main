@@ -1,55 +1,51 @@
 const express = require('express');
 const router = express.Router();
-const customerService = require('../services/customerService');
+const customerService= require('../../src/services/customerService')
 
-// Create a new customer
-router.post('/create-customer', async (req, res) => {
-    try {
-        const customerData = req.body;
-        const customerResult = await customerService.createCustomer(customerData);
-        res.json(customerResult);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Retrieve details of a customer
-router.get('/customer-details/:customerId', async (req, res) => {
-    try {
-        const { customerId } = req.params;
-        const customerDetails = await customerService.getCustomerDetails(customerId);
-        res.json(customerDetails);
-    } catch (error) {
-        console.error("Failed to retrieve customer details:", error);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Update a customer
-router.put('/customer-details/:customerId', async (req, res) => {
-    try {
-        const { customerId } = req.params;
-        const customerData = req.body;
-        const updatedCustomer = await customerService.updateCustomer(customerId, customerData);
-        res.json(updatedCustomer);
-    } catch (error) {
-        console.error("Failed to update customer details:", error);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// List all customers
+// Route to list all customers
 router.get('/list-customers', async (req, res) => {
-    try {
-        const customersList = await customerService.listCustomers();
-        res.json(customersList);
-    } catch (error) {
-        console.error("Failed to list customers:", error);
-        res.status(500).json({ error: error.message });
-    }
+  try {
+    const cursor = req.query.cursor; // If your API supports pagination
+    const customers = await customerService.listCustomers(cursor);
+    res.json(customers);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
+// Route to get details of a specific customer
+router.get('/customer-details/:customerId', async (req, res) => {
+  try {
+    const customerId = req.params.customerId;
+    const customer = await customerService.getCustomerDetails(customerId);
+    res.json(customer);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
-// Add more customer-related routes as needed
+// Route to create a new customer
+router.post('/create-customer', async (req, res) => {
+  try {
+    const customerData = req.body;
+    const newCustomer = await customerService.createCustomer(customerData);
+    res.status(201).json(newCustomer);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
+// Route to update an existing customer
+router.put('/update-customer/:customerId', async (req, res) => {
+  try {
+    const customerId = req.params.customerId;
+    const customerData = req.body;
+    const updatedCustomer = await customerService.updateCustomer(customerId, customerData);
+    res.json(updatedCustomer);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Export the router
 module.exports = router;

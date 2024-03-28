@@ -1,5 +1,5 @@
 jest.mock('../../src/api/squareClient'); // Ensure the path is correct relative to this test file
-const customerService = require('../../src/services/customerService');
+
 const { createCustomer, getCustomerDetails, updateCustomer, listCustomers } = require('../../src/services/customerService');
 const { customersApi } = require('../../src/api/squareClient');
 

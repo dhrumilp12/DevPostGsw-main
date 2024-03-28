@@ -1,63 +1,50 @@
 const { customersApi } = require('../api/squareClient');
 
-async function createCustomer(customerData) {
+async function listCustomers(cursor) {
     try {
-        const response = await customersApi.createCustomer(customerData);
-
-        if (!response || !response.result) {
-            throw new Error("API call did not return expected result");
-        }
-
-        return response.result.customer;
+      const response = await customersApi.listCustomers({
+        cursor: cursor
+      });
+      return response.customers || [];
     } catch (error) {
-        console.log("Failed to create customer:", error);
-        throw new Error("Failed to create customer");
+      console.error("Failed to list customers:", error);
+      throw error;
     }
-}
-
-async function getCustomerDetails(customerId) {
+  }
+  
+  async function getCustomerDetails(customerId) {
     try {
-        const response = await customersApi.retrieveCustomer(customerId);
-
-        if (!response || !response.result) {
-            throw new Error("API call did not return expected result");
-        }
-
-        return response.result.customer;
+      const response = await customersApi.retrieveCustomer(customerId);
+      return response.customer;
     } catch (error) {
-        console.log("Failed to retrieve customer details:", error);
-        throw new Error("Failed to retrieve customer details");
+      console.error("Failed to retrieve customer details:", error);
+      throw error;
     }
-}
-
-async function updateCustomer(customerId, customerData) {
+  }
+  
+  async function createCustomer(customerData) {
     try {
-        const response = await customersApi.updateCustomer(customerId, customerData);
-
-        if (!response || !response.result) {
-            throw new Error("API call did not return expected result");
-        }
-
-        return response.result.customer;
+      const response = await customersApi.createCustomer(customerData);
+      return response.customer;
     } catch (error) {
-        console.log("Failed to update customer:", error);
-        throw new Error("Failed to update customer");
+      console.error("Failed to create customer:", error);
+      throw error;
     }
-}
-
-async function listCustomers() {
+  }
+  
+  async function updateCustomer(customerId, customerData) {
     try {
-        const response = await customersApi.listCustomers();
-
-        if (!response || !response.result) {
-            throw new Error("API call did not return expected result");
-        }
-
-        return response.result.customers;
+      const response = await customersApi.updateCustomer(customerId, customerData);
+      return response.customer;
     } catch (error) {
-        console.log("Failed to list customers:", error);
-        throw new Error("Failed to list customers");
+      console.error("Failed to update customer:", error);
+      throw error;
     }
-}
-
-module.exports = { createCustomer, getCustomerDetails };
+  }
+  
+  module.exports = {
+    listCustomers,
+    getCustomerDetails,
+    createCustomer,
+    updateCustomer
+  };
