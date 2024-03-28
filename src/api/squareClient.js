@@ -8,4 +8,6 @@ const squareCLient = new Client({
 module.exports = { 
     squareCLient,
     paymentsApi: squareCLient.paymentsApi,
+    bookingApi: squareCLient.bookingsApi,
+    customersApi: squareCLient.customersApi,
 };

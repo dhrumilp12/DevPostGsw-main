@@ -1,10 +1,14 @@
 const express = require('express');
 const paymentRoutes = require('./src/api/paymentRoutes');
+const customerRoutes = require('./src/api/customerRoutes');
+const bookingRoutes = require('./src/api/bookingRoutes');
 const { anyOf } = require('@apimatic/schema');
 
 const app = express();
-app.use(express());
+app.use(express.json());
 app.use('/api/payments', paymentRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/customers', customerRoutes);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
