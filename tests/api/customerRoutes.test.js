@@ -43,4 +43,24 @@ describe('Customer Routes', () => {
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual({ id: 'c123', name: 'Updated Customer' });
   });
+
+  // New Test Case
+  it('responds with 404 when the customer does not exist', async () => {
+    // Setup the customersApi mock to simulate a nonexistent customer
+    customersApi.retrieveCustomer.mockRejectedValue({
+      response: {
+        status: 404,
+        data: {
+          errors: [{ category: 'INVALID_REQUEST_ERROR', code: 'NOT_FOUND', detail: 'Customer does not exist.' }]
+        }
+      }
+    });
+    
+    // Make the GET request for a nonexistent customer
+    const response = await request(app).get('/customerRoutes/customer-details/nonexistent_id');
+    
+    // Assert that a 404 status code is returned
+    expect(response.statusCode).toBe(404);
+    expect(response.body.error).toBe('Customer does not exist.');
+  });
 });

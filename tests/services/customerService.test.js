@@ -9,12 +9,26 @@ describe('Customer Service', () => {
   
   beforeEach(() => {
     
-
+    jest.clearAllMocks();
     // Setup mock implementations for the customersApi
     customersApi.createCustomer.mockResolvedValue({ customer: mockCustomer });
     customersApi.retrieveCustomer.mockResolvedValue({ customer: mockCustomer });
     customersApi.updateCustomer.mockResolvedValue({ customer: { ...mockCustomer, email: 'newemail@example.com' } });
     customersApi.listCustomers.mockResolvedValue({ customers: [mockCustomer] });
+    customersApi.retrieveCustomer.mockImplementation((customerId) => {
+      if (customerId === mockCustomer.id) {
+        return Promise.resolve({ customer: mockCustomer });
+      } else {
+        return Promise.reject({
+          response: {
+            status: 404,
+            data: {
+              errors: [{ category: 'INVALID_REQUEST_ERROR', code: 'NOT_FOUND', detail: 'Customer does not exist.' }]
+            }
+          }
+        });
+      }
+    });
   });
 
   it('creates a customer successfully', async () => {
@@ -47,5 +61,24 @@ describe('Customer Service', () => {
     expect(Array.isArray(result)).toBeTruthy();
     expect(result[0]).toHaveProperty('id', mockCustomer.id);
     expect(customersApi.listCustomers).toHaveBeenCalled();
+  });
+  it('returns an error if the customer does not exist', async () => {
+    // Simulate API response for non-existing customer
+    customersApi.retrieveCustomer.mockImplementation(() => 
+      Promise.reject({
+        response: {
+          data: {
+            errors: [{ detail: 'Customer does not exist.' }]
+          }
+        }
+      })
+    );
+  
+    // Test the error throwing behavior
+    await expect(getCustomerDetails('nonexistent_id'))
+      .rejects
+      .toThrow('Customer does not exist.');
+    
+    expect(customersApi.retrieveCustomer).toHaveBeenCalledWith('nonexistent_id');
   });
 });

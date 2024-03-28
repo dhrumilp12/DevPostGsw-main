@@ -3,8 +3,15 @@ const paymentRoutes = require('./src/api/paymentRoutes');
 const customerRoutes = require('./src/api/customerRoutes');
 const bookingRoutes = require('./src/api/bookingRoutes');
 const { anyOf } = require('@apimatic/schema');
+const cors = require('cors');
+app.use(cors());
 
 const app = express();
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong!');
+});
+
 app.use(express.json());
 app.use('/api/payments', paymentRoutes);
 app.use('/api/bookings', bookingRoutes);

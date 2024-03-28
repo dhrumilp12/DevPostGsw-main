@@ -11,26 +11,60 @@ const mockPaymentsApi = {
 };
 
 const mockBookingsApi = {
-  createBooking: jest.fn().mockImplementation((bookingData) => {
-    return Promise.resolve({ booking: { id: 'b123', ...bookingData } });
+  createBooking: jest.fn((bookingData) => {
+    if (bookingData) {
+      return Promise.resolve({ booking: { id: 'b123', ...bookingData } });
+    } else {
+      return Promise.reject(new Error('Booking creation failed'));
+    }
   }),
-  retrieveBooking: jest.fn().mockImplementation((bookingId) => {
-    return Promise.resolve({ booking: { id: bookingId, status: 'booked' } });
+  retrieveBooking: jest.fn((bookingId) => {
+    if (bookingId === 'existing_booking_id') {
+      return Promise.resolve({ booking: { id: bookingId, status: 'booked' } });
+    } else {
+      return Promise.reject(new Error('Booking not found'));
+    }
   }),
-  updateBooking: jest.fn().mockImplementation((bookingId, bookingData) => {
-    return Promise.resolve({ booking: { id: bookingId, ...bookingData } });
+  updateBooking: jest.fn((bookingId, bookingData) => {
+    if (bookingId === 'existing_booking_id') {
+      return Promise.resolve({ booking: { id: bookingId, ...bookingData } });
+    } else {
+      return Promise.reject(new Error('Booking not found'));
+    }
   }),
-  cancelBooking: jest.fn().mockImplementation((bookingId) => {
-    return Promise.resolve({ booking: { id: bookingId, status: 'cancelled' } });
+  cancelBooking: jest.fn((bookingId) => {
+    if (bookingId === 'existing_booking_id') {
+      return Promise.resolve({ booking: { id: bookingId, status: 'cancelled' } });
+    } else {
+      return Promise.reject(new Error('Booking not found'));
+    }
   }),
-  // ...additional mocked methods as needed
 };
+
 
 const mockCustomersApi = {
   listCustomers: jest.fn().mockResolvedValue({ customers: [{ id: 'c123', name: 'Test Customer' }] }),
-  retrieveCustomer: jest.fn().mockResolvedValue({ customer: { id: 'c123', name: 'Test Customer' } }),
-  createCustomer: jest.fn().mockResolvedValue({ customer: { id: 'c123', name: 'New Customer' } }),
-  updateCustomer: jest.fn().mockResolvedValue({ customer: { id: 'c123', name: 'Updated Customer' } }),
+  retrieveCustomer: jest.fn((customerId) => {
+    if (customerId === 'existing_customer_id') {
+      return Promise.resolve({ customer: { id: customerId, name: 'Existing Customer' } });
+    } else {
+      return Promise.reject({ errors: [{ category: 'INVALID_REQUEST_ERROR', code: 'NOT_FOUND', detail: 'Customer does not exist.' }] });
+    }
+  }),
+  createCustomer: jest.fn((customerData) => {
+    if (customerData) {
+      return Promise.resolve({ customer: { id: 'c123', ...customerData } });
+    } else {
+      return Promise.reject(new Error('Customer creation failed'));
+    }
+  }),
+  updateCustomer: jest.fn((customerId, customerData) => {
+    if (customerId === 'existing_customer_id') {
+      return Promise.resolve({ customer: { id: customerId, ...customerData } });
+    } else {
+      return Promise.reject({ errors: [{ category: 'INVALID_REQUEST_ERROR', code: 'NOT_FOUND', detail: 'Customer update failed.' }] });
+    }
+  }),
 };
 
 const squareClient = {

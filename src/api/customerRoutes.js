@@ -2,6 +2,17 @@ const express = require('express');
 const router = express.Router();
 const customerService= require('../../src/services/customerService')
 
+// Helper function to handle service level errors
+const handleServiceError = (error, res) => {
+  if (error.response && error.response.errors) {
+    const { errors } = error.response;
+    const firstError = errors[0] || {};
+    const statusCode = firstError.code === 'NOT_FOUND' ? 404 : 400;
+    res.status(statusCode).json({ errors });
+  } else {
+    res.status(500).json({ error: error.message });
+  }
+};
 // Route to list all customers
 router.get('/list-customers', async (req, res) => {
   try {
@@ -9,7 +20,7 @@ router.get('/list-customers', async (req, res) => {
     const customers = await customerService.listCustomers(cursor);
     res.json(customers);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    handleServiceError(error, res);
   }
 });
 
@@ -20,7 +31,12 @@ router.get('/customer-details/:customerId', async (req, res) => {
     const customer = await customerService.getCustomerDetails(customerId);
     res.json(customer);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    // Check for a specific error message and respond with a 404 status code
+    if (error.message === 'Customer does not exist.') {
+      res.status(404).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: error.message });
+    }
   }
 });
 
@@ -31,7 +47,7 @@ router.post('/create-customer', async (req, res) => {
     const newCustomer = await customerService.createCustomer(customerData);
     res.status(201).json(newCustomer);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    handleServiceError(error, res);
   }
 });
 
