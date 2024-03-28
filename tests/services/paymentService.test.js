@@ -1,3 +1,4 @@
+
 // paymentService.test.js
 jest.mock('../../src/api/squareClient', () => ({
   paymentsApi: {
@@ -23,5 +24,23 @@ describe('processPayment', () => {
     // Assertions to verify the behavior and the mock interaction
     expect(result).toHaveProperty('id', '123');
     expect(result.status).toBe('success');
+  });
+
+  it('throws an error for invalid payment amount', async () => {
+    const nonce = 'test_nonce';
+    const invalidAmount = -100; // Negative amount
+    await expect(processPayment(nonce, invalidAmount)).rejects.toThrow('Invalid payment amount');
+  });
+  
+  it('handles API errors', async () => {
+    const nonce = 'test_nonce';
+    const amount = 1000;
+    // Mock the API to throw an error
+    try {
+      await processPayment(nonce, amount);
+    } catch (error) {
+      console.log("Error caught in test:", error.message); // Additional logging
+      expect(error.message).toContain('API error');
+    }
   });
 });

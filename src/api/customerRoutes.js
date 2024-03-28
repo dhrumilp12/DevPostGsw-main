@@ -25,6 +25,31 @@ router.get('/customer-details/:customerId', async (req, res) => {
     }
 });
 
+// Update a customer
+router.put('/customer-details/:customerId', async (req, res) => {
+    try {
+        const { customerId } = req.params;
+        const customerData = req.body;
+        const updatedCustomer = await customerService.updateCustomer(customerId, customerData);
+        res.json(updatedCustomer);
+    } catch (error) {
+        console.error("Failed to update customer details:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// List all customers
+router.get('/list-customers', async (req, res) => {
+    try {
+        const customersList = await customerService.listCustomers();
+        res.json(customersList);
+    } catch (error) {
+        console.error("Failed to list customers:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
 // Add more customer-related routes as needed
 
 module.exports = router;
