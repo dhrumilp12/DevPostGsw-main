@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "express": "^4.19.2",
+    "node": "^18.20.0",
+    "path": "^0.12.7",
+    "square": "^35.1.0",
+    "winston": "^3.13.0"
+  },
+  "scripts": {
+    "test": "jest",
+    "start": "node server.js"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
+  },
+  "name": "devpostgsw-main",
+  "description": "",
+  "version": "1.0.0",
+  "main": "server.js",
+  "directories": {
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
