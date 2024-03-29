@@ -67,9 +67,32 @@ const { inventoryApi } = require('../api/squareClient');
             throw error;
         }
     }
-    
-
-
+    async function searchInventoryItems(query) {
+        try {
+            const response = await inventoryApi.searchCatalogItems(query);
+            return response.items || [];
+        } catch (error) {
+            console.error("Failed to search inventory items:", error);
+            throw error;
+        }
+    }
+    async function updateInventoryItem(itemId, itemData) {
+        try {
+            const response = await inventoryApi.updateCatalogItem(itemId, itemData);
+            return response.item;
+        } catch (error) {
+            console.error("Failed to update inventory item:", error);
+            throw error;
+        }
+    }
+    async function deleteInventoryItem(itemId) {
+        try {
+            await inventoryApi.deleteCatalogObject(itemId);
+        } catch (error) {
+            console.error("Failed to delete inventory item:", error);
+            throw error;
+        }
+    }
 module.exports = {
   listInventoryItems,
   adjustInventoryCount,
@@ -77,5 +100,7 @@ module.exports = {
   batchRetrieveInventoryCounts,
   batchAdjustInventoryCounts,
   transferInventory,
-
+  searchInventoryItems,
+  updateInventoryItem,
+  deleteInventoryItem
 };
