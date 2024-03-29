@@ -67,10 +67,23 @@ const mockCustomersApi = {
   }),
 };
 
+const mockInventoryApi = {
+  listInventoryCounts: jest.fn().mockResolvedValue({
+      result: {
+          counts: [
+              { id: 'item1', quantity: 10 },
+              { id: 'item2', quantity: 5 }
+          ]
+      }
+  }),
+  // Add other mock methods as needed
+};
+
 const squareClient = {
   paymentsApi: mockPaymentsApi,
   bookingsApi: mockBookingsApi,
   customersApi: mockCustomersApi,
+  inventoryApi: mockInventoryApi,
 };
 
 module.exports = squareClient;

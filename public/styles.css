@@ -1,0 +1,17 @@
+/* Custom styles */
+body {
+    background-color: #f8f9fa;
+}
+
+header, footer {
+    background-color: #343a40;
+}
+
+h1, h2 {
+    margin-bottom: 20px;
+}
+
+.list-group-item {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
