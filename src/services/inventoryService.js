@@ -1,10 +1,10 @@
 const { inventoryApi } = require('../api/squareClient');
 
-async function listInventoryItems() {
-    try {
-        const response = await inventoryApi.listInventoryCounts();
-        return response.result.counts || [];
-    } catch (error) {
+    async function listInventoryItems() {
+        try {
+            const response = await inventoryApi.listInventoryCounts();
+            return response.result.counts || [];
+        } catch (error) {
         console.error("Failed to list inventory items:", error);
         if (error.response && error.response.errors) {
             // Improved error messaging for the frontend
@@ -14,7 +14,7 @@ async function listInventoryItems() {
           throw error; // Re-throw for handling upstream
         }
       }
-      async function adjustInventoryCount(itemId, adjustment) {
+    async function adjustInventoryCount(itemId, adjustment) {
         const response = await inventoryApi.batchChangeInventory({
           changes: [
             {
@@ -26,7 +26,7 @@ async function listInventoryItems() {
         return response.result.counts;
       }
       
-      async function getInventoryCount(itemId) {
+    async function getInventoryCount(itemId) {
         try {
             const response = await inventoryApi.retrieveInventoryCount(itemId);
             return response.count;
@@ -71,6 +71,11 @@ async function listInventoryItems() {
 
 
 module.exports = {
-    listInventoryItems,
-    adjustInventoryCount,
+  listInventoryItems,
+  adjustInventoryCount,
+  getInventoryCount,
+  batchRetrieveInventoryCounts,
+  batchAdjustInventoryCounts,
+  transferInventory,
+
 };
