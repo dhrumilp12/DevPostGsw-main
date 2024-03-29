@@ -69,15 +69,32 @@ const mockCustomersApi = {
 
 const mockInventoryApi = {
   listInventoryCounts: jest.fn().mockResolvedValue({
-      result: {
-          counts: [
-              { id: 'item1', quantity: 10 },
-              { id: 'item2', quantity: 5 }
-          ]
-      }
+    result: {
+      counts: [
+        { id: 'item1', quantity: 10 },
+        { id: 'item2', quantity: 5 }
+      ]
+    }
+  }),
+  retrieveInventoryCount: jest.fn().mockImplementation((catalogObjectId) => {
+    if (catalogObjectId === 'item1') {
+      return Promise.resolve({ count: { quantity: 10 } });
+    } else {
+      return Promise.reject(new Error('Item not found'));
+    }
+  }),
+  batchRetrieveInventoryCounts: jest.fn().mockResolvedValue({
+    counts: [
+      { quantity: 10 },
+      { quantity: 5 }
+    ]
+  }),
+  transferInventory: jest.fn().mockResolvedValue({
+    result: { success: true }
   }),
   // Add other mock methods as needed
 };
+
 
 const squareClient = {
   paymentsApi: mockPaymentsApi,

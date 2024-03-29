@@ -8,8 +8,10 @@ router.get('/', async (req, res) => {
         const inventoryItems = await inventoryService.listInventoryItems();
         res.json(inventoryItems);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: 'Failed to retrieve inventory' }); // Standardized error message
     }
-});
 
+    
+});
+ 
 module.exports = router;
