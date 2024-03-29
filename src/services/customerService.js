@@ -2,9 +2,9 @@ const { customersApi } = require('../api/squareClient');
 
 async function listCustomers(cursor) {
     try {
-      const response = await customersApi.listCustomers({
-        cursor: cursor
-      });
+      const response = await customersApi.listCustomers(
+        cursor || undefined
+      );
       return response.customers || [];
     } catch (error) {
       console.error("Failed to list customers:", error);

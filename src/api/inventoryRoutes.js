@@ -3,7 +3,7 @@ const router = express.Router();
 const inventoryService = require('../services/inventoryService');
 
 // Route to list inventory items
-router.get('/', async (req, res) => {
+router.get('/list', async (req, res) => {
     try {
         const inventoryItems = await inventoryService.listInventoryItems();
         res.json(inventoryItems);

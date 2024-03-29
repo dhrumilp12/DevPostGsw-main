@@ -42,7 +42,7 @@ describe('Inventory Routes', () => {
       const mockInventoryData = [{ id: 'item1', quantity: 5 }, { id: 'item2', quantity: 10 }];
       inventoryApi.listInventoryCounts.mockResolvedValue({ result: { counts: mockInventoryData } });
 
-      const response = await request(app).get('/inventoryRoutes');
+      const response = await request(app).get('/inventoryRoutes/list');
 
       expect(response.statusCode).toBe(200);
       expect(response.body).toEqual(mockInventoryData);
