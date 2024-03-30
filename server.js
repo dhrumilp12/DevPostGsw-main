@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const authMiddleware = require('./authMiddleware'); 
+const authMiddleware = require('./auth/authMiddleware'); 
 const paymentRoutes = require('./src/api/paymentRoutes');
 const customerRoutes = require('./src/api/customerRoutes');
 const bookingRoutes = require('./src/api/bookingRoutes');
