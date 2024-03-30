@@ -1,59 +1,41 @@
-// src/components/Inventory.js
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import axios from 'axios';
 
-const Inventory = () => {
-    const [inventoryItems, setInventoryItems] = useState([]);
-    const [newItemName, setNewItemName] = useState('');
-    const [adjustmentAmount, setAdjustmentAmount] = useState(0); 
+// Import action creators for inventory actions
+import { 
+  fetchInventoryStart, 
+  fetchInventorySuccess, 
+  fetchInventoryFailure,
+  adjustInventory
+} from '../action/inventoryActions';
 
-    // Fetch inventory on component mount
+const Inventory = ({ inventoryData, dispatchFetchInventoryStart, dispatchFetchInventorySuccess, dispatchFetchInventoryFailure, dispatchAdjustInventory }) => {
     useEffect(() => {
         const fetchInventory = async () => {
+            dispatchFetchInventoryStart();
+
             try {
                 const response = await axios.get('http://localhost:3000/api/inventory/list');
-                setInventoryItems(response.data);
+                dispatchFetchInventorySuccess(response.data);
             } catch (error) {
                 console.error("Error fetching inventory:", error);
-                // Display an error message to the user
+                dispatchFetchInventoryFailure(error.message);
             }
         };
 
         fetchInventory();
-    }, []);
+    }, [dispatchFetchInventoryStart, dispatchFetchInventorySuccess, dispatchFetchInventoryFailure]);
 
-    // Handle new item input change
-    const handleNewItemChange = (event) => {
-        setNewItemName(event.target.value);
-    };
-
-    // Handle adjustment amount change
-    const handleAdjustmentChange = (event) => {
-        setAdjustmentAmount(parseInt(event.target.value, 10) || 0);
-    };
-
-    // Add new item
-    const handleAddItem = async () => {
-        // ... (Implement adding items - API call, state update)
-    };
-
-    // Adjust inventory count for an item
-    const handleAdjustInventory = async (itemId, direction) => {
-        // ... (Implement inventory adjustment - API call, state update)
-    };
 
     return (
         <div>
             <h2>Inventory Management</h2>
-
-            {/* Add new item section */}
-            <div>
-                <input type="text" placeholder="Item Name" value={newItemName} onChange={handleNewItemChange} />
-                <button onClick={handleAddItem}>Add Item</button>
-            </div>
-
-            {/* Inventory list */}
-            {inventoryItems.length > 0 ? (
+            {inventoryData.loading ? (
+                <p>Loading...</p>
+            ) : inventoryData.error ? (
+                <p>Error: {inventoryData.error}</p>
+            ) : inventoryData.items.length > 0 ? (
                 <table>
                     <thead>
                         <tr>
@@ -63,14 +45,13 @@ const Inventory = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {inventoryItems.map((item) => (
+                        {inventoryData.items.map(item => (
                             <tr key={item.id}>
-                                <td>{item.name}</td> {/* Replace with relevant property */}
-                                <td>{item.count}</td> {/* Replace with relevant property */}
+                                <td>{item.name}</td>
+                                <td>{item.count}</td>
                                 <td>
-                                    <input type="number" value={adjustmentAmount} onChange={handleAdjustmentChange} />
-                                    <button onClick={() => handleAdjustInventory(item.id, 'increase')}>+</button>
-                                    <button onClick={() => handleAdjustInventory(item.id, 'decrease')}>-</button>
+                                    <button onClick={() => dispatchAdjustInventory(item.id, 1)}>Increase</button>
+                                    <button onClick={() => dispatchAdjustInventory(item.id, -1)}>Decrease</button>
                                 </td>
                             </tr>
                         ))}
@@ -83,4 +64,17 @@ const Inventory = () => {
     );
 };
 
-export default Inventory;
+
+const mapStateToProps = (state) => ({
+    inventoryData: state.inventory // Replace 'inventory' with the actual state slice name
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    dispatchFetchInventoryStart: () => dispatch(fetchInventoryStart()),
+    dispatchFetchInventorySuccess: (items) => dispatch(fetchInventorySuccess(items)),
+    dispatchFetchInventoryFailure: (errorMessage) => dispatch(fetchInventoryFailure(errorMessage)),
+    dispatchAdjustInventory: (itemId, adjustment) => dispatch(adjustInventory(itemId, adjustment)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Inventory);
+

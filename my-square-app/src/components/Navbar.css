@@ -1,0 +1,115 @@
+/* Navbar.css */
+.navbar {
+    background-color: #24292e;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease-in-out;
+    position: relative;
+    z-index: 10;
+}
+
+.navbar-brand a {
+    color: white;
+    text-decoration: none;
+    font-size: 2em;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand a:hover,
+.navbar-brand a:focus {
+    transform: scale(1.05);
+    outline: none;
+}
+
+.navbar-links {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-links li {
+    margin: 0 1em;
+}
+
+.navbar-links li a {
+    color: #ddd;
+    text-decoration: none;
+    padding: 10px 15px;
+    transition: color 0.3s ease-in-out, border-bottom 0.3s ease-in-out;
+    position: relative;
+}
+
+.navbar-links li a:hover,
+.navbar-links li a.active {
+    color: #1db954;
+    text-decoration: none;
+    border-bottom: 2px solid #1db954;
+}
+
+.navbar-toggle {
+    cursor: pointer;
+    background: none;
+    border: none;
+    display: none;
+    outline: none;
+    padding: 0;
+}
+
+.navbar-toggle:focus {
+    outline: none;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 15px;
+    }
+
+    .navbar-brand a {
+        margin-right: auto;
+    }
+
+    .navbar-toggle {
+        display: block;
+        padding: 10px;
+    }
+
+    .navbar-links {
+        display: none;
+        position: absolute;
+        transition: transform 0.3s ease-in-out;
+        width: 100%;
+        left: 0;
+        right: 0;
+        width:100%;
+        flex-direction: column;
+        background-color: #24292e;
+        padding-top: 10px;
+        box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .navbar-links.active {
+        display: flex;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .navbar-links li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .navbar-links li a {
+        padding: 0px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: #ddd;
+    }
+
+    .navbar-links li:last-child a {
+        border-bottom: none;
+    }
+}

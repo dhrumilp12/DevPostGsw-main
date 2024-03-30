@@ -1,56 +1,72 @@
-// src/components/BookingForm.js
+
 import React, { useState } from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { createBookingSuccess, createBookingFailure } from '../action/bookingAction';
+import './BookingForm.css'; // Ensure you have this CSS file for styling
 
-const CreateBooking = () => {
-    const [bookingData, setBookingData] = useState({
-        customerId: '',
-        service: '', 
-        appointmentTime: '', 
-        // Add other relevant booking details here, e.g.,  
-        // notes: '', 
-        // location: '',
+const BookingForm = ({ dispatch }) => {
+    const [bookingState, setBookingState] = useState({
+        name: '',
+        email: '',
+        service: '',
+        appointmentTime: '',
+        notes: '' // Optional field for special requests or notes
     });
 
     const handleChange = (event) => {
-        setBookingData({
-            ...bookingData,
-            [event.target.name]: event.target.value 
+        setBookingState({
+            ...bookingState,
+            [event.target.name]: event.target.value
         });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/api/bookings/create-booking', bookingData);
-            console.log(response.data); 
-            // Success! Do something here:
-            // 1. Clear the form: setBookingData({ /* reset to initial state */ });
-            // 2. Display a "Booking Created!" message to the user
+            // Assuming your API expects the same structure as bookingState
+            const response = await axios.post('http://localhost:3000/api/bookings/create-booking', bookingState);
+            dispatch(createBookingSuccess(response.data));
+            alert('Booking created successfully!');
         } catch (error) {
             console.error("Error creating booking:", error);
-            // Error Handling: Display a user-friendly error message
+            dispatch(createBookingFailure(error));
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="customerId">Customer ID:</label>
-                <input type="text" id="customerId" name="customerId" value={bookingData.customerId} onChange={handleChange} />
+        <form onSubmit={handleSubmit} className="booking-form">
+            <h2>Book an Appointment</h2>
+            <div className="form-group">
+                <label htmlFor="name">Customer Name:</label>
+                <input type="text" id="name" name="name" value={bookingState.name} onChange={handleChange} required />
             </div>
-            <div>
+            <div className="form-group">
+                <label htmlFor="email">Email:</label>
+                <input type="email" id="email" name="email" value={bookingState.email} onChange={handleChange} required />
+            </div>
+            <div className="form-group">
                 <label htmlFor="service">Service:</label>
-                <input type="text" id="service" name="service" value={bookingData.service} onChange={handleChange} />
+                <select id="service" name="service" value={bookingState.service} onChange={handleChange} required>
+                    <option value="">Select a service</option>
+                    <option value="service1">Service 1</option>
+                    <option value="service2">Service 2</option>
+                    {/* Add more services as options here */}
+                </select>
             </div>
-            <div>
+            <div className="form-group">
                 <label htmlFor="appointmentTime">Appointment Time:</label>
-                <input type="datetime-local" id="appointmentTime" name="appointmentTime" value={bookingData.appointmentTime} onChange={handleChange} />
+                <input type="datetime-local" id="appointmentTime" name="appointmentTime" value={bookingState.appointmentTime} onChange={handleChange} required />
             </div>
-            {/* Add more input fields as needed */}
-            <button type="submit">Create Booking</button>
+            <div className="form-group">
+                <label htmlFor="notes">Notes (Optional):</label>
+                <textarea id="notes" name="notes" value={bookingState.notes} onChange={handleChange} />
+            </div>
+            <button type="submit" className="booking-submit">Create Booking</button>
         </form>
     );
 };
 
-export default CreateBooking; 
+const mapDispatchToProps = { createBookingSuccess, createBookingFailure };
+
+export default connect(null, mapDispatchToProps)(BookingForm);
