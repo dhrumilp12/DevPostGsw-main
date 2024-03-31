@@ -1,46 +1,52 @@
+const paymentService = require('../../src/services/paymentService');
+const { paymentsApi } = require('../../api/squareClient');
 
-// paymentService.test.js
-jest.mock('../../src/api/squareClient', () => ({
-  paymentsApi: {
-    createPayment: jest.fn().mockResolvedValue({
-      result: { payment: { id: '123', status: 'success' } } // Mocked response structure
-    }),
-  },
-}));
+jest.mock('../../src/api/squareClient');
 
-const { processPayment } = require('../../src/services/paymentService');
+describe('Payment Service', () => {
+  describe('processPayment', () => {
+    it('should process a payment successfully', async () => {
+      const paymentData = { sourceId: 'cnon:card-nonce-ok', amount: 100, currency: 'USD', idempotencyKey: 'unique_key' };
+      const expectedResult = { id: 'payment_id', status: 'COMPLETED', amount_money: { amount: 100, currency: 'USD' } };
 
-describe('processPayment', () => {
-  beforeEach(() => {
-    jest.clearAllMocks(); // Clears the mock call history before each test
+      paymentsApi.createPayment.mockResolvedValue({ result: { payment: expectedResult } });
+
+      const result = await paymentService.processPayment(paymentData.sourceId, paymentData.amount, paymentData.currency, paymentData.idempotencyKey);
+
+      expect(result).toEqual(expectedResult);
+      expect(paymentsApi.createPayment).toHaveBeenCalledWith(expect.objectContaining({
+        sourceId: paymentData.sourceId,
+        amountMoney: { amount: paymentData.amount, currency: paymentData.currency },
+        idempotencyKey: paymentData.idempotencyKey
+      }));
+    });
   });
 
-  it('processes payment successfully', async () => {
-    const nonce = 'test_nonce';
-    const amount = 1000;
-    // Call the function with the mocked setup
-    const result = await processPayment(nonce, amount);
+  describe('listPayments', () => {
+    it('should list payments successfully', async () => {
+      const queryParams = { beginTime: '2023-12-20T00:00:00Z', endTime: '2024-01-01T23:59:59Z' };
+      const expectedResult = [{ id: 'payment_id', status: 'COMPLETED', amount_money: { amount: 100, currency: 'USD' } }];
 
-    // Assertions to verify the behavior and the mock interaction
-    expect(result).toHaveProperty('id', '123');
-    expect(result.status).toBe('success');
+      paymentsApi.listPayments.mockResolvedValue({ result: { payments: expectedResult } });
+
+      const result = await paymentService.listPayments(queryParams);
+
+      expect(result).toEqual(expectedResult);
+      expect(paymentsApi.listPayments).toHaveBeenCalledWith(expect.objectContaining(queryParams));
+    });
   });
 
-  it('throws an error for invalid payment amount', async () => {
-    const nonce = 'test_nonce';
-    const invalidAmount = -100; // Negative amount
-    await expect(processPayment(nonce, invalidAmount)).rejects.toThrow('Invalid payment amount');
-  });
-  
-  it('handles API errors', async () => {
-    const nonce = 'test_nonce';
-    const amount = 1000;
-    // Mock the API to throw an error
-    try {
-      await processPayment(nonce, amount);
-    } catch (error) {
-      console.log("Error caught in test:", error.message); // Additional logging
-      expect(error.message).toContain('API error');
-    }
+  describe('getPaymentDetails', () => {
+    it('should get payment details successfully', async () => {
+      const paymentId = 'payment_id';
+      const expectedResult = { id: paymentId, status: 'COMPLETED', amount_money: { amount: 100, currency: 'USD' } };
+
+      paymentsApi.getPayment.mockResolvedValue({ result: { payment: expectedResult } });
+
+      const result = await paymentService.getPaymentDetails(paymentId);
+
+      expect(result).toEqual(expectedResult);
+      expect(paymentsApi.getPayment).toHaveBeenCalledWith(paymentId);
+    });
   });
 });

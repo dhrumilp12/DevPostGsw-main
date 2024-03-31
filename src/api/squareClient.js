@@ -15,4 +15,5 @@ module.exports = {
     bookingApi: squareClient.bookingsApi,
     customersApi: squareClient.customersApi,
     inventoryApi: squareClient.inventoryApi, 
+    
 };

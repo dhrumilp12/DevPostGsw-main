@@ -3,67 +3,141 @@ const crypto = require('crypto');
 
 
 
-async function processPayment(nonce, amount) {
-    if (amount <= 0) {
-        throw new Error('Invalid payment amount'); // Throw an error for invalid amount
-    }
+async function processPayment(sourceId, amount, currency = 'USD', idempotencyKey = crypto.randomUUID()) {
+    const requestBody = {
+        sourceId: sourceId,
+        amountMoney: {
+            amount: amount,
+            currency: currency
+        },
+        idempotencyKey: idempotencyKey,
+    };
+
+    console.log('Request body to Square:', JSON.stringify(requestBody, null, 2));
 
     try {
-        const response = await paymentsApi.createPayment({
-            sourceId: nonce,
-            amountMoney: {
-                amount: amount,
-                currency: 'USD'
-            },
-            idempotencyKey: crypto.randomUUID(),
-        });
+        const response = await paymentsApi.createPayment(requestBody);
 
-        if (!response || !response.result) {
+        console.log('Square API response status:', response.statusCode);
+
+        if (!response || !response.result || !response.result.payment) {
             throw new Error("API call did not return expected result");
         }
 
-        return response.result.payment;
+        // Convert all BigInt properties to strings to ensure proper JSON serialization
+        const paymentResult = JSON.parse(JSON.stringify(response.result.payment, (key, value) =>
+            typeof value === 'bigint' ? value.toString() : value
+        ));
+        
+        return paymentResult;
     } catch (error) {
-        console.log("Error in processPayment:", error.message); // Additional logging
-        throw error; // Re-throw the error
+        console.error("Full error details:", error);
+        throw error;
     }
 }
 
-async function refundPayment(paymentId, amountMoney) {
+/**
+ * Validates and formats a date string to an RFC 3339 format required by Square API.
+ * If the input is invalid, a default date string is returned.
+ * @param {string} dateStr - The date string to validate and format.
+ * @param {boolean} [startOfDay=false] - True to set the time to the start of the day.
+ * @returns {string} - The validated and formatted date string.
+ */
+function validateAndFormatDate(dateStr, startOfDay = false) {
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) {
+    // Invalid date, return default
+    const defaultDate = new Date(); 
+    if (startOfDay) { 
+      defaultDate.setUTCHours(0, 0, 0, 0); // Start of current day
+    }
+    return defaultDate.toISOString(); 
+  }
+
+  if (startOfDay) {
+    date.setUTCHours(0, 0, 0, 0); 
+  }
+  return date.toISOString();
+}
+
+/**
+ * Validates and formats a date string to an RFC 3339 format required by Square API.
+ * If the input is invalid, a default date string is returned.
+ * @param {string} dateStr - The date string to validate and format.
+ * @param {boolean} [startOfDay=false] - True to set the time to the start of the day.
+ * @returns {string} - The validated and formatted date string.
+ */
+function validateAndFormatDate(dateStr, startOfDay = false) {
+  if (dateStr) {
+    const date = new Date(dateStr);
+    if (!isNaN(date.getTime())) {
+      if (startOfDay) {
+        date.setUTCHours(0, 0, 0, 0);
+      }
+      return date.toISOString();
+    }
+  }
+  return null; // Return null for an invalid or absent date string
+}
+
+
+async function listPayments(queryParams) {
+  try {
+    // Validate and format dates
+    const beginTime = validateAndFormatDate(queryParams.beginTime, true);
+    const endTime = validateAndFormatDate(queryParams.endTime);
+
+    // Prepare the API call parameters
+    const params = {};
+    if (beginTime) params.beginTime = beginTime;
+    if (endTime) params.endTime = endTime;
+    if (queryParams.sortOrder) params.sortOrder = queryParams.sortOrder;
+    if (queryParams.cursor) params.cursor = queryParams.cursor;
+    if (queryParams.locationId) params.locationId = queryParams.locationId;
+    if (queryParams.limit) params.limit = queryParams.limit;
+
+    console.log("Request Params:", params);
+    const response = await paymentsApi.listPayments(params.beginTime, params.endTime, params.sortOrder, params.cursor, params.locationId, params.limit);
+
+    if (!response || !response.result || !response.result.payments) {
+      throw new Error("API call to list payments did not return expected result");
+    }
+
+    // Convert BigInt to strings if necessary
+    return response.result.payments.map(payment => {
+      return JSON.parse(JSON.stringify(payment, (key, value) =>
+        typeof value === 'bigint' ? value.toString() : value
+      ));
+    });
+  } catch (error) {
+    console.error("Failed to list payments:", error);
+    throw error;
+  }
+}
+
+
+async function getPaymentDetails(paymentId) {
     try {
-        const response = await paymentsApi.refundPayment({
-            idempotencyKey: crypto.randomUUID(),
-            paymentId: paymentId,
-            amountMoney: amountMoney
-        });
-
-        if (!response || !response.result) {
-            throw new Error("API call to refund payment did not return expected result");
-        }
-
-        return response.result.refund;
+      const response = await paymentsApi.getPayment(paymentId);
+      if (!response || !response.result) {
+        throw new Error("API call did not return expected result");
+      }
+  
+      // If the response contains a BigInt value, you will need to serialize it.
+      const paymentDetails = response.result.payment;
+      
+      // Handling BigInt serialization, if necessary
+      const paymentDetailsWithSerializedBigInts = JSON.parse(JSON.stringify(paymentDetails, (key, value) =>
+        typeof value === 'bigint' ? value.toString() : value
+      ));
+  
+      return paymentDetailsWithSerializedBigInts;
     } catch (error) {
-        console.log("Failed to refund payment:", error);
-        throw new Error("Failed to refund payment");
+      console.error("Error in getPaymentDetails:", error.message);
+      throw error;
     }
-}
-
-async function listPayments(customerId) {
-    try {
-        const response = await paymentsApi.listPayments({
-            customerId: customerId
-        });
-
-        if (!response || !response.result) {
-            throw new Error("API call to list payments did not return expected result");
-        }
-
-        return response.result.payments;
-    } catch (error) {
-        console.log("Failed to list payments:", error);
-        throw new Error("Failed to list payments");
-    }
-}
+  }
+  
 
 
-module.exports = { processPayment, refundPayment, listPayments };
+module.exports = { processPayment, listPayments,getPaymentDetails };

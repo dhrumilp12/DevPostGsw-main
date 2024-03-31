@@ -35,10 +35,11 @@ app.use((err, req, res, next) => {
 });
 
 app.use(express.json());
-app.use('/api/payments', authMiddleware,paymentRoutes);
+app.use('/api/payments',paymentRoutes);
 app.use('/api/bookings', authMiddleware, bookingRoutes);
-app.use('/api/customers', customerRoutes);
+app.use('/api/customers', authMiddleware, customerRoutes);
 app.use('/api/inventory', authMiddleware, inventoryRoutes);
+
 app.use(morgan('combined'));
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

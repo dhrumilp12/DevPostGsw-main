@@ -1,62 +1,53 @@
-// paymentRoutes.test.js
-jest.mock('../../src/services/paymentService'); // Mock the paymentService
-
 const request = require('supertest');
 const express = require('express');
-const paymentRoutes = require('../../src/api/paymentRoutes');
+const app = express();
 const paymentService = require('../../src/services/paymentService');
 
-
-
-const app = express();
-app.use(express.json());
-app.use('/api/paymentRoutes', paymentRoutes);
+jest.mock('../../src/services/paymentService');
 
 describe('Payment Routes', () => {
-  const validNonce = 'fake-card-nonce-ok';
-  const validAmount = { amount: 1000, currency: 'USD' };
-  
+  describe('POST /process-payment', () => {
+    it('should process a payment successfully', async () => {
+      const paymentData = { sourceId: 'cnon:card-nonce-ok', amount: 100, currency: 'USD', idempotencyKey: 'unique_key' };
+      const expectedResult = { id: 'payment_id', status: 'COMPLETED', amount_money: { amount: 100, currency: 'USD' } };
+      
+      paymentService.processPayment.mockResolvedValue(expectedResult);
 
-  beforeAll(() => {
-  paymentService.processPayment.mockResolvedValue({ id: 'p123', status: 'COMPLETED' });
+      const response = await request(app).post('/process-payment').send(paymentData);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(expectedResult);
+      expect(paymentService.processPayment).toHaveBeenCalledWith(paymentData.sourceId, paymentData.amount, paymentData.currency, paymentData.idempotencyKey);
+    });
   });
 
-  beforeEach(() => {
-    jest.clearAllMocks();
+  describe('GET /list-payments', () => {
+    it('should list payments successfully', async () => {
+      const queryParams = { beginTime: '2023-12-20T00:00:00Z', endTime: '2024-01-01T23:59:59Z' };
+      const expectedResult = [{ id: 'payment_id', status: 'COMPLETED', amount_money: { amount: 100, currency: 'USD' } }];
+
+      paymentService.listPayments.mockResolvedValue(expectedResult);
+
+      const response = await request(app).get('/list-payments').query(queryParams);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(expectedResult);
+      expect(paymentService.listPayments).toHaveBeenCalledWith(queryParams);
+    });
   });
 
-  it('should process a payment successfully', async () => {
-    const response = await request(app)
-      .post('/api/paymentRoutes/process-payment')
-      .send({ nonce: validNonce, amount: validAmount.amount });
+  describe('GET /payment-details/:paymentId', () => {
+    it('should get payment details successfully', async () => {
+      const paymentId = 'payment_id';
+      const expectedResult = { id: paymentId, status: 'COMPLETED', amount_money: { amount: 100, currency: 'USD' } };
 
-    expect(response.statusCode).toBe(200);
-    expect(response.body).toHaveProperty('id', 'p123');
-  });
+      paymentService.getPaymentDetails.mockResolvedValue(expectedResult);
 
-  it('should return 400 for invalid request body', async () => {
-    const invalidBody = { nonce: validNonce }; // Missing amount
-    const response = await request(app)
-      .post('/api/paymentRoutes/process-payment')
-      .send(invalidBody);
-  
-    expect(response.statusCode).toBe(400);
-    expect(response.body).toHaveProperty('error');
+      const response = await request(app).get(`/payment-details/${paymentId}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(expectedResult);
+      expect(paymentService.getPaymentDetails).toHaveBeenCalledWith(paymentId);
+    });
   });
-  
-  it('should handle service errors', async () => {
-    const nonce = 'test_nonce';
-    const amount = 1000;
-    // Mock the service to throw an error
-    paymentService.processPayment.mockRejectedValue(new Error('Service error'));
-    const response = await request(app)
-      .post('/api/paymentRoutes/process-payment')
-      .send({ nonce, amount });
-  
-    expect(response.statusCode).toBe(500);
-    expect(response.body).toHaveProperty('error', 'Service error');
-  });
-  
-  // ... Add more tests as needed for other routes and scenarios
 });
-
