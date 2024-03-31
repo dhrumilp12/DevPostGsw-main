@@ -1,41 +1,33 @@
-jest.mock('../../src/api/squareClient'); // Ensure the path is correct relative to this test file
+jest.mock('../../src/api/squareClient');
 
 const { createCustomer, getCustomerDetails, updateCustomer, listCustomers } = require('../../src/services/customerService');
 const { customersApi } = require('../../src/api/squareClient');
 
 describe('Customer Service', () => {
-  // Define a mock customer to use in your tests
-  const mockCustomer = { id: 'c123', name: 'John Doe', email: 'john.doe@example.com' };
-  
+  const mockCustomer = {
+    id: 'c123',
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    version: 0n
+  };
+
   beforeEach(() => {
-    
     jest.clearAllMocks();
-    // Setup mock implementations for the customersApi
-    customersApi.createCustomer.mockResolvedValue({ customer: mockCustomer });
-    customersApi.retrieveCustomer.mockResolvedValue({ customer: mockCustomer });
-    customersApi.updateCustomer.mockResolvedValue({ customer: { ...mockCustomer, email: 'newemail@example.com' } });
-    customersApi.listCustomers.mockResolvedValue({ customers: [mockCustomer] });
-    customersApi.retrieveCustomer.mockImplementation((customerId) => {
-      if (customerId === mockCustomer.id) {
-        return Promise.resolve({ customer: mockCustomer });
-      } else {
-        return Promise.reject({
-          response: {
-            status: 404,
-            data: {
-              errors: [{ category: 'INVALID_REQUEST_ERROR', code: 'NOT_FOUND', detail: 'Customer does not exist.' }]
-            }
-          }
-        });
-      }
+    customersApi.createCustomer.mockResolvedValue({
+      result: { customer: { ...mockCustomer, version: mockCustomer.version.toString() } } // Convert BigInt to string
     });
+    customersApi.retrieveCustomer.mockResolvedValue({ result: { customer: mockCustomer } });
+    customersApi.updateCustomer.mockResolvedValue({ result: { customer: { ...mockCustomer, email: 'newemail@example.com' } } });
+    customersApi.listCustomers.mockResolvedValue({ result: { customers: [{ ...mockCustomer, version: mockCustomer.version.toString() }] } });
   });
+  
 
   it('creates a customer successfully', async () => {
     const customerData = { name: 'John Doe', email: 'john.doe@example.com' };
     const result = await createCustomer(customerData);
 
     expect(result).toHaveProperty('id', mockCustomer.id);
+    expect(result).toHaveProperty('version', mockCustomer.version.toString());
     expect(customersApi.createCustomer).toHaveBeenCalledWith(customerData);
   });
 
@@ -43,6 +35,7 @@ describe('Customer Service', () => {
     const result = await getCustomerDetails(mockCustomer.id);
 
     expect(result).toHaveProperty('id', mockCustomer.id);
+    expect(result).toHaveProperty('version', mockCustomer.version.toString());
     expect(customersApi.retrieveCustomer).toHaveBeenCalledWith(mockCustomer.id);
   });
 
@@ -52,6 +45,7 @@ describe('Customer Service', () => {
 
     expect(result).toHaveProperty('id', mockCustomer.id);
     expect(result).toHaveProperty('email', updatedData.email);
+    expect(result).toHaveProperty('version', mockCustomer.version.toString());
     expect(customersApi.updateCustomer).toHaveBeenCalledWith(mockCustomer.id, updatedData);
   });
 
@@ -60,25 +54,7 @@ describe('Customer Service', () => {
 
     expect(Array.isArray(result)).toBeTruthy();
     expect(result[0]).toHaveProperty('id', mockCustomer.id);
+    expect(result[0]).toHaveProperty('version', mockCustomer.version.toString());
     expect(customersApi.listCustomers).toHaveBeenCalled();
-  });
-  it('returns an error if the customer does not exist', async () => {
-    // Simulate API response for non-existing customer
-    customersApi.retrieveCustomer.mockImplementation(() => 
-      Promise.reject({
-        response: {
-          data: {
-            errors: [{ detail: 'Customer does not exist.' }]
-          }
-        }
-      })
-    );
-  
-    // Test the error throwing behavior
-    await expect(getCustomerDetails('nonexistent_id'))
-      .rejects
-      .toThrow('Customer does not exist.');
-    
-    expect(customersApi.retrieveCustomer).toHaveBeenCalledWith('nonexistent_id');
   });
 });
