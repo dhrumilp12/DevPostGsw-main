@@ -1,60 +1,69 @@
-jest.mock('../../src/api/squareClient');
+const { processPayment, listPayments, getPaymentDetails } = require('../../src/services/paymentService');
+const squareClient = require('../../src/api/squareClient');
 
-const { createCustomer, getCustomerDetails, updateCustomer, listCustomers } = require('../../src/services/customerService');
-const { customersApi } = require('../../src/api/squareClient');
+jest.mock('../../src/api/squareClient', () => ({
+  paymentsApi: {
+    createPayment: jest.fn(),
+    listPayments: jest.fn(),
+    getPayment: jest.fn(),
+  },
+}));
 
-describe('Customer Service', () => {
-  const mockCustomer = {
-    id: 'c123',
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    version: 0n
-  };
-
+describe('Payment Service', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    customersApi.createCustomer.mockResolvedValue({
-      result: { customer: { ...mockCustomer, version: mockCustomer.version.toString() } } // Convert BigInt to string
+  });
+
+  describe('processPayment', () => {
+    it('should call createPayment with the correct parameters and return data', async () => {
+      const paymentData = { sourceId: 'source_id', amount: 100, currency: 'USD', idempotencyKey: 'key' };
+      const response = { payment: { id: 'payment_id', status: 'COMPLETED' } };
+      squareClient.paymentsApi.createPayment.mockResolvedValue(response);
+
+      const result = await processPayment(paymentData.sourceId, paymentData.amount, paymentData.currency, paymentData.idempotencyKey);
+
+      expect(squareClient.paymentsApi.createPayment).toHaveBeenCalledWith({
+        sourceId: paymentData.sourceId,
+        amountMoney: {
+          amount: paymentData.amount,
+          currency: paymentData.currency,
+        },
+        idempotencyKey: paymentData.idempotencyKey,
+      });
+      expect(result).toEqual(response.payment);
     });
-    customersApi.retrieveCustomer.mockResolvedValue({ result: { customer: mockCustomer } });
-    customersApi.updateCustomer.mockResolvedValue({ result: { customer: { ...mockCustomer, email: 'newemail@example.com' } } });
-    customersApi.listCustomers.mockResolvedValue({ result: { customers: [{ ...mockCustomer, version: mockCustomer.version.toString() }] } });
-  });
-  
-
-  it('creates a customer successfully', async () => {
-    const customerData = { name: 'John Doe', email: 'john.doe@example.com' };
-    const result = await createCustomer(customerData);
-
-    expect(result).toHaveProperty('id', mockCustomer.id);
-    expect(result).toHaveProperty('version', mockCustomer.version.toString());
-    expect(customersApi.createCustomer).toHaveBeenCalledWith(customerData);
   });
 
-  it('retrieves customer details successfully', async () => {
-    const result = await getCustomerDetails(mockCustomer.id);
+  describe('listPayments', () => {
+    it('should call listPayments with the correct parameters and return data', async () => {
+      const params = { beginTime: 'begin_time', endTime: 'end_time' };
+      const response = { payments: [{ id: 'payment_id', status: 'COMPLETED' }] };
+      squareClient.paymentsApi.listPayments.mockResolvedValue(response);
 
-    expect(result).toHaveProperty('id', mockCustomer.id);
-    expect(result).toHaveProperty('version', mockCustomer.version.toString());
-    expect(customersApi.retrieveCustomer).toHaveBeenCalledWith(mockCustomer.id);
+      const result = await listPayments(params);
+
+      expect(squareClient.paymentsApi.listPayments).toHaveBeenCalledWith({
+        beginTime: params.beginTime,
+        endTime: params.endTime,
+        sort: 'DESC',
+        // Include other parameters you expect to pass
+      });
+      expect(result).toEqual(response.payments);
+    });
   });
 
-  it('updates customer details successfully', async () => {
-    const updatedData = { email: 'newemail@example.com' };
-    const result = await updateCustomer(mockCustomer.id, updatedData);
+  describe('getPaymentDetails', () => {
+    it('should call getPayment with the correct parameter and return data', async () => {
+      const paymentId = 'payment_id';
+      const response = { payment: { id: paymentId, status: 'COMPLETED' } };
+      squareClient.paymentsApi.getPayment.mockResolvedValue(response);
 
-    expect(result).toHaveProperty('id', mockCustomer.id);
-    expect(result).toHaveProperty('email', updatedData.email);
-    expect(result).toHaveProperty('version', mockCustomer.version.toString());
-    expect(customersApi.updateCustomer).toHaveBeenCalledWith(mockCustomer.id, updatedData);
+      const result = await getPaymentDetails(paymentId);
+
+      expect(squareClient.paymentsApi.getPayment).toHaveBeenCalledWith(paymentId);
+      expect(result).toEqual(response.payment);
+    });
   });
 
-  it('lists all customers successfully', async () => {
-    const result = await listCustomers();
-
-    expect(Array.isArray(result)).toBeTruthy();
-    expect(result[0]).toHaveProperty('id', mockCustomer.id);
-    expect(result[0]).toHaveProperty('version', mockCustomer.version.toString());
-    expect(customersApi.listCustomers).toHaveBeenCalled();
-  });
+  // ... any other tests for functions in paymentService
 });

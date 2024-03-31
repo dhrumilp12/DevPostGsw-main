@@ -36,29 +36,6 @@ async function processPayment(sourceId, amount, currency = 'USD', idempotencyKey
     }
 }
 
-/**
- * Validates and formats a date string to an RFC 3339 format required by Square API.
- * If the input is invalid, a default date string is returned.
- * @param {string} dateStr - The date string to validate and format.
- * @param {boolean} [startOfDay=false] - True to set the time to the start of the day.
- * @returns {string} - The validated and formatted date string.
- */
-function validateAndFormatDate(dateStr, startOfDay = false) {
-  const date = new Date(dateStr);
-  if (isNaN(date.getTime())) {
-    // Invalid date, return default
-    const defaultDate = new Date(); 
-    if (startOfDay) { 
-      defaultDate.setUTCHours(0, 0, 0, 0); // Start of current day
-    }
-    return defaultDate.toISOString(); 
-  }
-
-  if (startOfDay) {
-    date.setUTCHours(0, 0, 0, 0); 
-  }
-  return date.toISOString();
-}
 
 /**
  * Validates and formats a date string to an RFC 3339 format required by Square API.
