@@ -38,15 +38,18 @@ router.put('/update-catalog/:itemId', async (req, res) => {
 
 
 // Route to delete a catalog item
-router.delete('/:itemId', async (req, res) => {
+router.delete('/delete/:itemId', async (req, res) => {
   try {
     const itemId = req.params.itemId;
-    await catalogService.deleteCatalogItem(itemId);
-    res.status(204).send(); // Success, no content to return
+    const deletedItem = await catalogService.deleteCatalogItem(itemId);
+    console.log("Deleted item ID:", deletedItem.id); // Log the deleted item ID
+    res.status(200).json({ message: 'Catalog item deleted successfully', deletedItemId: deletedItem.id });
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete catalog item' });
   }
 });
+
+
 
 // Route to search catalog items
 router.get('/search', async (req, res) => {
@@ -65,14 +68,23 @@ router.get('/search', async (req, res) => {
 });
 
 // Route to get a single catalog item
-router.get('/:itemId', async (req, res) => {
+router.get('/Serach-item/:itemId', async (req, res) => {
   try {
     const itemId = req.params.itemId;
+    console.log("Fetching catalog item with ID:", itemId); // Log the item ID being fetched
     const item = await catalogService.getCatalogItem(itemId);
-    res.json(item);
+    console.log("Fetched item:", item); // Log the fetched item
+
+    // Convert BigInt values to strings
+    const itemWithConvertedBigInts = JSON.parse(JSON.stringify(item, (_, v) => 
+      typeof v === 'bigint' ? v.toString() : v));
+
+    res.json(itemWithConvertedBigInts); // Send the converted item
   } catch (error) {
+    console.error("Error fetching catalog item:", error); // Log the error
     res.status(500).json({ error: 'Failed to get catalog item' });
   }
 });
+
 
 module.exports = router;

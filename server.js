@@ -39,7 +39,7 @@ app.use(express.json());
 app.use('/api/catalogs', catalogRoutes);
 app.use('/api/payments', authMiddleware,paymentRoutes);
 app.use('/api/bookings', authMiddleware, bookingRoutes);
-app.use('/api/customers', authMiddleware, customerRoutes);
+app.use('/api/customers',  customerRoutes);
 app.use('/api/inventory',  inventoryRoutes);
 
 app.use(morgan('combined'));

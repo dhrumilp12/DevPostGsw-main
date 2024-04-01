@@ -86,14 +86,16 @@ async function createCatalogItem(itemData) {
   
   
 
-async function deleteCatalogItem(itemId) {
-  try {
-    await catalogApi.deleteCatalogObject(itemId);
-  } catch (error) {
-    console.error("Failed to delete catalog item:", itemId, error);
-    throw error; 
+  async function deleteCatalogItem(itemId) {
+    try {
+      await catalogApi.deleteCatalogObject(itemId);
+      return { id: itemId }; // Return the ID of the deleted item
+    } catch (error) {
+      console.error("Failed to delete catalog item:", itemId, error);
+      throw error; 
+    }
   }
-}
+  
 
 async function searchCatalogItems(query) {
     try {
@@ -119,25 +121,24 @@ async function searchCatalogItems(query) {
   
   
 
-async function getCatalogItem(itemId) {
-  try {
-    const response = await catalogApi.retrieveCatalogObject(itemId, {
-      includeRelatedObjects: true, // Optionally fetch related objects if needed
-    });
-
-    return response.result.object; 
-  } catch (error) {
-    console.error("Failed to fetch catalog item:", itemId, error);
-    throw error; 
+  async function getCatalogItem(itemId) {
+    try {
+      const response = await catalogApi.retrieveCatalogObject(itemId, true);
+      console.log("result:",response.result.object)
+      return response.result.object;
+    } catch (error) {
+      console.error("Failed to fetch catalog item:", itemId, error);
+      throw error;
+    }
   }
-}
+  
 
 // ... Add other Catalog API interactions as needed 
 
 module.exports = {
   createCatalogItem,
   updateCatalogItem,//error
-  deleteCatalogItem,// not checked
+  deleteCatalogItem,
   searchCatalogItems,
-  getCatalogItem,//not checked
+  getCatalogItem,
 };
