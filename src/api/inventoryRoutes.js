@@ -66,4 +66,49 @@ router.post('/transfer', async (req, res) => {
     }
 });
 
+// Route to search inventory items
+router.post('/search', async (req, res) => {
+    try {
+        const query = req.body;
+        const items = await inventoryService.searchInventoryItems(query);
+        res.json(items);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to search inventory items' });
+    }
+});
+
+// Route to update an inventory item
+router.put('/:itemId', async (req, res) => {
+    try {
+        const itemId = req.params.itemId;
+        const itemData = req.body;
+        const updatedItem = await inventoryService.updateInventoryItem(itemId, itemData);
+        res.json(updatedItem);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update inventory item' });
+    }
+});
+
+// Route to create a new inventory item
+router.post('/creat-inventory', async (req, res) => {
+    try {
+        const itemData = req.body;
+        const newItem = await inventoryService.createInventoryItem(itemData);
+        res.status(201).json(newItem);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to create inventory item' });
+    }
+});
+
+// Route to delete an inventory item
+router.delete('/:itemId', async (req, res) => {
+    try {
+        const itemId = req.params.itemId;
+        await inventoryService.deleteInventoryItem(itemId);
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete inventory item' });
+    }
+});
+
 module.exports = router;

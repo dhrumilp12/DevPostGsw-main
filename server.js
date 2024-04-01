@@ -6,6 +6,7 @@ const paymentRoutes = require('./src/api/paymentRoutes');
 const customerRoutes = require('./src/api/customerRoutes');
 const bookingRoutes = require('./src/api/bookingRoutes');
 const inventoryRoutes = require('./src/api/inventoryRoutes'); 
+const catalogRoutes= require('./src/api/catalogRoutes'); 
 const cors = require('cors');
 const app = express();
 const morgan = require('morgan');
@@ -35,10 +36,11 @@ app.use((err, req, res, next) => {
 });
 
 app.use(express.json());
-app.use('/api/payments',paymentRoutes);
+app.use('/api/catalogs', catalogRoutes);
+app.use('/api/payments', authMiddleware,paymentRoutes);
 app.use('/api/bookings', authMiddleware, bookingRoutes);
 app.use('/api/customers', authMiddleware, customerRoutes);
-app.use('/api/inventory', authMiddleware, inventoryRoutes);
+app.use('/api/inventory',  inventoryRoutes);
 
 app.use(morgan('combined'));
 const port = process.env.PORT || 3000;
