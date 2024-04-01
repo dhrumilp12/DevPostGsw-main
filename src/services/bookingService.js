@@ -60,5 +60,35 @@ async function retrieveBooking(bookingId) {
     }
 }
 
+async function listBookings() {
+    try {
+        const response = await bookingApi.listBookings();
+        return response.result.bookings || [];
+    } catch (error) {
+        console.error("Failed to list bookings:", error);
+        throw new Error("Failed to list bookings");
+    }
+}
+
+async function searchAvailability(searchCriteria) {
+    try {
+        const response = await bookingApi.searchAvailability(searchCriteria);
+        return response.result.availabilities || [];
+    } catch (error) {
+        console.error("Failed to search availability:", error);
+        throw new Error("Failed to search availability");
+    }
+}
+
+async function bulkRetrieveBookings(bookingIds) {
+    try {
+        const response = await bookingApi.bulkRetrieveBookings({ bookingIds });
+        return response.result.bookings || [];
+    } catch (error) {
+        console.error("Failed to bulk retrieve bookings:", error);
+        throw new Error("Failed to bulk retrieve bookings");
+    }
+}
+
 // Add other necessary functions and export them
-module.exports = { createBooking, updateBooking, cancelBooking, retrieveBooking };
+module.exports = { createBooking, updateBooking, cancelBooking, retrieveBooking, bulkRetrieveBookings, searchAvailability,  listBookings};

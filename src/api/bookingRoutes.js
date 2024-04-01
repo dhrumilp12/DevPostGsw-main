@@ -47,5 +47,34 @@ router.get('/retrieve-booking/:bookingId', async (req, res) => {
     }
 });
 
+router.get('/list-bookings', async (req, res) => {
+    try {
+        const bookings = await bookingService.listBookings();
+        res.json(bookings);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/search-availability', async (req, res) => {
+    try {
+        const searchCriteria = req.body;
+        const availability = await bookingService.searchAvailability(searchCriteria);
+        res.json(availability);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/bulk-retrieve-bookings', async (req, res) => {
+    try {
+        const { bookingIds } = req.body;
+        const bookings = await bookingService.bulkRetrieveBookings(bookingIds);
+        res.json(bookings);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Add other necessary routes and export the router
 module.exports = router;

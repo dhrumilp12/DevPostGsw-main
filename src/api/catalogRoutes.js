@@ -86,5 +86,15 @@ router.get('/Serach-item/:itemId', async (req, res) => {
   }
 });
 
+router.get('/list', async (req, res) => {
+  try {
+      const items = await catalogService.listItems();
+      
+      res.json(items);
+  } catch (error) {
+      res.status(500).json({ error: 'Failed to retrieve inventory' });
+  }
+});
+
 
 module.exports = router;

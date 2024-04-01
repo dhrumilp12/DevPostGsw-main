@@ -1,7 +1,7 @@
 // catalogService.js
 const crypto = require('crypto'); // For generating idempotency keys
 const { catalogApi } = require('../api/squareClient');
-
+const { inventoryApi} = require('../api/squareClient');
 async function createCatalogItem(itemData) {
     try {
       const response = await catalogApi.upsertCatalogObject({
@@ -133,6 +133,48 @@ async function searchCatalogItems(query) {
   }
   
 
+// catalogService.js
+// ... other catalogService functions ...
+
+async function listItems() {
+  try {
+    // Search for item variations and get their IDs
+    console.log("Listing catalog item variations");
+    const searchResponse = await catalogApi.searchCatalogObjects({
+      objectTypes: ['ITEM_VARIATION']
+    });
+
+    console.log("Search response:", searchResponse.result.objects); 
+
+    const variationIds = searchResponse.result.objects.map(variation => variation.id);
+    console.log("Variation IDs:", variationIds); 
+
+    // Check for empty inventory before proceeding
+    if (variationIds.length === 0) {
+      console.warn('No item variations found.');
+      return []; 
+    }
+
+    // Retrieve inventory counts with logging for debugging
+    console.log("Fetching inventory counts for variation IDs:", variationIds);
+    const response = await inventoryApi.batchRetrieveInventoryCounts({
+      catalogObjectIds: variationIds
+    });
+
+    console.log("Inventory counts response:", response.result); 
+
+    // Convert any potential BigInt values to strings
+    const countsWithConvertedBigInts = JSON.parse(JSON.stringify(response.result.counts || [], (_, v) =>
+      typeof v === 'bigint' ? v.toString() : v));
+
+    return countsWithConvertedBigInts;
+  } catch (error) {
+    console.error("Failed to list inventory items:", error);
+    throw error; 
+  }
+}
+
+
 // ... Add other Catalog API interactions as needed 
 
 module.exports = {
@@ -141,4 +183,5 @@ module.exports = {
   deleteCatalogItem,
   searchCatalogItems,
   getCatalogItem,
+  listItems,
 };
