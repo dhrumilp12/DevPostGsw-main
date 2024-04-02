@@ -12,6 +12,7 @@ const inventoryRoutes = require('./src/api/inventoryRoutes');
 const catalogRoutes= require('./src/api/catalogRoutes'); 
 const loyaltyRoutes = require('./src/api/loyaltyRoutes'); 
 const oauthRoutes= require('./src/api/oauthRoutes');
+const webhookRoutes = require('./src/api/webhookRoutes');
 const { setupOAuth } = require('./src/services/oauthService');
 const cors = require('cors');
 const app = express();
@@ -47,6 +48,7 @@ app.use('/api/customers', authMiddleware,customerRoutes);
 app.use('/api/inventory',  inventoryRoutes);
 app.use('/api/loyalty', loyaltyRoutes); 
 app.use('/api/oauthRoutes', oauthRoutes); 
+app.use('/api/webhooks', webhookRoutes);
 
 app.use(morgan('combined'));
 const port = process.env.PORT || 3000;

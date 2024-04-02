@@ -18,4 +18,5 @@ module.exports = {
     catalogApi: squareClient.catalogApi,
     loyaltyApi: squareClient.loyaltyApi,
     oauthApi: squareClient.oAuthApi,
+    webhookApi: squareClient.webhookApi,
 };
