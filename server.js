@@ -12,7 +12,7 @@ const inventoryRoutes = require('./src/api/inventoryRoutes');
 const catalogRoutes= require('./src/api/catalogRoutes'); 
 const loyaltyRoutes = require('./src/api/loyaltyRoutes'); 
 const oauthRoutes= require('./src/api/oauthRoutes');
-const { setupOAuth } = require('./src/api/oauthService');
+const { setupOAuth } = require('./src/services/oauthService');
 const cors = require('cors');
 const app = express();
 const morgan = require('morgan');
@@ -31,7 +31,6 @@ app.use(session({
 // Initialize Passport and OAuth
 app.use(passport.initialize());
 app.use(passport.session());
-setupOAuth(passport);
 app.use(cors());
 
 

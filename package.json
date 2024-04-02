@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
@@ -10,6 +11,8 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "node": "^18.20.0",
+    "passport": "^0.7.0",
+    "passport-oauth2": "^1.8.0",
     "path": "^0.12.7",
     "square": "^35.1.0",
     "winston": "^3.13.0"
