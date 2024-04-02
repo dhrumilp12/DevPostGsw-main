@@ -16,5 +16,6 @@ module.exports = {
     customersApi: squareClient.customersApi,
     inventoryApi: squareClient.inventoryApi, 
     catalogApi: squareClient.catalogApi,
-    
+    loyaltyApi: squareClient.loyaltyApi,
+    oauthApi: squareClient.oAuthApi,
 };
