@@ -3,7 +3,7 @@ import {
     PROCESS_PAYMENT_START,
     PROCESS_PAYMENT_SUCCESS,
     PROCESS_PAYMENT_FAILURE
-  } from '../action/paymentActions';
+  } from '../Actions/paymentActions';
   
   // Define the initial state
   const initialState = {

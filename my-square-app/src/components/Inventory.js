@@ -8,7 +8,7 @@ import {
   fetchInventorySuccess, 
   fetchInventoryFailure,
   adjustInventory
-} from '../action/inventoryActions';
+} from '../Actions/inventoryActions';
 
 const Inventory = ({ inventoryData, dispatchFetchInventoryStart, dispatchFetchInventorySuccess, dispatchFetchInventoryFailure, dispatchAdjustInventory }) => {
     useEffect(() => {

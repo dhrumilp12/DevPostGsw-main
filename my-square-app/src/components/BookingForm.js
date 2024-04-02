@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { createBookingSuccess, createBookingFailure } from '../action/bookingAction';
+import { createBookingSuccess, createBookingFailure } from '../Actions/bookingAction';
 import './BookingForm.css'; // Ensure you have this CSS file for styling
 
 const BookingForm = ({ dispatch }) => {

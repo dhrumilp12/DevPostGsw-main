@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 // Import the action creators you might have
-import { fetchCustomersStart, fetchCustomersSuccess, fetchCustomersFailure } from '../action/customerActions';
+import { fetchCustomersStart, fetchCustomersSuccess, fetchCustomersFailure } from '../Actions/customerActions';
 
 const CustomerList = ({ customersData, dispatchFetchCustomersStart, dispatchFetchCustomersSuccess, dispatchFetchCustomersFailure }) => {
     useEffect(() => {

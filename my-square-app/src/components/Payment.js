@@ -6,7 +6,7 @@ import {
   processPaymentStart,
   processPaymentSuccess,
   processPaymentFailure,
-} from '../action/paymentActions'; // Make sure the path is correct
+} from '../Actions/paymentActions'; // Make sure the path is correct
 
 const Payment = ({
   dispatchProcessPaymentStart,

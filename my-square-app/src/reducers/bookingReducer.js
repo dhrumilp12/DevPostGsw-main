@@ -4,7 +4,7 @@ import {
     CREATE_BOOKING_SUCCESS,
     CREATE_BOOKING_FAILURE,
     // Add other relevant action types if needed (e.g., FETCH_BOOKINGS_START, etc.)
-} from '../action/bookingAction'; // Import your action types
+} from '../Actions/bookingAction'; // Import your action types
 
 const initialState = {
     loading: false,  // Track if a booking creation is in progress

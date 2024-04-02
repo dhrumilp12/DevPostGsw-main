@@ -1,6 +1,6 @@
 //reducers/inventoryReducer
 
-import { FETCH_INVENTORY_START, FETCH_INVENTORY_SUCCESS, FETCH_INVENTORY_FAILURE, ADJUST_INVENTORY } from '../action/inventoryActions';
+import { FETCH_INVENTORY_START, FETCH_INVENTORY_SUCCESS, FETCH_INVENTORY_FAILURE, ADJUST_INVENTORY } from '../Actions/inventoryActions';
 
 const initialState = {
     loading: false,

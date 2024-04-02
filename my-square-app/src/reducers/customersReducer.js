@@ -1,5 +1,5 @@
 // src/redux/reducers/customersReducer.js
-import { FETCH_CUSTOMERS_START, FETCH_CUSTOMERS_SUCCESS, FETCH_CUSTOMERS_FAILURE  } from '../action/customerActions';
+import { FETCH_CUSTOMERS_START, FETCH_CUSTOMERS_SUCCESS, FETCH_CUSTOMERS_FAILURE  } from '../Actions/customerActions';
 
 const initialState = {
     loading: false,

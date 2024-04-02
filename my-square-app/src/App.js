@@ -1,13 +1,13 @@
 import './App.css';
 import React from 'react';
 import { Provider } from 'react-redux'; // Import Provider from react-redux
-import store from './store'; // Import the store you've created
+import store from './Store/store'; // Import the store you've created
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import BookingForm from './components/BookingForm';
-import CustomerList from './components/CustomerList';
-import Inventory from './components/Inventory';
-import Payment from './components/Payment';
-import Navbar from './components/Navbar';
+import BookingForm from './Components/BookingForm';
+import CustomerList from './Components/CustomerList';
+import Inventory from './Components/Inventory';
+import Payment from './Components/Payment';
+import Navbar from './Components/Navbar';
 
 const App = () => {
   return (
