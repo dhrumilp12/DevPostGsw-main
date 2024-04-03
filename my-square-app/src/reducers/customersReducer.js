@@ -1,23 +1,34 @@
-// src/redux/reducers/customersReducer.js
-import { FETCH_CUSTOMERS_START, FETCH_CUSTOMERS_SUCCESS, FETCH_CUSTOMERS_FAILURE  } from '../Actions/customerActions';
+// src/reducers/customerReducer.js
+import { FETCH_CUSTOMERS_START, FETCH_CUSTOMERS_SUCCESS, FETCH_CUSTOMERS_FAILURE } from '../Actions/actionTypes.js';
 
 const initialState = {
-    loading: false,
-    customers: [],
-    error: null 
+  customers: [],
+  loading: false,
+  error: null,
 };
 
-const customersReducer = (state = initialState, action) => {
-    switch (action.type) {
-        case FETCH_CUSTOMERS_START:
-            return { ...state, loading: true };
-        case FETCH_CUSTOMERS_SUCCESS:
-            return { ...state, loading: false, customers: action.payload, error: null }; 
-        case FETCH_CUSTOMERS_FAILURE:
-            return { ...state, loading: false, error: action.payload };
-        default:
-            return state;
-    }
+const customerReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case FETCH_CUSTOMERS_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case FETCH_CUSTOMERS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        customers: action.payload,
+      };
+    case FETCH_CUSTOMERS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
 };
 
-export default customersReducer;
+export default customerReducer;

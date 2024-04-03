@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
- 
+const { exchangeCodeForToken } = require('../services/oauthService');
 // Redirect to OAuth provider for authentication
 router.get('/auth/square', passport.authenticate('square'));
  
@@ -14,4 +14,15 @@ router.get('/auth/square/callback',
   }
 );
  
+router.post('/exchange-code', async (req, res) => {
+  const { code } = req.body;
+  try {
+    const tokenData = await exchangeCodeForToken(code);
+    res.json(tokenData);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to exchange code for token' });
+  }
+});
+
+
 module.exports = router;

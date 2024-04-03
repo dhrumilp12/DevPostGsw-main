@@ -1,17 +1,17 @@
-// src/components/Inventory.js
+// src/components/Customers.js
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchInventory } from '../Actions/inventoryAction';
+import { fetchCustomers } from '../Actions/customerAction';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ThreeDots } from 'react-loader-spinner';
+import { ThreeDots } from 'react-loader-spinner'; 
 
-const Inventory = () => {
+const Customers = () => {
   const dispatch = useDispatch();
-  const { inventory, loading, error } = useSelector(state => state.inventory);
+  const { customers, loading, error } = useSelector(state => state.customers);
 
   useEffect(() => {
-    dispatch(fetchInventory());
+    dispatch(fetchCustomers());
   }, [dispatch]);
 
   if (loading) return <div>Loading...</div>;
@@ -19,13 +19,14 @@ const Inventory = () => {
 
   return (
     <div>
-    <ToastContainer />
-    {loading ? (
+      <ToastContainer />
+      <h2>Customers</h2>
+      {loading ? (
         <ThreeDots color="#00BFFF" height={20} width={20} />
       ) : (
         <ul>
-          {inventory.map(item => (
-            <li key={item.id}>{item.name}</li>
+          {customers.map(customer => (
+            <li key={customer.id}>{customer.name}</li>
           ))}
         </ul>
       )}
@@ -33,4 +34,4 @@ const Inventory = () => {
   );
 };
 
-export default Inventory;
+export default Customers;

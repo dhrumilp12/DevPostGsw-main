@@ -1,7 +1,7 @@
 const passport = require('passport');
 const OAuth2Strategy = require('passport-oauth2');
 const { oauthApi } = require('../api/squareClient');
- 
+const axios = require('axios');
 // Set up Square OAuth2Strategy
 const setupOAuth = () => {
   // *** SECURITY: Validate environment variables ***
@@ -39,4 +39,20 @@ const setupOAuth = () => {
   });
 };
  
-module.exports = { setupOAuth };
+const exchangeCodeForToken = async (code) => {
+  try {
+    const response = await axios.post('https://connect.squareup.com/oauth2/token', {
+      client_id: process.env.SQUARE_CLIENT_ID,
+      client_secret: process.env.SQUARE_CLIENT_SECRET,
+      code: code,
+      grant_type: 'authorization_code',
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to exchange code for token');
+  }
+};
+
+
+module.exports = { setupOAuth, exchangeCodeForToken };
