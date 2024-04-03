@@ -10,9 +10,7 @@ const Catalog = () => {
   const dispatch = useDispatch();
   const { catalog, loading, error } = useSelector(state => state.catalog);
 
-  const Catalog = () => {
-    const dispatch = useDispatch();
-    const { catalog, loading, error } = useSelector(state => state.catalog);
+  
   
     useEffect(() => {
       dispatch(fetchCatalog());
@@ -39,5 +37,5 @@ const Catalog = () => {
   );
 };
 
-}
+
 export default Catalog;
