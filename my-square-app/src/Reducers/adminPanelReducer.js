@@ -17,7 +17,7 @@ import {
     UPDATE_CONTENT_START,
     UPDATE_CONTENT_SUCCESS,
     UPDATE_CONTENT_FAILURE,
-  } from './adminPanelAction';
+  } from '../Actions/actionTypes';
   
   const initialState = {
     users: [],

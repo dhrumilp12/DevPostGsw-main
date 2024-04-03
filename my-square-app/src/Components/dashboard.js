@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchSummary, fetchAnalytics } from './dashboardAction';
+import { fetchSummary, fetchAnalytics } from '../Actions/dashboardAction';
 
 const Dashboard = () => {
   const dispatch = useDispatch();

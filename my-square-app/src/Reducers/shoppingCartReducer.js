@@ -7,7 +7,7 @@ import {
     FETCH_CART_SUMMARY_START,
     FETCH_CART_SUMMARY_SUCCESS,
     FETCH_CART_SUMMARY_FAILURE,
-  } from './shoppingCartAction';
+  } from '../Actions/shoppingCartAction.js';
   
   const initialState = {
     cartItems: [],

@@ -5,7 +5,7 @@ import {
     CONFIRM_ORDER_START,
     CONFIRM_ORDER_SUCCESS,
     CONFIRM_ORDER_FAILURE,
-  } from './orderConfirmationAction';
+  } from '../Actions/orderConfirmationAction';
   
   const initialState = {
     orderDetails: null,

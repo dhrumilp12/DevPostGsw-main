@@ -7,7 +7,7 @@ import {
   deleteUser,
   fetchContent,
   updateContent,
-} from './adminPanelAction';
+} from '../Actions/adminPanelAction';
 
 const AdminPanel = () => {
   const dispatch = useDispatch();
@@ -16,6 +16,7 @@ const AdminPanel = () => {
   // Local state for creating/updating users and content
   const [newUser, setNewUser] = useState({ name: '', email: '' });
   const [newContent, setNewContent] = useState({ title: '', body: '' });
+  const [selectedContentId, setSelectedContentId] = useState(null);
 
   useEffect(() => {
     dispatch(fetchUsers());

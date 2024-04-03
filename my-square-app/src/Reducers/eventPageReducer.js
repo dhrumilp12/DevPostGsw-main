@@ -2,7 +2,7 @@ import {
     FETCH_EVENTS_START,
     FETCH_EVENTS_SUCCESS,
     FETCH_EVENTS_FAILURE,
-  } from './eventPageAction';
+  } from '../Actions/actionTypes';
   
   const initialState = {
     events: [],

@@ -9,7 +9,7 @@ import loyaltyReducer from './loyaltyReducer';
 import oauthReducer from './oauthReducer';
 import adminPanelReducer from './adminPanelReducer';
 import dashboardReducer from './dashboardReducer';
-import eventReducer from './eventReducer';
+import eventReducer from './eventPageReducer';
 import orderConfirmationReducer from './orderConfirmationReducer';
 import shoppingCartReducer from './shoppingCartReducer';
 

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchEvents } from './eventPageAction';
+import { fetchEvents } from '../Actions/eventPageAction';
 
 const EventPage = () => {
   const dispatch = useDispatch();

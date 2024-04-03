@@ -1,60 +1,56 @@
 import axios from 'axios';
+import {
+  FETCH_USERS_START,
+  FETCH_USERS_SUCCESS,
+  FETCH_USERS_FAILURE,
+  CREATE_USER_START,
+  CREATE_USER_SUCCESS,
+  CREATE_USER_FAILURE,
+  UPDATE_USER_START,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_FAILURE,
+  DELETE_USER_START,
+  DELETE_USER_SUCCESS,
+  DELETE_USER_FAILURE,
+  FETCH_CONTENT_START,
+  FETCH_CONTENT_SUCCESS,
+  FETCH_CONTENT_FAILURE,
+  UPDATE_CONTENT_START,
+  UPDATE_CONTENT_SUCCESS,
+  UPDATE_CONTENT_FAILURE,
+} from './actionTypes';
 
-// User management action types
-export const FETCH_USERS_START = 'FETCH_USERS_START';
-export const FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS';
-export const FETCH_USERS_FAILURE = 'FETCH_USERS_FAILURE';
-export const CREATE_USER_START = 'CREATE_USER_START';
-export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
-export const CREATE_USER_FAILURE = 'CREATE_USER_FAILURE';
-export const UPDATE_USER_START = 'UPDATE_USER_START';
-export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
-export const UPDATE_USER_FAILURE = 'UPDATE_USER_FAILURE';
-export const DELETE_USER_START = 'DELETE_USER_START';
-export const DELETE_USER_SUCCESS = 'DELETE_USER_SUCCESS';
-export const DELETE_USER_FAILURE = 'DELETE_USER_FAILURE';
+// Fetch users action creators
+export const fetchUsersStart = () => ({ type: FETCH_USERS_START });
+export const fetchUsersSuccess = (users) => ({ type: FETCH_USERS_SUCCESS, payload: users });
+export const fetchUsersFailure = (error) => ({ type: FETCH_USERS_FAILURE, payload: error });
 
-// Content management action types
-export const FETCH_CONTENT_START = 'FETCH_CONTENT_START';
-export const FETCH_CONTENT_SUCCESS = 'FETCH_CONTENT_SUCCESS';
-export const FETCH_CONTENT_FAILURE = 'FETCH_CONTENT_FAILURE';
-export const UPDATE_CONTENT_START = 'UPDATE_CONTENT_START';
-export const UPDATE_CONTENT_SUCCESS = 'UPDATE_CONTENT_SUCCESS';
-export const UPDATE_CONTENT_FAILURE = 'UPDATE_CONTENT_FAILURE';
+// Create user action creators
+export const createUserStart = () => ({ type: CREATE_USER_START });
+export const createUserSuccess = (user) => ({ type: CREATE_USER_SUCCESS, payload: user });
+export const createUserFailure = (error) => ({ type: CREATE_USER_FAILURE, payload: error });
 
+// Update user action creators
+export const updateUserStart = () => ({ type: UPDATE_USER_START });
+export const updateUserSuccess = (user) => ({ type: UPDATE_USER_SUCCESS, payload: user });
+export const updateUserFailure = (error) => ({ type: UPDATE_USER_FAILURE, payload: error });
 
-// Define action creators for user management
-const fetchUsersStart = () => ({
-  type: FETCH_USERS_START,
-});
+// Delete user action creators
+export const deleteUserStart = () => ({ type: DELETE_USER_START });
+export const deleteUserSuccess = (userId) => ({ type: DELETE_USER_SUCCESS, payload: userId });
+export const deleteUserFailure = (error) => ({ type: DELETE_USER_FAILURE, payload: error });
 
-const fetchUsersSuccess = (users) => ({
-  type: FETCH_USERS_SUCCESS,
-  payload: users,
-});
+// Fetch content action creators
+export const fetchContentStart = () => ({ type: FETCH_CONTENT_START });
+export const fetchContentSuccess = (content) => ({ type: FETCH_CONTENT_SUCCESS, payload: content });
+export const fetchContentFailure = (error) => ({ type: FETCH_CONTENT_FAILURE, payload: error });
 
-const fetchUsersFailure = (error) => ({
-  type: FETCH_USERS_FAILURE,
-  payload: error,
-});
+// Update content action creators
+export const updateContentStart = () => ({ type: UPDATE_CONTENT_START });
+export const updateContentSuccess = (content) => ({ type: UPDATE_CONTENT_SUCCESS, payload: content });
+export const updateContentFailure = (error) => ({ type: UPDATE_CONTENT_FAILURE, payload: error });
 
-const createUserStart = () => ({
-  type: CREATE_USER_START,
-});
-
-const createUserSuccess = (user) => ({
-  type: CREATE_USER_SUCCESS,
-  payload: user,
-});
-
-const createUserFailure = (error) => ({
-  type: CREATE_USER_FAILURE,
-  payload: error,
-});
-
-// ... (similarly define start/success/failure action creators for update and delete)
-
-// Async action creators for user management
+// Async action creators
 export const fetchUsers = () => async (dispatch) => {
   dispatch(fetchUsersStart());
   try {
@@ -75,24 +71,26 @@ export const createUser = (userData) => async (dispatch) => {
   }
 };
 
-// ... (implement update and delete action creators using PUT and DELETE HTTP methods)
+export const updateUser = (userId, userData) => async (dispatch) => {
+  dispatch(updateUserStart());
+  try {
+    const response = await axios.put(`/api/admin/users/${userId}`, userData);
+    dispatch(updateUserSuccess(response.data));
+  } catch (error) {
+    dispatch(updateUserFailure(error.toString()));
+  }
+};
 
-// Async action creators for content management
-const fetchContentStart = () => ({
-  type: FETCH_CONTENT_START,
-});
+export const deleteUser = (userId) => async (dispatch) => {
+  dispatch(deleteUserStart());
+  try {
+    await axios.delete(`/api/admin/users/${userId}`);
+    dispatch(deleteUserSuccess(userId));
+  } catch (error) {
+    dispatch(deleteUserFailure(error.toString()));
+  }
+};
 
-const fetchContentSuccess = (content) => ({
-  type: FETCH_CONTENT_SUCCESS,
-  payload: content,
-});
-
-const fetchContentFailure = (error) => ({
-  type: FETCH_CONTENT_FAILURE,
-  payload: error,
-});
-
-// Define action creators for fetching and updating content
 export const fetchContent = () => async (dispatch) => {
   dispatch(fetchContentStart());
   try {
@@ -103,28 +101,12 @@ export const fetchContent = () => async (dispatch) => {
   }
 };
 
-const updateContentStart = () => ({
-  type: UPDATE_CONTENT_START,
-});
-
-const updateContentSuccess = (content) => ({
-  type: UPDATE_CONTENT_SUCCESS,
-  payload: content,
-});
-
-const updateContentFailure = (error) => ({
-  type: UPDATE_CONTENT_FAILURE,
-  payload: error,
-});
-
-export const updateContent = (contentData) => async (dispatch) => {
+export const updateContent = (contentId, contentData) => async (dispatch) => {
   dispatch(updateContentStart());
   try {
-    const response = await axios.put(`/api/admin/content/${contentData.id}`, contentData);
+    const response = await axios.put(`/api/admin/content/${contentId}`, contentData);
     dispatch(updateContentSuccess(response.data));
   } catch (error) {
     dispatch(updateContentFailure(error.toString()));
   }
 };
-
-// Add any additional action creators needed for your admin panel functionality

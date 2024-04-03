@@ -5,7 +5,7 @@ import {
     FETCH_ANALYTICS_START,
     FETCH_ANALYTICS_SUCCESS,
     FETCH_ANALYTICS_FAILURE,
-  } from './dashboardAction';
+  } from '../Actions/dashboardAction';
   
   const initialState = {
     summary: null,

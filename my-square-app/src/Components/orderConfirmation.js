@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchOrderDetails, confirmOrder } from './orderConfirmationAction';
+import { fetchOrderDetails, confirmOrder } from '../Actions/orderConfirmationAction';
 
 const OrderConfirmation = ({ orderId }) => {
   const dispatch = useDispatch();
