@@ -1,44 +1,75 @@
 // src/components/PaymentForm.js
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { processPayment } from '../Actions/paymentAction';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { ThreeDots } from 'react-loader-spinner';
+
 
 const PaymentForm = () => {
-  const [amount, setAmount] = useState('');
+  const [paymentData, setPaymentData] = useState({
+    sourceId: '',
+    amountMoney: { amount: 0, currency: 'USD' },
+    idempotencyKey: ''
+  });
   const dispatch = useDispatch();
-  const { loading, error } = useSelector(state => state.payment);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setPaymentData({ ...paymentData, [name]: value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const paymentData = { amount };
     dispatch(processPayment(paymentData));
   };
-  if (error) toast.error(`Error: ${error}`);
 
   return (
-    <div>
-      <ToastContainer />
+    <form onSubmit={handleSubmit}>
       <h2>Process Payment</h2>
-      <form onSubmit={handleSubmit}>
+      <label>
+        Source ID:
+        <input
+          type="text"
+          name="sourceId"
+          value={paymentData.sourceId}
+          onChange={handleChange}
+          required
+        />
+      </label>
+      <label>
+        Amount (in cents):
         <input
           type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          placeholder="Amount"
-          disabled={loading}
+          name="amountMoney"
+          value={paymentData.amountMoney.amount}
+          onChange={(e) => setPaymentData({ ...paymentData, amountMoney: { ...paymentData.amountMoney, amount: e.target.value } })}
+          required
         />
-        <button type="submit" disabled={loading}>Pay</button>
-      </form>
-      {loading && (
-        <div>
-          <ThreeDots color="#00BFFF" height={20} width={20} />
-        </div>
-      )}
-      {error && <div>Error: {error}</div>}
-    </div>
+      </label>
+      <label>
+        Currency:
+        <select
+          name="currency"
+          value={paymentData.amountMoney.currency}
+          onChange={(e) => setPaymentData({ ...paymentData, amountMoney: { ...paymentData.amountMoney, currency: e.target.value } })}
+          required
+        >
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+        </select>
+      </label>
+      <label>
+        Idempotency Key:
+        <input
+          type="text"
+          name="idempotencyKey"
+          value={paymentData.idempotencyKey}
+          onChange={handleChange}
+          required
+        />
+      </label>
+      <button type="submit">Submit Payment</button>
+    </form>
   );
 };
 

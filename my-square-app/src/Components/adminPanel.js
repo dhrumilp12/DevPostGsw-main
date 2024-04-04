@@ -64,9 +64,11 @@ const AdminPanel = () => {
         {content.map(item => (
           <div key={item.id}>
             {item.title} - {item.body}
+            <button onClick={() => setSelectedContentId(item.id)}>Edit</button>
             <button onClick={() => handleUpdateContent(item.id, newContent)}>Update</button>
           </div>
         ))}
+
         <form>
           <input type="text" placeholder="Title" onChange={(e) => setNewContent({ ...newContent, title: e.target.value })} />
           <textarea placeholder="Body" onChange={(e) => setNewContent({ ...newContent, body: e.target.value })}></textarea>
