@@ -86,6 +86,27 @@ async function listCustomers(cursor) {
       throw error;
     }
   }
+
+  async function authenticateCustomer(email, password) {
+    try {
+      const customer = await customersApi.authenticateCustomer(email, password);
+      if (!customer) {
+        throw new Error('Customer not found.');
+      }
+      
+      const match = await bcrypt.compare(password, customer.hashedPassword);
+      if (!match) {
+        throw new Error('Invalid password.');
+      }
+
+      const { hashedPassword, ...customerWithoutPassword } = customer;
+      return customerWithoutPassword;
+    } catch (error) {
+        console.error("Failed to authenticate customer:", error);
+        throw error;
+      }
+    }
+  
   
   
   module.exports = {
@@ -93,4 +114,5 @@ async function listCustomers(cursor) {
     getCustomerDetails,
     createCustomer,
     updateCustomer,
+    authenticateCustomer
   };

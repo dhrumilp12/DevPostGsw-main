@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const customerService= require('../../src/services/customerService')
+const customerService= require('../../src/services/customerService');
+const bcrypt = require('bcrypt');
 
 
 // Route to list all customers
@@ -80,6 +81,21 @@ router.put('/update-customer/:customerId', async (req, res) => {
     res.json(updatedCustomer);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const customer = await customerService.authenticateCustomer(email, password);
+    if (customer) {
+      res.json({ message: "Login successful", customer });
+    } else {
+      res.status(401).json({ error: "Login failed" });
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
