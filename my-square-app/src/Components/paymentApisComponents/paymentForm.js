@@ -1,7 +1,7 @@
 // src/components/PaymentForm.js
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { processPayment } from '../Actions/paymentAction';
+import { processPayment } from '../../Actions/paymentApisAction/paymentAction';
 
 
 const PaymentForm = () => {

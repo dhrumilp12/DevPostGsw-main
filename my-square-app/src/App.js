@@ -2,17 +2,19 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import store from './Store/store';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import RegisterLogin from './Components/registerLogin.js';
+import RegisterLogin from './Components/customerApisComponents/registerLogin.js';
 import ProtectedRoute from './Components/protectedRoute';
 import BookingForm from './Components/bookingForm';
 import Catalog from './Components/catalog';
-import CustomerDetail from './Components/customerDetails';
+import CustomerDetail from './Components/customerApisComponents/customerDetails.js';
+import CustomerList from './Components/customerApisComponents/customerList';
+import customerUpdate from './Components/customerApisComponents/customerUpdate.js';
 import Inventory from './Components/inventory';
 import Loyalty from './Components/loyalty';
-import PaymentForm from './Components/paymentForm';
-import PaymentStatus from './Components/paymentStatus';
-import PaymentHistory from './Components/paymentHistory';
-import PaymentDetail from './Components/paymentDetails';
+import PaymentForm from './Components/paymentApisComponents/paymentForm.js';
+import PaymentStatus from './Components/paymentApisComponents/paymentStatus.js';
+import PaymentHistory from './Components/paymentApisComponents/paymentHistory.js';
+import PaymentDetail from './Components/paymentApisComponents/paymentDetails.js';
 import Navbar from './Components/navbar';
 import AdminPanel from './Components/adminPanel';
 import Dashboard from './Components/dashboard';
@@ -32,6 +34,8 @@ function App() {
         <Route path="/registerLogin" element={<RegisterLogin />} />
         <Route path="/booking" element={<BookingForm />} />
         <Route path="/customerDetail/:customerId" element={<CustomerDetail  />} />
+        <Route path="/customerList" element={<CustomerList />} />
+        <Route path="/update-customer/:customerId" element={<customerUpdate />} />
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/loyalty" element={<Loyalty />} />
         <Route path="/payment" element={<><PaymentForm /><PaymentStatus /></>} />

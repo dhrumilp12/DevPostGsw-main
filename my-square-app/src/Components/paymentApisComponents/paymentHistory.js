@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPaymentsHistory } from '../Actions/paymentAction';
+import { fetchPaymentsHistory } from '../../Actions/paymentApisAction/paymentAction';
 
 const PaymentHistory = () => {
     const dispatch = useDispatch();

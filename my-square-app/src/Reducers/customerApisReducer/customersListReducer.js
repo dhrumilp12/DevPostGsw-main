@@ -1,5 +1,4 @@
-// src/reducers/customerReducer.js
-import { FETCH_CUSTOMERS_START, FETCH_CUSTOMERS_SUCCESS, FETCH_CUSTOMERS_FAILURE } from '../Actions/actionTypes.js';
+import { FETCH_CUSTOMERS_START, FETCH_CUSTOMERS_SUCCESS, FETCH_CUSTOMERS_FAILURE } from '../../Actions/actionTypes';
 
 const initialState = {
   customers: [],
@@ -7,12 +6,13 @@ const initialState = {
   error: null,
 };
 
-const customerReducer = (state = initialState, action) => {
+const customerListReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_CUSTOMERS_START:
       return {
         ...state,
         loading: true,
+        error: null,
       };
     case FETCH_CUSTOMERS_SUCCESS:
       return {
@@ -31,4 +31,4 @@ const customerReducer = (state = initialState, action) => {
   }
 };
 
-export default customerReducer;
+export default customerListReducer;

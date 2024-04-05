@@ -3,7 +3,7 @@ import {
     PROCESS_PAYMENT_START,
     PROCESS_PAYMENT_SUCCESS,
     PROCESS_PAYMENT_FAILURE,
-  } from '../Actions/actionTypes';
+  } from '../../Actions/actionTypes';
   
   const initialState = {
     loading: false,

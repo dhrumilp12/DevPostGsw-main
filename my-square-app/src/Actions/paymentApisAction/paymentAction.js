@@ -12,7 +12,7 @@ import {
   FETCH_PAYMENT_DETAILS_START,
   FETCH_PAYMENT_DETAILS_SUCCESS,
   FETCH_PAYMENT_DETAILS_FAILURE
-} from './actionTypes.js';
+} from '../actionTypes.js';
 
 export const processPaymentStart = () => ({
   type: PROCESS_PAYMENT_START,

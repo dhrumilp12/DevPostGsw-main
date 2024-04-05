@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const NavigationBar = () => {
   return (
-    <Navbar bg="light" expand="lg" className="shadow-sm navbar-modern">
+    <Navbar bg="dark" expand="lg" className="shadow-sm navbar-modern" variant="dark">
       <Container fluid>
         <Link to="/" className="navbar-brand">
           <strong>Your Brand</strong>
@@ -20,7 +20,7 @@ const NavigationBar = () => {
             <Link to="/loyalty" className="nav-link">Loyalty</Link>
             <Link to="/auth" className="nav-link">Auth</Link>
             <Link to="/payment" className="nav-link">Payment</Link>
-            </Nav>
+          </Nav>
           <Form className="d-flex my-2 my-lg-0">
             <FormControl
               type="search"
@@ -45,15 +45,29 @@ const NavigationBar = () => {
         {`
           .navbar-modern .navbar-brand {
             font-size: 1.5em;
-            color: #0d6efd; // Bootstrap primary color
+            color: #ffffff; // Change to white for better contrast
           }
 
           .navbar-modern .nav-link {
             margin-right: 1rem; // Add spacing between links
+            color: #ffffff; // Change to white for better contrast
+          }
+
+          .navbar-modern .nav-link:hover {
+            color: #ffc107; // Bootstrap warning color for hover effect
           }
 
           .navbar-modern .form-control {
-            max-width: 250px; // Set a max-width for the search input
+            max-width: 300px; // Increase width of the search input
+          }
+
+          .navbar-modern .btn-outline-primary {
+            color: #ffffff; // Change to white for better contrast
+          }
+
+          .navbar-modern .btn-outline-primary:hover {
+            color: #000000; // Change to black on hover for better visibility
+            background-color: #ffc107; // Bootstrap warning color for hover effect
           }
 
           .navbar-modern .user-dropdown {
@@ -62,7 +76,7 @@ const NavigationBar = () => {
 
           @media (max-width: 992px) {
             .navbar-modern .navbar-collapse {
-              background-color: #f8f9fa; // Light background for the collapsed navbar
+              background-color: #343a40; // Dark background for the collapsed navbar
             }
           }
         `}

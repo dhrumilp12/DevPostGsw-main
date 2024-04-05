@@ -2,7 +2,7 @@ import {
     FETCH_PAYMENT_DETAILS_START,
     FETCH_PAYMENT_DETAILS_SUCCESS,
     FETCH_PAYMENT_DETAILS_FAILURE,
-} from '../Actions/actionTypes';
+} from '../../Actions/actionTypes';
 
 const initialState = {
     paymentDetails: {},

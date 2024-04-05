@@ -3,7 +3,7 @@ import {
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAILURE,
   LOGIN_USER
-} from '../Actions/actionTypes';
+} from '../../Actions/actionTypes';
 
 const initialState = {
   user: null,

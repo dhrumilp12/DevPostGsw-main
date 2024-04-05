@@ -1,5 +1,5 @@
 // src/reducers/paymentReducer.js
-import { PROCESS_PAYMENT_START, PROCESS_PAYMENT_SUCCESS, PROCESS_PAYMENT_FAILURE } from '../Actions/actionTypes.js';
+import { PROCESS_PAYMENT_START, PROCESS_PAYMENT_SUCCESS, PROCESS_PAYMENT_FAILURE } from '../../Actions/actionTypes.js';
 
 const initialState = {
   payment: null,

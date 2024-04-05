@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
-import { registerUser, loginUser } from '../Actions/registerLoginAction';
+import { registerUser, loginUser } from '../../Actions/customerApisAction/registerLoginAction';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure this import is at the top level of your app, ideally in index.js
 
 const RegisterLogin = () => {

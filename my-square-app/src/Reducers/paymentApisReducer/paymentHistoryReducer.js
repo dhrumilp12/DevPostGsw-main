@@ -3,7 +3,7 @@ import {
     FETCH_PAYMENTS_HISTORY_START,
     FETCH_PAYMENTS_HISTORY_SUCCESS,
     FETCH_PAYMENTS_HISTORY_FAILURE,
-  } from '../Actions/actionTypes';
+  } from '../../Actions/actionTypes';
   
   const initialState = {
     payments: [],

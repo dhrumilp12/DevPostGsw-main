@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const customerService= require('../../src/services/customerService')
+const customerService= require('../services/customerService')
 
 
 // Route to list all customers
