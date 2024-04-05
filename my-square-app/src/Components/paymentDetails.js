@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPaymentDetails } from '../Actions/paymentActions'; // Adjust the path as necessary
+import { fetchPaymentDetails } from '../Actions/paymentAction'; // Adjust the path as necessary
 
 const PaymentDetails = ({ paymentId }) => {
     const dispatch = useDispatch();

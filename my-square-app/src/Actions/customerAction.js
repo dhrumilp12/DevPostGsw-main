@@ -16,10 +16,10 @@ export const fetchCustomersFailure = error => ({
   payload: error,
 });
 
-export const fetchCustomers = () => async dispatch => {
+export const fetchCustomers = (cursor = null) => async dispatch => {
   dispatch(fetchCustomersStart());
   try {
-    const response = await axios.get('/api/customers/list-customers');
+    const response = await axios.get(`/api/customers/list-customers?cursor=${cursor}`);
     dispatch(fetchCustomersSuccess(response.data));
   } catch (error) {
     dispatch(fetchCustomersFailure(error.message));

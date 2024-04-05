@@ -8,13 +8,13 @@ import paymentHistoryReducer from './paymentHistoryReducer';
 import customerReducer from './customersReducer';
 import bookingReducer from './bookingReducer';
 import loyaltyReducer from './loyaltyReducer';
-import oauthReducer from './oauthReducer';
 import adminPanelReducer from './adminPanelReducer';
 import dashboardReducer from './dashboardReducer';
 import eventReducer from './eventPageReducer';
 import orderConfirmationReducer from './orderConfirmationReducer';
 import shoppingCartReducer from './shoppingCartReducer';
 import paymentDetailsReducer from './paymentDetailsReducer';
+import registerLogicReducer from './registerLogicReducer';
 
 const rootReducer = combineReducers({
   catalog: catalogReducer,
@@ -25,13 +25,13 @@ const rootReducer = combineReducers({
   customers: customerReducer,
   booking: bookingReducer,
   loyalty: loyaltyReducer,
-  auth: oauthReducer,
   adminPanel: adminPanelReducer,
   dashboard: dashboardReducer,
   events: eventReducer,
   orderConfirmation: orderConfirmationReducer,
   shoppingCart: shoppingCartReducer,
   paymentDetails: paymentDetailsReducer,
+  registerLogic: registerLogicReducer,
 });
 
 export default rootReducer;

@@ -47,7 +47,7 @@ async function listCustomers(cursor) {
       const response = await customersApi.createCustomer(customerData);
       if (response.errors) {
         // Throw the error with Square API's error detail for better debugging 
-        throw new Error(response.errors[0].detail); 
+        throw new Error(`Failed to create customer: ${response.errors[0].detail}`);
       }
   
       return response.result.customer;
@@ -67,7 +67,7 @@ async function listCustomers(cursor) {
       
   
       if (response.errors) {
-        throw new Error(response.errors[0].detail);
+        throw new Error(`Failed to update customer: ${response.errors[0].detail}`);
       }
   
       if (!response.result.customer) {
