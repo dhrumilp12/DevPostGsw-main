@@ -1,6 +1,10 @@
 // src/reducers/rootReducer.js
 import { combineReducers } from 'redux';
-import catalogReducer from './catalogReducer';
+import catalogListReducer from './catalogApisReducer/catalogListReducer';
+import catalogCreateReducer from './catalogApisReducer/catalogCreateReducer';
+import catalogDeleteItemReducer from './catalogApisReducer/catalogDeleteItem';
+import catalogSearchReducer from './catalogApisReducer/catalogSearchReducer';
+import catalogsearchItemReducer from './catalogApisReducer/catalogSearchItemReducer'
 import inventoryReducer from './inventoryReducer';
 import paymentReducer from './paymentApisReducer/paymentFormReducer';
 import paymentStatusReducer from './paymentApisReducer/paymentStatusReducer';
@@ -17,10 +21,15 @@ import orderConfirmationReducer from './orderConfirmationReducer';
 import shoppingCartReducer from './shoppingCartReducer';
 import paymentDetailsReducer from './paymentApisReducer/paymentDetailsReducer';
 import registerLogicReducer from './customerApisReducer/registerLogicReducer';
-
+import { catalogUpdateItemReducer } from './catalogApisReducer/catalogUpdateItemReducer';
 
 const rootReducer = combineReducers({
-  catalog: catalogReducer,
+  catalogList: catalogListReducer,
+  catalogCreate: catalogCreateReducer,
+  catalogItemUpdate: catalogUpdateItemReducer,
+  catalogDeleteItem: catalogDeleteItemReducer,
+  catalogSearch: catalogSearchReducer,
+  catalogSearchItem: catalogsearchItemReducer,
   inventory: inventoryReducer,
   payment: paymentReducer,
   paymentStatus: paymentStatusReducer,

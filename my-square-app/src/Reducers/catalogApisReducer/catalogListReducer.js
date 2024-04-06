@@ -1,5 +1,5 @@
 // src/reducers/catalogReducer.js
-import { FETCH_CATALOG_START, FETCH_CATALOG_SUCCESS, FETCH_CATALOG_FAILURE } from '../Actions/actionTypes.js';
+import { FETCH_CATALOG_START, FETCH_CATALOG_SUCCESS, FETCH_CATALOG_FAILURE } from '../../Actions/actionTypes';
 
 const initialState = {
   catalog: [],

@@ -5,10 +5,15 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RegisterLogin from './Components/customerApisComponents/registerLogin.js';
 import ProtectedRoute from './Components/protectedRoute';
 import BookingForm from './Components/bookingForm';
-import Catalog from './Components/catalog';
+import CatalogUpdateItem from './Components/catalogApisComponent/catalogUpdateItem';
+import CatalogDeleteItem from './Components/catalogApisComponent/catalogDeleteItem';
+import CatalogList from './Components/catalogApisComponent/catalogList.js';
+import CatalogCreate from './Components/catalogApisComponent/catalogCreate.js';
+import CatalogSearch from './Components/catalogApisComponent/catalogSearch';
+import CatalogSearchItem from './Components/catalogApisComponent/catalogSearchItem.js';
 import CustomerDetail from './Components/customerApisComponents/customerDetails.js';
 import CustomerList from './Components/customerApisComponents/customerList';
-import customerUpdate from './Components/customerApisComponents/customerUpdate.js';
+import CustomerUpdate from './Components/customerApisComponents/customerUpdate.js';
 import Inventory from './Components/inventory';
 import Loyalty from './Components/loyalty';
 import PaymentForm from './Components/paymentApisComponents/paymentForm.js';
@@ -30,12 +35,17 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Catalog />} />
+        <Route path="/" element={<CatalogList />} />
+        <Route path="/catalog-search" element={<CatalogSearch />} />
+        <Route path="/catalogSearchItem/:itemId" element={<CatalogSearchItem />} />
+        <Route path="/catalogCreate" element={<CatalogCreate />} />
+        <Route path="/catalogUpdateItem/:itemId" element={<CatalogUpdateItem />} />
+        <Route path="/catalogDeleteItem/:itemId" element={<CatalogDeleteItem />} />
         <Route path="/registerLogin" element={<RegisterLogin />} />
         <Route path="/booking" element={<BookingForm />} />
         <Route path="/customerDetail/:customerId" element={<CustomerDetail  />} />
         <Route path="/customerList" element={<CustomerList />} />
-        <Route path="/update-customer/:customerId" element={<customerUpdate />} />
+        <Route path="/update-customer/:customerId" element={<CustomerUpdate/>} />
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/loyalty" element={<Loyalty />} />
         <Route path="/payment" element={<><PaymentForm /><PaymentStatus /></>} />
