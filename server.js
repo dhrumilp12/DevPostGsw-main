@@ -11,13 +11,12 @@ const bookingRoutes = require('./src/api/bookingRoutes');
 const inventoryRoutes = require('./src/api/inventoryRoutes'); 
 const catalogRoutes= require('./src/api/catalogRoutes'); 
 const loyaltyRoutes = require('./src/api/loyaltyRoutes'); 
-const { setupOAuth } = require('./src/services/oauthService');
+
 const cors = require('cors');
 const app = express();
 const morgan = require('morgan');
 
-// Set up OAuth
-setupOAuth();
+
 
 // Set up session handling
 app.use(session({
@@ -42,7 +41,7 @@ app.use(express.json());
 app.use('/api/catalogs', catalogRoutes);
 app.use('/api/payments', authMiddleware,paymentRoutes);
 app.use('/api/bookings',  bookingRoutes);
-app.use('/api/customers', authMiddleware,customerRoutes);
+app.use('/api/customers', customerRoutes);
 app.use('/api/inventory',  inventoryRoutes);
 app.use('/api/loyalty', loyaltyRoutes); 
 

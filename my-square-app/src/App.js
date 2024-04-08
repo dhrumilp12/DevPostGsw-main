@@ -26,6 +26,7 @@ import LoyaltyAccountForm from './Components/loyaltyApiComponent/createLoyaltyAc
 import SearchLoyaltyAccountsForm from './Components/loyaltyApiComponent/searchLoyaltyAccount';
 import RetrieveLoyaltyAccountForm from './Components/loyaltyApiComponent/retrieveLoyaltyAccountAction';
 import AccumulateLoyaltyPointsForm from './Components/loyaltyApiComponent/accumulateLoyaltyPointsForm';
+import AdjustLoyaltyPointsForm from './Components/loyaltyApiComponent/adjustLoyaltyPointsForm';
 import Inventory from './Components/inventory';
 import Loyalty from './Components/loyalty';
 import PaymentForm from './Components/paymentApisComponents/paymentForm.js';
@@ -68,8 +69,9 @@ function App() {
         <Route path="/update-customer/:customerId" element={<CustomerUpdate/>} />
         <Route path="/loyalty-Account" element={<LoyaltyAccountForm/>} />
         <Route path="/search-loyalty-accounts" element={<SearchLoyaltyAccountsForm />} />
-        <Route path="/retrieveLoyaltyAccountForm/:accountId" element={<RetrieveLoyaltyAccountForm/>} />
-        <Route path="/accumulate-loyalty-points/:accountId" element={<AccumulateLoyaltyPointsForm/>} />
+        <Route path="/retrieveLoyaltyAccountForm" element={<RetrieveLoyaltyAccountForm/>} />
+        <Route path="/accumulate-loyalty-points" element={<AccumulateLoyaltyPointsForm/>} />
+        <Route path="/adjust-loyalty-points" element={<AdjustLoyaltyPointsForm />} />
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/loyalty" element={<Loyalty />} />
         <Route path="/payment" element={<><PaymentForm /><PaymentStatus /></>} />

@@ -25,6 +25,7 @@ import loyaltyAccountReducer from './loyaltyApiReducer/loyaltyAccountReducer';
 import searchLoyaltyAccountsReducer from './loyaltyApiReducer/searchLoyaltyAccountReducer';
 import retrieveLoyaltyAccountReducer from './loyaltyApiReducer/retrieveLoyaltyAccountReducer';
 import accumulateLoyaltyPointsReducer from './loyaltyApiReducer/accumulateLoyaltyPointsReducer';
+import adjustLoyaltyPointsReducer from './loyaltyApiReducer/adjustLoyaltyPointsReducer';
 import loyaltyReducer from './loyaltyReducer';
 import adminPanelReducer from './adminPanelReducer';
 import dashboardReducer from './dashboardReducer';
@@ -62,6 +63,7 @@ const rootReducer = combineReducers({
   searchLoyaltyAccounts: searchLoyaltyAccountsReducer,
   retrieveLoyaltyAccount: retrieveLoyaltyAccountReducer,
   loyaltyPointsAccumulation: accumulateLoyaltyPointsReducer,
+  adjustLoyaltyPoints: adjustLoyaltyPointsReducer,
   loyalty: loyaltyReducer,
   adminPanel: adminPanelReducer,
   dashboard: dashboardReducer,
