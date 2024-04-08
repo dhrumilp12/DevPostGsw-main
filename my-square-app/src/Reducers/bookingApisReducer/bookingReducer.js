@@ -1,5 +1,5 @@
 // src/reducers/bookingReducer.js
-import { CREATE_BOOKING_START, CREATE_BOOKING_SUCCESS, CREATE_BOOKING_FAILURE } from '../Actions/actionTypes.js';
+import { CREATE_BOOKING_START, CREATE_BOOKING_SUCCESS, CREATE_BOOKING_FAILURE } from '../../Actions/actionTypes.js';
 
 const initialState = {
   booking: null,
@@ -13,6 +13,7 @@ const bookingReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: true,
+        error: null,
       };
     case CREATE_BOOKING_SUCCESS:
       return {

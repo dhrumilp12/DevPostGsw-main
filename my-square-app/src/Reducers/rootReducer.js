@@ -12,7 +12,19 @@ import paymentHistoryReducer from './paymentApisReducer/paymentHistoryReducer';
 import customerListReducer from './customerApisReducer/customersListReducer';
 import CustomerDetailsReducer from './customerApisReducer/customerDetailsReducer';
 import customerUpdateReducer from './customerApisReducer/customerUpdateReducer';
-import bookingReducer from './bookingReducer';
+import bookingReducer from './bookingApisReducer/bookingReducer';
+import bookingUpdateReducer from './bookingApisReducer/bookingUpdateReducer';
+import bookingCancelReducer from './bookingApisReducer/bookingCancelReducer';
+import bookingRetriveReducer from './bookingApisReducer/bookingRetriveReducer';
+import bookingsListReducer from './bookingApisReducer/bookingListReducer';
+import bookingSearchAvailabilityReducer from './bookingApisReducer/bookingSearchAvailabilityReducer';
+import bookingBulkRetrieveReducer from './bookingApisReducer/bookingBulkRetriveReducer';
+import inventoryCountsReducer from './inventoryApiReducer/inventoryBatchRetrieveReducer';
+import inventoryAdjustmentReducer from './inventoryApiReducer/inventoryAdjustmentReducer';
+import loyaltyAccountReducer from './loyaltyApiReducer/loyaltyAccountReducer';
+import searchLoyaltyAccountsReducer from './loyaltyApiReducer/searchLoyaltyAccountReducer';
+import retrieveLoyaltyAccountReducer from './loyaltyApiReducer/retrieveLoyaltyAccountReducer';
+import accumulateLoyaltyPointsReducer from './loyaltyApiReducer/accumulateLoyaltyPointsReducer';
 import loyaltyReducer from './loyaltyReducer';
 import adminPanelReducer from './adminPanelReducer';
 import dashboardReducer from './dashboardReducer';
@@ -38,6 +50,18 @@ const rootReducer = combineReducers({
   customer: CustomerDetailsReducer,
   customerUpdate: customerUpdateReducer,
   booking: bookingReducer,
+  bookingUpdate: bookingUpdateReducer,
+  bookingCancel: bookingCancelReducer,
+  bookingRetrive: bookingRetriveReducer,
+  bookingsList: bookingsListReducer,
+  bookingAvailabilitySearch: bookingSearchAvailabilityReducer,
+  bookingBulkRetrieve: bookingBulkRetrieveReducer,
+  inventoryCounts: inventoryCountsReducer,
+  inventoryAdjustment: inventoryAdjustmentReducer,
+  loyaltyAccount: loyaltyAccountReducer,
+  searchLoyaltyAccounts: searchLoyaltyAccountsReducer,
+  retrieveLoyaltyAccount: retrieveLoyaltyAccountReducer,
+  loyaltyPointsAccumulation: accumulateLoyaltyPointsReducer,
   loyalty: loyaltyReducer,
   adminPanel: adminPanelReducer,
   dashboard: dashboardReducer,

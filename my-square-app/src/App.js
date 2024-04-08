@@ -4,7 +4,15 @@ import store from './Store/store';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RegisterLogin from './Components/customerApisComponents/registerLogin.js';
 import ProtectedRoute from './Components/protectedRoute';
-import BookingForm from './Components/bookingForm';
+import BookingForm from './Components/bookingApisComponent/bookingForm.js';
+import UpdateBookingForm from './Components/bookingApisComponent/bookingUpdateForm';
+import CancelBooking from './Components/bookingApisComponent/bookingCancel';
+import BookingRetrive from './Components/bookingApisComponent/bookingRetrive';
+import BookingsList from './Components/bookingApisComponent/bookingList';
+import BookingSearchAvailabilityForm from './Components/bookingApisComponent/bookingSearchAvailability';
+import BookingBulkRetrieveForm from './Components/bookingApisComponent/bookingBulkRetrive';
+import BatchRetrieveInventoryCountsForm from './Components/inventoryApiComponent/inventoryBatchRetriveCount.js';
+import BatchAdjustInventoryForm from './Components/inventoryApiComponent/inventoryBatchAdjust.js';
 import CatalogUpdateItem from './Components/catalogApisComponent/catalogUpdateItem';
 import CatalogDeleteItem from './Components/catalogApisComponent/catalogDeleteItem';
 import CatalogList from './Components/catalogApisComponent/catalogList.js';
@@ -14,6 +22,10 @@ import CatalogSearchItem from './Components/catalogApisComponent/catalogSearchIt
 import CustomerDetail from './Components/customerApisComponents/customerDetails.js';
 import CustomerList from './Components/customerApisComponents/customerList';
 import CustomerUpdate from './Components/customerApisComponents/customerUpdate.js';
+import LoyaltyAccountForm from './Components/loyaltyApiComponent/createLoyaltyAccountForm.js';
+import SearchLoyaltyAccountsForm from './Components/loyaltyApiComponent/searchLoyaltyAccount';
+import RetrieveLoyaltyAccountForm from './Components/loyaltyApiComponent/retrieveLoyaltyAccountAction';
+import AccumulateLoyaltyPointsForm from './Components/loyaltyApiComponent/accumulateLoyaltyPointsForm';
 import Inventory from './Components/inventory';
 import Loyalty from './Components/loyalty';
 import PaymentForm from './Components/paymentApisComponents/paymentForm.js';
@@ -43,9 +55,21 @@ function App() {
         <Route path="/catalogDeleteItem/:itemId" element={<CatalogDeleteItem />} />
         <Route path="/registerLogin" element={<RegisterLogin />} />
         <Route path="/booking" element={<BookingForm />} />
+        <Route path="/updateBooking/:bookingId" element={<UpdateBookingForm />} />
+        <Route path="/cancelBooking/:bookingId" element={<CancelBooking />} />
+        <Route path="/booking/:bookingId" element={<BookingRetrive />} />
+        <Route path="/bookingList" element={<BookingsList />} />
+        <Route path="/search-availability" element={<BookingSearchAvailabilityForm />} />
+        <Route path="/bulk-retrieve-bookings" element={<BookingBulkRetrieveForm />} />
+        <Route path="/batch-retrieve-inventory-counts" element={<BatchRetrieveInventoryCountsForm />} />
+        <Route path="/batch-adjust-inventory" element={<BatchAdjustInventoryForm />} />
         <Route path="/customerDetail/:customerId" element={<CustomerDetail  />} />
         <Route path="/customerList" element={<CustomerList />} />
         <Route path="/update-customer/:customerId" element={<CustomerUpdate/>} />
+        <Route path="/loyalty-Account" element={<LoyaltyAccountForm/>} />
+        <Route path="/search-loyalty-accounts" element={<SearchLoyaltyAccountsForm />} />
+        <Route path="/retrieveLoyaltyAccountForm/:accountId" element={<RetrieveLoyaltyAccountForm/>} />
+        <Route path="/accumulate-loyalty-points/:accountId" element={<AccumulateLoyaltyPointsForm/>} />
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/loyalty" element={<Loyalty />} />
         <Route path="/payment" element={<><PaymentForm /><PaymentStatus /></>} />

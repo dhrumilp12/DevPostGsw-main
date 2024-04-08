@@ -1,6 +1,6 @@
 // src/actions/bookingActions.js
 import axios from 'axios';
-import { CREATE_BOOKING_START, CREATE_BOOKING_SUCCESS, CREATE_BOOKING_FAILURE } from './actionTypes';
+import { CREATE_BOOKING_START, CREATE_BOOKING_SUCCESS, CREATE_BOOKING_FAILURE } from '../actionTypes';
 
 export const createBookingStart = () => ({
   type: CREATE_BOOKING_START,
