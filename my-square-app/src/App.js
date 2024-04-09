@@ -13,6 +13,7 @@ import Dashboard from './Components/dashboard';
 import EventPage from './Components/eventPage';
 import OrderConfirmation from './Components/orderConfirmation';
 import ShoppingCart from './Components/shoppingCart';
+import LoginPage from './Components/loginPage';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/events" element={<EventPage />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
         <Route path="/shopping-cart" element={<ShoppingCart />} />
+        <Route path="/login" element={<LoginPage />} />
         {/* Add more routes as needed */}
       </Routes>
     </Router>
