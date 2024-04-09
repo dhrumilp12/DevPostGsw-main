@@ -19,11 +19,12 @@ import {
           error: null,
         };
       case CATALOG_SEARCH_SUCCESS:
-        return {
-          ...state,
-          loading: false,
-          catalogItems: action.payload,
-        };
+      return {
+        ...state,
+        loading: false,
+        catalogItems: action.payload,
+      };
+    
       case CATALOG_SEARCH_FAILURE:
         return {
           ...state,
