@@ -13,12 +13,14 @@ import BookingSearchAvailabilityForm from './Components/bookingApisComponent/boo
 import BookingBulkRetrieveForm from './Components/bookingApisComponent/bookingBulkRetrive';
 import BatchRetrieveInventoryCountsForm from './Components/inventoryApiComponent/inventoryBatchRetriveCount.js';
 import BatchAdjustInventoryForm from './Components/inventoryApiComponent/inventoryBatchAdjust.js';
+
 import CatalogUpdateItem from './Components/catalogApisComponent/catalogUpdateItem';
 import CatalogDeleteItem from './Components/catalogApisComponent/catalogDeleteItem';
 import CatalogList from './Components/catalogApisComponent/catalogList.js';
 import CatalogCreate from './Components/catalogApisComponent/catalogCreate.js';
 import CatalogSearch from './Components/catalogApisComponent/catalogSearch';
 import CatalogSearchItem from './Components/catalogApisComponent/catalogSearchItem.js';
+
 import CustomerDetail from './Components/customerApisComponents/customerDetails.js';
 import CustomerList from './Components/customerApisComponents/customerList';
 import CustomerUpdate from './Components/customerApisComponents/customerUpdate.js';

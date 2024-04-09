@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { catalogSearch } from '../../Actions/catalogApisAction/catalogSearch';
-import { Form, Button, ListGroup, Badge, Image, Container, Row, Col, Card } from 'react-bootstrap';
+import { Form, Button, Badge,Container, Row, Col, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Make sure you have this import for Bootstrap styles
 
 const CatalogSearch = () => {

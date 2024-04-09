@@ -68,7 +68,7 @@ router.get('/search', async (req, res) => {
 });
 
 // Route to get a single catalog item
-router.get('/Serach-item/:itemId', async (req, res) => {
+router.get('/search-item/:itemId', async (req, res) => {
   try {
     const itemId = req.params.itemId;
     console.log("Fetching catalog item with ID:", itemId); // Log the item ID being fetched
