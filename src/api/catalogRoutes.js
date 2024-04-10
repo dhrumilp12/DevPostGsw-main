@@ -2,6 +2,34 @@
 const express = require('express');
 const router = express.Router();
 const catalogService = require('../services/catalogService');
+const { put } = require('./catalogRoutes');
+const path = require('path');
+const multer = require('multer');
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, path.join(__dirname, '../uploads'));
+  },
+  filename: function(req, file, cb) {
+      cb(null, Date.now() + path.extname(file.originalname))
+  }
+  });
+
+const upload = multer({ storage: storage });
+
+router.post('/upload', upload.single('image'), async (req, res) => {
+  try {
+      const image = req.file;
+      const itemId = req.query.itemId;
+      const updatedItem = await catalogImageService.updateCatalogImage(itemId, image);
+      res.json(updatedItem);
+  } catch (error) {
+      res.status(500).json({ error: 'Failed to update catalog image' });
+  }
+});
+
+
 
 // Route to create a catalog item
 router.post('/create-catalog', async (req, res) => {
@@ -21,19 +49,6 @@ router.post('/create-catalog', async (req, res) => {
         res.status(500).json({ error: 'Failed to create catalog item' });
     }
 });
-
-// Define the bigIntReplacer function here as well
-function bigIntReplacer(_, value) {
-  if (typeof value === 'bigint') {
-    return value.toString();
-  }
-  return value;
-}
-
-
-
-
-
 
 
 // Route to delete a catalog item
