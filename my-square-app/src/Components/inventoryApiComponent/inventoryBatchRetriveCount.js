@@ -4,19 +4,21 @@ import { batchRetrieveInventoryCounts } from '../../Actions/inventoryApi/invento
 import { Form, Button, Container, Row, Col, Table } from 'react-bootstrap';
 
 const BatchRetrieveInventoryCountsForm = () => {
-  const [itemIds, setItemIds] = useState('');
+  const [itemIds, setItemIds] = useState([]); // Initialize as an empty array
 
   const dispatch = useDispatch();
   const { counts, loading, error } = useSelector((state) => state.inventoryCounts);
 
   const handleChange = (e) => {
-    setItemIds(e.target.value.split(',').map(id => id.trim()));
+    const newItemIds = e.target.value.split(',').map(id => id.trim());
+    setItemIds(newItemIds);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(batchRetrieveInventoryCounts(itemIds));
   };
+
 
   return (
     <Container>
@@ -51,8 +53,8 @@ const BatchRetrieveInventoryCountsForm = () => {
               <tbody>
                 {counts.map((count, index) => (
                   <tr key={index}>
-                    <td>{count.catalog_object_id}</td>
-                    <td>{count.location_id}</td>
+                    <td>{count.catalogObjectId}</td>
+                    <td>{count.locationId}</td>
                     <td>{count.quantity}</td>
                     <td>{count.state}</td>
                   </tr>

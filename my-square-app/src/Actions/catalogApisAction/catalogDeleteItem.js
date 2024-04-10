@@ -15,12 +15,16 @@ export const deleteCatalogItemFailure = (error) => ({
   payload: error,
 });
 
+// Import statements as before...
+
 export const deleteCatalogItem = (itemId) => async (dispatch) => {
   dispatch(deleteCatalogItemStart());
   try {
     const response = await axios.delete(`/api/catalogs/delete/${itemId}`);
-    dispatch(deleteCatalogItemSuccess(response.data.deletedItemId));
+    dispatch(deleteCatalogItemSuccess(response.data.deleted_object_ids)); // We expect an array of deleted IDs
+    alert('Item deleted successfully'); // Alert the user of successful deletion
   } catch (error) {
-    dispatch(deleteCatalogItemFailure(error.message));
+    dispatch(deleteCatalogItemFailure(error.response.data.error));
+    alert('Failed to delete item'); // Alert the user of a failure
   }
 };

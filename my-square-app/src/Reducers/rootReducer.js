@@ -34,12 +34,11 @@ import orderConfirmationReducer from './orderConfirmationReducer';
 import shoppingCartReducer from './shoppingCartReducer';
 import paymentDetailsReducer from './paymentApisReducer/paymentDetailsReducer';
 import registerLogicReducer from './customerApisReducer/registerLogicReducer';
-import { catalogUpdateItemReducer } from './catalogApisReducer/catalogUpdateItemReducer';
+
 
 const rootReducer = combineReducers({
   catalogList: catalogListReducer,
   catalogCreate: catalogCreateReducer,
-  catalogItemUpdate: catalogUpdateItemReducer,
   catalogDeleteItem: catalogDeleteItemReducer,
   catalogSearch: catalogSearchReducer,
   catalogSearchItem: catalogSearchItemReducer,
@@ -48,8 +47,9 @@ const rootReducer = combineReducers({
   payment: paymentReducer,
   paymentStatus: paymentStatusReducer,
   paymentHistory: paymentHistoryReducer,
+
   customers: customerListReducer,
-  customer: CustomerDetailsReducer,
+  customerDetails: CustomerDetailsReducer,
   customerUpdate: customerUpdateReducer,
   booking: bookingReducer,
   bookingUpdate: bookingUpdateReducer,
