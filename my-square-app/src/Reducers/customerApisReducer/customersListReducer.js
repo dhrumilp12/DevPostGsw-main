@@ -9,18 +9,22 @@ const initialState = {
 const customerListReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_CUSTOMERS_START:
+      console.log("State before FETCH_CUSTOMERS_START:", state);
       return {
         ...state,
         loading: true,
         error: null,
       };
-    case FETCH_CUSTOMERS_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        customers: action.payload,
-      };
+      case FETCH_CUSTOMERS_SUCCESS:
+        console.log("State before FETCH_CUSTOMERS_SUCCESS:", state);
+        return {
+          ...state,
+          loading: false,
+          customers: action.payload,
+        };
+      
     case FETCH_CUSTOMERS_FAILURE:
+      console.log("State before FETCH_CUSTOMERS_FAILURE:", state);
       return {
         ...state,
         loading: false,

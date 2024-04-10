@@ -22,9 +22,12 @@ export const catalogSearchFailure = (error) => ({
 export const catalogSearch = (query) => async (dispatch) => {
   dispatch(catalogSearchStart());
   try {
-    const response = await axios.post('/api/catalog/search', { query });
-    dispatch(catalogSearchSuccess(response.data.objects));
+    // Use GET method and pass query as a query parameter
+    const response = await axios.get(`/api/catalogs/search?q=${query}`);
+    console.log(response.data);
+    dispatch(catalogSearchSuccess(response.data));
   } catch (error) {
     dispatch(catalogSearchFailure(error.message));
   }
 };
+

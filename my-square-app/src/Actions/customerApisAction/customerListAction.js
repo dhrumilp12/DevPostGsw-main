@@ -20,9 +20,10 @@ export const fetchCustomers = (cursor = '') => async dispatch => {
   dispatch(fetchCustomersStart());
   try {
     const response = await axios.get(`/api/customers/list-customers${cursor ? `?cursor=${cursor}` : ''}`);
-    dispatch(fetchCustomersSuccess(response.data.customers)); // Assuming the response data has a `customers` field
-    // If you want to handle pagination, you can also dispatch the cursor value here, for example:
-    // dispatch(setNextPageCursor(response.data.cursor));
+    console.log("Response data:", response.data);
+   
+    dispatch(fetchCustomersSuccess(response.data));
+
   } catch (error) {
     dispatch(fetchCustomersFailure(error.message));
   }

@@ -20,6 +20,7 @@ export const fetchCatalog = () => async dispatch => {
   dispatch(fetchCatalogStart());
   try {
     const response = await axios.get('/api/catalogs/list');
+    console.log("Response data:", response.data);
     dispatch(fetchCatalogSuccess(response.data));
   } catch (error) {
     dispatch(fetchCatalogFailure(error.message));

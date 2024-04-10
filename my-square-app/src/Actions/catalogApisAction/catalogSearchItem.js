@@ -1,4 +1,5 @@
 import axios from 'axios';
+// Adjust the action types import path as needed
 import {
   FETCH_CATALOG_ITEM_START,
   FETCH_CATALOG_ITEM_SUCCESS,
@@ -22,7 +23,8 @@ export const fetchCatalogItemFailure = (error) => ({
 export const fetchCatalogItem = (itemId) => async (dispatch) => {
   dispatch(fetchCatalogItemStart());
   try {
-    const response = await axios.get(`/api/catalogs/Serach-item/${itemId}`);
+    // Ensure this URL matches the backend route
+    const response = await axios.get(`/api/catalogs/search-item/${itemId}`);
     dispatch(fetchCatalogItemSuccess(response.data));
   } catch (error) {
     dispatch(fetchCatalogItemFailure(error.message));

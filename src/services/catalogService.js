@@ -166,7 +166,7 @@ async function listItems() {
     // Convert any potential BigInt values to strings
     const countsWithConvertedBigInts = JSON.parse(JSON.stringify(response.result.counts || [], (_, v) =>
       typeof v === 'bigint' ? v.toString() : v));
-
+    
     return countsWithConvertedBigInts;
   } catch (error) {
     console.error("Failed to list inventory items:", error);
