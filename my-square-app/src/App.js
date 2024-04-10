@@ -84,6 +84,7 @@ function App() {
         <Route path="/shopping-cart" element={<ShoppingCart />} />
         <Route path="/payment-history" element={<PaymentHistory />} />
         <Route path="/payment-detail/:paymentId" element={<PaymentDetail />} />
+        <Route path="/catalogImage" element={<CatalogImage />} />
         {/* Add more routes as needed */}
       </Routes>
     </Router>

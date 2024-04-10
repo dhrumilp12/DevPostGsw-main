@@ -1,8 +1,5 @@
 import axios from 'axios';
 
-const CATALOG_IMAGE_UPDATE_REQUEST = 'CATALOG_IMAGE_UPDATE_REQUEST';
-const CATALOG_IMAGE_UPDATE_SUCCESS = 'CATALOG_IMAGE_UPDATE_SUCCESS';
-const CATALOG_IMAGE_UPDATE_FAILURE = 'CATALOG_IMAGE_UPDATE_FAILURE';
 
 export const catalogImageUpdate = (id, image) => async (dispatch) => {
     try {
