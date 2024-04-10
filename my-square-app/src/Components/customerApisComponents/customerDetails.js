@@ -1,27 +1,33 @@
 // src/components/CustomerDetails.js
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { fetchCustomerDetails } from '../../Actions/customerApisAction/customerDetailsAction';
 import { useSelector, useDispatch } from 'react-redux';
 import { Container, Card, Spinner, Alert, Button, ListGroup } from 'react-bootstrap';
-
+ 
 const CustomerDetails = () => {
   const { customerId } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const customerDetails = useSelector((state) => state.customerDetails);
   const { loading, error, customer } = customerDetails;
-
+ 
   // Local state for toggling extra details
   const [showExtraDetails, setShowExtraDetails] = useState(false);
-
+ 
   useEffect(() => {
     dispatch(fetchCustomerDetails(customerId));
   }, [dispatch, customerId]);
-
+ 
   const toggleExtraDetails = () => {
     setShowExtraDetails(!showExtraDetails);
   };
-
+ 
+  // Function to navigate to the UpdateCustomer component
+  const handleUpdateClick = () => {
+    navigate(`/update-customer/${customerId}`);
+  };
+ 
   return (
     <Container className="mt-5">
       <Card className="shadow">
@@ -73,26 +79,29 @@ const CustomerDetails = () => {
                   <Button onClick={toggleExtraDetails} variant={showExtraDetails ? "secondary" : "primary"}>
                     {showExtraDetails ? 'Hide Extra Details' : 'Show Extra Details'}
                   </Button>
+                  {' '}
+                  <Button onClick={handleUpdateClick} variant="warning">
+                    Update Customer
+                  </Button>
                 </div>
                 {showExtraDetails && (
-  <Card className="mt-3">
-    <Card.Header>Extra Details</Card.Header>
-    <Card.Body>
-      <ListGroup variant="flush">
-        <ListGroup.Item>
-          <strong>Created At:</strong> {new Date(customer.createdAt).toLocaleString()}
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <strong>Last Updated:</strong> {new Date(customer.updatedAt).toLocaleString()}
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <strong>Note:</strong> {customer.note ? customer.note : 'No note available.'}
-        </ListGroup.Item>
+                  <Card className="mt-3">
+                    <Card.Header>Extra Details</Card.Header>
+                    <Card.Body>
+                      <ListGroup variant="flush">
+                        <ListGroup.Item>
+                          <strong>Created At:</strong> {new Date(customer.createdAt).toLocaleString()}
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                          <strong>Last Updated:</strong> {new Date(customer.updatedAt).toLocaleString()}
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                          <strong>Note:</strong> {customer.note ? customer.note : 'No note available.'}
+                        </ListGroup.Item>
                       </ListGroup>
                     </Card.Body>
                   </Card>
                 )}
-
               </>
             )
           )}
@@ -101,5 +110,5 @@ const CustomerDetails = () => {
     </Container>
   );
 };
-
+ 
 export default CustomerDetails;

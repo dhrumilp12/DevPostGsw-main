@@ -4,7 +4,9 @@ import catalogListReducer from './catalogApisReducer/catalogListReducer';
 import catalogCreateReducer from './catalogApisReducer/catalogCreateReducer';
 import catalogDeleteItemReducer from './catalogApisReducer/catalogDeleteItem';
 import catalogSearchReducer from './catalogApisReducer/catalogSearchReducer';
-import catalogSearchItemReducer from './catalogApisReducer/catalogSearchItemReducer'
+import catalogSearchItemReducer from './catalogApisReducer/catalogSearchItemReducer';
+import catalogImageReducer from './catalogApisReducer/catalogImageReducer'; 
+
 import inventoryReducer from './inventoryReducer';
 import paymentReducer from './paymentApisReducer/paymentFormReducer';
 import paymentStatusReducer from './paymentApisReducer/paymentStatusReducer';
@@ -42,7 +44,8 @@ const rootReducer = combineReducers({
   catalogDeleteItem: catalogDeleteItemReducer,
   catalogSearch: catalogSearchReducer,
   catalogSearchItem: catalogSearchItemReducer,
-
+  catalogImage: catalogImageReducer,
+  
   inventory: inventoryReducer,
   payment: paymentReducer,
   paymentStatus: paymentStatusReducer,

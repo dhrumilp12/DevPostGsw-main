@@ -1,3 +1,4 @@
+
 // src/actions/catalogListActions.js
 import axios from 'axios';
 import { FETCH_CATALOG_START, FETCH_CATALOG_SUCCESS, FETCH_CATALOG_FAILURE } from '../actionTypes.js';

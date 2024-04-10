@@ -1,23 +1,50 @@
-import {CATALOG_IMAGE_REQUEST, CATALOG_IMAGE_SUCCESS, CATALOG_IMAGE_FAIL} from '../../Actions/catalogApisActions/catalogImageActions';
-
-const initialState = {
+import {
+    CREATE_CATALOG_IMAGE_REQUEST,
+    CREATE_CATALOG_IMAGE_SUCCESS,
+    CREATE_CATALOG_IMAGE_FAILURE,
+    UPDATE_CATALOG_IMAGE_REQUEST,
+    UPDATE_CATALOG_IMAGE_SUCCESS,
+    UPDATE_CATALOG_IMAGE_FAILURE,
+  } from '../../Actions/actionTypes';
+  
+  const initialState = {
     loading: false,
     error: null,
-    data: {}
+    createdImage: null,
+    updatedImage: null,
   };
   
-  const catalogImageReducer = (state = initialState, action) => {
+  export const catalogImageReducer = (state = initialState, action) => {
     switch (action.type) {
-      case CATALOG_IMAGE_REQUEST:
-        return { ...state, loading: true, error: null };
-      case CATALOG_IMAGE_SUCCESS:
-        return { ...state, loading: false, data: action.payload };
-      case CATALOG_IMAGE_FAIL:
-        return { ...state, loading: false, error: action.payload };
+      case CREATE_CATALOG_IMAGE_REQUEST:
+      case UPDATE_CATALOG_IMAGE_REQUEST:
+        return {
+          ...state,
+          loading: true,
+          error: null,
+        };
+      case CREATE_CATALOG_IMAGE_SUCCESS:
+        return {
+          ...state,
+          loading: false,
+          createdImage: action.payload,
+        };
+      case UPDATE_CATALOG_IMAGE_SUCCESS:
+        return {
+          ...state,
+          loading: false,
+          updatedImage: action.payload,
+        };
+      case CREATE_CATALOG_IMAGE_FAILURE:
+      case UPDATE_CATALOG_IMAGE_FAILURE:
+        return {
+          ...state,
+          loading: false,
+          error: action.payload,
+        };
       default:
         return state;
     }
   };
   
   export default catalogImageReducer;
-  

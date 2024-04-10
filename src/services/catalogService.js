@@ -2,7 +2,7 @@
 const crypto = require('crypto'); // For generating idempotency keys
 const { catalogApi } = require('../api/squareClient');
 const { inventoryApi} = require('../api/squareClient');
-
+const fs = require('fs');
 
 async function createCatalogItem(itemData) {
     try {
@@ -84,6 +84,7 @@ async function searchCatalogItems(query) {
       throw error;
     }
   }
+
   
 
 // catalogService.js
@@ -127,57 +128,45 @@ async function listItems() {
   }
 }
 
-async function uploadCatalogImage(itemId, imageBuffer, imageName) {
-  const base64Image = imageBuffer.toString('base64');
-  const requestBody = {
-    idempotencyKey: crypto.randomUUID().toString(),
-    object: {
-      type: 'IMAGE',
-      id: '#tempImageId',
-      image_data: {
-        name: imageName,
-        url: '',
-        data: base64Image,
+
+
+async function createCatalogImage(idempotencyKey, objectId, imageData) {
+  try {
+    // Generate a default idempotencyKey if not provided
+    idempotencyKey = idempotencyKey || crypto.randomUUID();
+    const response = await catalogApi.createCatalogImage({
+      idempotencyKey,
+      objectId,
+      image: {
+        type: 'IMAGE',
+        id: '#tempImageId',
+        imageData
       }
-    }
-  };
-
-  try {
-    await axiosInstance.post('/upsert', requestBody);
-    return linkImageToCatalogItem(itemId, '#tempImageId');
+    });
+    return response.result.image;
   } catch (error) {
-    console.error("Failed to upload catalog image:", error);
+    console.error("Failed to create catalog image:", error);
     throw error;
   }
 }
 
 
-async function linkImageToCatalogItem(itemId, imageId) {
-  const linkRequestBody = {
-    idempotencyKey: crypto.randomUUID().toString(),
-    object: {
-      type: 'ITEM',
-      id: itemId,
-      image_ids: [imageId]
-    }
-  };
-
+// Function to update a catalog image
+async function updateCatalogImage(imageId, idempotencyKey, imageData) {
   try {
-    const response = await axiosInstance.post('/upsert', linkRequestBody);
-    return response.data;
+    const response = await catalogApi.updateCatalogImage(imageId, {
+      idempotencyKey,
+      image: {
+        type: 'IMAGE',
+        imageData
+      }
+    });
+    return response.result.image;
   } catch (error) {
-    console.error("Failed to link catalog image:", error);
+    console.error("Failed to update catalog image:", error);
     throw error;
   }
 }
-
-// Function to update an existing catalog item image
-async function updateCatalogImage(itemId, imageBuffer, imageName) {
-  // This function can be identical to uploadCatalogImage, or include additional logic for handling updates
-  return await uploadCatalogImage(itemId, imageBuffer, imageName);
-}
-
-
 // ... Add other Catalog API interactions as needed 
 
 module.exports = {
@@ -186,6 +175,6 @@ module.exports = {
   searchCatalogItems,
   getCatalogItem,
   listItems,
-  uploadCatalogImage,
+  createCatalogImage,
   updateCatalogImage
 };

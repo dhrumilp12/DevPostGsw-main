@@ -34,4 +34,3 @@ export const updateCustomer = (customerId, customerData) => async (dispatch) => 
     dispatch(updateCustomerFailure(error.response?.data?.error || 'Unknown error'));
   }
 };
-

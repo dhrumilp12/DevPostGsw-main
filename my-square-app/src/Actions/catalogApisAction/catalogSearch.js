@@ -30,4 +30,3 @@ export const catalogSearch = (query) => async (dispatch) => {
     dispatch(catalogSearchFailure(error.message));
   }
 };
-

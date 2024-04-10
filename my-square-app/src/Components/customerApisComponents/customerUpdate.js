@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { updateCustomer } from '../../Actions/customerApisAction/customerUpdateAction';
 import axios from 'axios';
-import { Container, TextField, Button, Typography, Box, CircularProgress } from '@mui/material';
-
+import { Container, TextField, Button, Typography, Box } from '@mui/material';
+ 
 const UpdateCustomer = () => {
   const { customerId } = useParams();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Create an instance of useNavigate
   const [customerData, setCustomerData] = useState({
     emailAddress: '',
     note: '',
@@ -16,8 +16,7 @@ const UpdateCustomer = () => {
     familyName: '',
   });
   const dispatch = useDispatch();
-  const { loading, error, success } = useSelector((state) => state.customerUpdate);
-
+ 
   useEffect(() => {
     const fetchCustomerDetails = async () => {
       try {
@@ -34,32 +33,26 @@ const UpdateCustomer = () => {
         console.error('Failed to fetch customer details:', error);
       }
     };
-
+ 
     fetchCustomerDetails();
   }, [customerId]);
-
-  useEffect(() => {
-    if (success) {
-      navigate('/');
-    }
-  }, [success, navigate]);
-
+ 
   const handleChange = (e) => {
     setCustomerData({ ...customerData, [e.target.name]: e.target.value });
   };
-
+ 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("Updating customer with ID:", customerId);
     dispatch(updateCustomer(customerId, customerData));
+    navigate(`/customerDetail/${customerId}`); // Navigate to CustomerDetails page after update
   };
-
+ 
   return (
     <Container maxWidth="sm">
       <Typography variant="h4" gutterBottom>
         Update Customer
       </Typography>
-      {loading && <CircularProgress />}
-      {error && <p>Error: {error}</p>}
       <form onSubmit={handleSubmit}>
         <Box mb={3}>
           <TextField
@@ -123,5 +116,5 @@ const UpdateCustomer = () => {
     </Container>
   );
 };
-
+ 
 export default UpdateCustomer;
