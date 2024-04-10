@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { uploadCatalogImage } from '../../Actions/catalogApisAction/catalogImageAction';
+import { uploadCatalogImage } from '../../Actions/catalogApisAction/catalogUpdateImage';
 import { Form, Button, Container, Row, Col, Spinner } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 

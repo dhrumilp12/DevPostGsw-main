@@ -21,7 +21,7 @@ import CatalogList from './Components/catalogApisComponent/catalogList.js';
 import CatalogCreate from './Components/catalogApisComponent/catalogCreate.js';
 import CatalogSearch from './Components/catalogApisComponent/catalogSearch';
 import CatalogSearchItem from './Components/catalogApisComponent/catalogSearchItem.js';
-
+import catalogImage from './Components/catalogApisComponent/catalogImage'
 import CustomerDetail from './Components/customerApisComponents/customerDetails.js';
 import CustomerList from './Components/customerApisComponents/customerList';
 import UpdateCustomer from './Components/customerApisComponents/customerUpdate.js';
@@ -88,7 +88,7 @@ function App() {
         <Route path="/shopping-cart" element={<ShoppingCart />} />
         <Route path="/payment-history" element={<PaymentHistory />} />
         <Route path="/payment-detail/:paymentId" element={<PaymentDetail />} />
-        <Route path="/catalogImage" element={<CatalogImage />} />
+        <Route path="/catalogImage" element={<catalogImage />} />
         {/* Add more routes as needed */}
       </Routes>
     </Router>
