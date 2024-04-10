@@ -11,10 +11,11 @@ import BookingRetrive from './Components/bookingApisComponent/bookingRetrive';
 import BookingsList from './Components/bookingApisComponent/bookingList';
 import BookingSearchAvailabilityForm from './Components/bookingApisComponent/bookingSearchAvailability';
 import BookingBulkRetrieveForm from './Components/bookingApisComponent/bookingBulkRetrive';
+
 import BatchRetrieveInventoryCountsForm from './Components/inventoryApiComponent/inventoryBatchRetriveCount.js';
 import BatchAdjustInventoryForm from './Components/inventoryApiComponent/inventoryBatchAdjust.js';
 
-import CatalogUpdateItem from './Components/catalogApisComponent/catalogUpdateItem';
+
 import CatalogDeleteItem from './Components/catalogApisComponent/catalogDeleteItem';
 import CatalogList from './Components/catalogApisComponent/catalogList.js';
 import CatalogCreate from './Components/catalogApisComponent/catalogCreate.js';
@@ -23,7 +24,7 @@ import CatalogSearchItem from './Components/catalogApisComponent/catalogSearchIt
 
 import CustomerDetail from './Components/customerApisComponents/customerDetails.js';
 import CustomerList from './Components/customerApisComponents/customerList';
-import CustomerUpdate from './Components/customerApisComponents/customerUpdate.js';
+import UpdateCustomer from './Components/customerApisComponents/customerUpdate.js';
 import LoyaltyAccountForm from './Components/loyaltyApiComponent/createLoyaltyAccountForm.js';
 import SearchLoyaltyAccountsForm from './Components/loyaltyApiComponent/searchLoyaltyAccount';
 import RetrieveLoyaltyAccountForm from './Components/loyaltyApiComponent/retrieveLoyaltyAccountAction';
@@ -54,8 +55,8 @@ function App() {
         <Route path="/catalog-search" element={<CatalogSearch />} />
         <Route path="/catalogSearchItem/:itemId" element={<CatalogSearchItem />} />
         <Route path="/catalogCreate" element={<CatalogCreate />} />
-        <Route path="/catalogUpdateItem/:itemId" element={<CatalogUpdateItem />} />
         <Route path="/catalogDeleteItem/:itemId" element={<CatalogDeleteItem />} />
+        
         <Route path="/registerLogin" element={<RegisterLogin />} />
         <Route path="/booking" element={<BookingForm />} />
         <Route path="/updateBooking/:bookingId" element={<UpdateBookingForm />} />
@@ -64,11 +65,14 @@ function App() {
         <Route path="/bookingList" element={<BookingsList />} />
         <Route path="/search-availability" element={<BookingSearchAvailabilityForm />} />
         <Route path="/bulk-retrieve-bookings" element={<BookingBulkRetrieveForm />} />
+        
         <Route path="/batch-retrieve-inventory-counts" element={<BatchRetrieveInventoryCountsForm />} />
         <Route path="/batch-adjust-inventory" element={<BatchAdjustInventoryForm />} />
+
         <Route path="/customerDetail/:customerId" element={<CustomerDetail  />} />
         <Route path="/customerList" element={<CustomerList />} />
-        <Route path="/update-customer/:customerId" element={<CustomerUpdate/>} />
+        <Route path="/update-customer/:customerId" element={<UpdateCustomer/>} />
+
         <Route path="/loyalty-Account" element={<LoyaltyAccountForm/>} />
         <Route path="/search-loyalty-accounts" element={<SearchLoyaltyAccountsForm />} />
         <Route path="/retrieveLoyaltyAccountForm" element={<RetrieveLoyaltyAccountForm/>} />

@@ -2,6 +2,8 @@
 const crypto = require('crypto'); // For generating idempotency keys
 const { catalogApi } = require('../api/squareClient');
 const { inventoryApi} = require('../api/squareClient');
+
+
 async function createCatalogItem(itemData) {
     try {
       const response = await catalogApi.upsertCatalogObject({
@@ -35,56 +37,7 @@ async function createCatalogItem(itemData) {
       throw error;
     }
   }
-  
-  
-  
-
-  async function updateCatalogItem(itemId, itemData) {
-    try {
-      // Extract the actual item data from the nested 'object' property if it exists
-      const actualItemData = itemData.object ? itemData.object.item_data : itemData;
-  
-      // Fetch the latest version number
-      const { result: { object } } = await catalogApi.retrieveCatalogObject(itemId);
-      const latestVersion = object.version;
-  
-      // Provide a default name if missing
-      actualItemData.name = actualItemData.name || 'Unnamed Item';
-  
-      // Ensure variations is an array
-      const variations = Array.isArray(actualItemData.variations) ? actualItemData.variations : [];
-  
-      // Update the item with the latest version number
-      const response = await catalogApi.upsertCatalogObject({
-        idempotencyKey: crypto.randomUUID().toString(),
-        object: {
-          type: 'ITEM',
-          id: itemId,
-          version: latestVersion,
-          itemData: {
-            name: actualItemData.name,
-            description: actualItemData.description,
-            variations: variations.map(variation => ({
-              type: 'ITEM_VARIATION',
-              id: variation.id,
-              itemVariationData: {
-                name: variation.name,
-                pricingType: variation.pricingType,
-                priceMoney: variation.priceMoney,
-              },
-            })),
-          },
-        },
-      });
-  
-      return response.result.catalogObject;
-    } catch (error) {
-      console.error("Failed to update catalog item:", itemId, error);
-      throw error;
-    }
-  }
-  
-  
+    
 
   async function deleteCatalogItem(itemId) {
     try {
@@ -179,7 +132,6 @@ async function listItems() {
 
 module.exports = {
   createCatalogItem,
-  updateCatalogItem,//error
   deleteCatalogItem,
   searchCatalogItems,
   getCatalogItem,

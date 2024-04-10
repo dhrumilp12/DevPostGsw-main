@@ -1,58 +1,100 @@
 // src/components/CustomerDetails.js
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { Container, Card } from 'react-bootstrap'; // Adding Bootstrap components for styling
+import { fetchCustomerDetails } from '../../Actions/customerApisAction/customerDetailsAction';
+import { useSelector, useDispatch } from 'react-redux';
+import { Container, Card, Spinner, Alert, Button, ListGroup } from 'react-bootstrap';
 
 const CustomerDetails = () => {
   const { customerId } = useParams();
-  const [customer, setCustomer] = useState(null);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true); // State to manage loading state
+  const dispatch = useDispatch();
+  const customerDetails = useSelector((state) => state.customerDetails);
+  const { loading, error, customer } = customerDetails;
+
+  // Local state for toggling extra details
+  const [showExtraDetails, setShowExtraDetails] = useState(false);
 
   useEffect(() => {
-    const fetchCustomerDetails = async () => {
-      try {
-        const response = await axios.get(`/api/customers/${customerId}`, {
-          headers: {
-            'Square-Version': '2024-03-20',
-            'Authorization': `Bearer ${process.env.REACT_APP_SQUARE_ACCESS_TOKEN}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        setCustomer(response.data.customer); // Assuming the customer object is directly within the data
-      } catch (error) {
-        setError('Failed to retrieve customer details');
-      } finally {
-        setLoading(false); // Set loading to false regardless of outcome
-      }
-    };
+    dispatch(fetchCustomerDetails(customerId));
+  }, [dispatch, customerId]);
 
-    fetchCustomerDetails();
-  }, [customerId]);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!customer) return <div>No customer details available.</div>;
+  const toggleExtraDetails = () => {
+    setShowExtraDetails(!showExtraDetails);
+  };
 
   return (
-    <Container>
-      <Card>
+    <Container className="mt-5">
+      <Card className="shadow">
         <Card.Body>
-          <Card.Title>Customer Details</Card.Title>
-          <Card.Text>Name: {customer.given_name} {customer.family_name}</Card.Text>
-          <Card.Text>Email: {customer.email_address}</Card.Text>
-          <Card.Text>Phone: {customer.phone_number}</Card.Text>
-          {/* Display more customer details as needed */}
-          {/* Example: Address */}
-          {customer.address && (
-            <>
-              <Card.Text>Address: {customer.address.address_line_1} {customer.address.address_line_2}</Card.Text>
-              <Card.Text>City: {customer.address.locality}</Card.Text>
-              <Card.Text>State/Province: {customer.address.administrative_district_level_1}</Card.Text>
-              <Card.Text>Postal Code: {customer.address.postal_code}</Card.Text>
-              <Card.Text>Country: {customer.address.country}</Card.Text>
-            </>
+          {loading ? (
+            <div className="text-center">
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : error ? (
+            <Alert variant="danger">An error occurred: {error.message || error}</Alert>
+          ) : (
+            customer && (
+              <>
+                <Card.Title className="text-center mb-3">Customer Details</Card.Title>
+                <ListGroup variant="flush">
+                  <ListGroup.Item>
+                    <strong>Name:</strong> {customer.givenName} {customer.familyName}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <strong>Email:</strong> {customer.emailAddress}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <strong>Phone:</strong> {customer.phoneNumber}
+                  </ListGroup.Item>
+                  {/* Conditional rendering for address, only if address exists */}
+                  {customer.address && (
+                    <>
+                      <ListGroup.Item>
+                        <strong>Address:</strong> {customer.address.addressLine1}, {customer.address.addressLine2}
+                      </ListGroup.Item>
+                      <ListGroup.Item>
+                        <strong>City:</strong> {customer.address.locality}
+                      </ListGroup.Item>
+                      <ListGroup.Item>
+                        <strong>State/Province:</strong> {customer.address.administrativeDistrictLevel1}
+                      </ListGroup.Item>
+                      <ListGroup.Item>
+                        <strong>Postal Code:</strong> {customer.address.postalCode}
+                      </ListGroup.Item>
+                      <ListGroup.Item>
+                        <strong>Country:</strong> {customer.address.country}
+                      </ListGroup.Item>
+                    </>
+                  )}
+                </ListGroup>
+                <div className="mt-3 text-center">
+                  <Button onClick={toggleExtraDetails} variant={showExtraDetails ? "secondary" : "primary"}>
+                    {showExtraDetails ? 'Hide Extra Details' : 'Show Extra Details'}
+                  </Button>
+                </div>
+                {showExtraDetails && (
+  <Card className="mt-3">
+    <Card.Header>Extra Details</Card.Header>
+    <Card.Body>
+      <ListGroup variant="flush">
+        <ListGroup.Item>
+          <strong>Created At:</strong> {new Date(customer.createdAt).toLocaleString()}
+        </ListGroup.Item>
+        <ListGroup.Item>
+          <strong>Last Updated:</strong> {new Date(customer.updatedAt).toLocaleString()}
+        </ListGroup.Item>
+        <ListGroup.Item>
+          <strong>Note:</strong> {customer.note ? customer.note : 'No note available.'}
+        </ListGroup.Item>
+                      </ListGroup>
+                    </Card.Body>
+                  </Card>
+                )}
+
+              </>
+            )
           )}
         </Card.Body>
       </Card>

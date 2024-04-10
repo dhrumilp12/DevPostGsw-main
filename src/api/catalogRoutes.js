@@ -22,19 +22,18 @@ router.post('/create-catalog', async (req, res) => {
     }
 });
 
-   
-// Route to update a catalog item
-router.put('/update-catalog/:itemId', async (req, res) => {
-    const itemId = req.params.itemId;
-    const itemData = req.body;
-    try {
-        const updatedItem = await catalogService.updateCatalogItem(itemId, itemData);
-        console.log(updatedItem);
-        res.json(updatedItem);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to update catalog item' });
-    }
-});
+// Define the bigIntReplacer function here as well
+function bigIntReplacer(_, value) {
+  if (typeof value === 'bigint') {
+    return value.toString();
+  }
+  return value;
+}
+
+
+
+
+
 
 
 // Route to delete a catalog item
@@ -42,13 +41,12 @@ router.delete('/delete/:itemId', async (req, res) => {
   try {
     const itemId = req.params.itemId;
     const deletedItem = await catalogService.deleteCatalogItem(itemId);
-    console.log("Deleted item ID:", deletedItem.id); // Log the deleted item ID
-    res.status(200).json({ message: 'Catalog item deleted successfully', deletedItemId: deletedItem.id });
+    console.log("Deleted item ID:", deletedItem.id);
+    res.status(200).json({ deleted_object_ids: [deletedItem.id] }); // Ensure an array is returned
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete catalog item' });
   }
 });
-
 
 
 // Route to search catalog items

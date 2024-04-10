@@ -63,7 +63,7 @@ async function listCustomers(cursor) {
     try {
       console.log('Updating customer:', customerId, 'with data:', customerData);
       const response = await customersApi.updateCustomer(customerId, customerData);
-  
+      console.log('Square API update customer response:', response); 
       
   
       if (response.errors) {

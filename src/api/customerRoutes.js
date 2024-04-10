@@ -70,16 +70,16 @@ router.post('/create-customer', async (req, res) => {
 });
 
 
-// Route to update an existing customer
 router.put('/update-customer/:customerId', async (req, res) => {
   try {
     const customerId = req.params.customerId;
     const customerData = req.body;
     const updatedCustomer = await customerService.updateCustomer(customerId, customerData);
     console.log('Updated customer:', updatedCustomer);
-    res.json(updatedCustomer);
+    res.json(updatedCustomer); // Make sure the response is being sent back
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error updating customer:', error);
+    res.status(500).json({ error: error.message }); // Send an error response if something goes wrong
   }
 });
 
