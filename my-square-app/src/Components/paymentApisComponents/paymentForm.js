@@ -7,6 +7,9 @@ import { v4 as uuidv4 } from 'uuid'; // Import the UUID generator
 const PaymentForm = () => {
   const [paymentData, setPaymentData] = useState({
     sourceId: '',
+    cardholderName: '',
+    email: '',
+    cardNumber: '',
     amountMoney: { amount: 0, currency: 'USD' }
   });
   const dispatch = useDispatch();
@@ -36,6 +39,36 @@ const PaymentForm = () => {
           <Form onSubmit={handleSubmit}>
             <h2 className="text-center">Process Payment</h2>
             <Form.Group className="mb-3">
+              <Form.Label>Cardholder Name:</Form.Label>
+              <Form.Control
+                type="text"
+                name="cardholderName"
+                value={paymentData.cardholderName}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Email:</Form.Label>
+              <Form.Control
+                type="email"
+                name="email"
+                value={paymentData.email}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Card Number:</Form.Label>
+              <Form.Control
+                type="text"
+                name="cardNumber"
+                value={paymentData.cardNumber}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
               <Form.Label>Payment Source:</Form.Label>
               <Form.Select
                 name="sourceId"
@@ -45,7 +78,6 @@ const PaymentForm = () => {
               >
                 <option value="">Select a Payment Source</option>
                 <option value="cnon:card-nonce-ok">Card (Sandbox)</option>
-                
                 {/* Add more options as needed */}
               </Form.Select>
             </Form.Group>

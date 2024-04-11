@@ -61,10 +61,7 @@ const PaymentDetails = () => {
               <Typography variant="body1"><strong>Transaction Date:</strong> {moment(data.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="body1"><strong>Card Brand:</strong> {data.cardDetails.card.cardBrand}</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="body1"><strong>Last 4 Digits:</strong> {data.cardDetails.card.last4}</Typography>
+              <Typography variant="body1"><strong>Card Number:</strong> **** **** **** {data.cardDetails.card.last4}</Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="body1"><strong>Entry Method:</strong> {data.cardDetails.entryMethod}</Typography>

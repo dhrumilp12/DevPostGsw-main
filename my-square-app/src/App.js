@@ -62,7 +62,7 @@ function App() {
         <Route path="/catalogDeleteItem/:itemId" element={<CatalogDeleteItem />} />
         <Route path="/catalog-image" element={<CatalogImageForm />} />
 
-        <Route path="/registerLogin" element={<RegisterLogin />} />
+        
         <Route path="/booking" element={<BookingForm />} />
         <Route path="/updateBooking/:bookingId" element={<UpdateBookingForm />} />
         <Route path="/cancelBooking/:bookingId" element={<CancelBooking />} />
@@ -73,7 +73,8 @@ function App() {
         
         <Route path="/batch-retrieve-inventory-counts" element={<BatchRetrieveInventoryCountsForm />} />
         <Route path="/batch-adjust-inventory" element={<BatchAdjustInventoryForm />} />
-
+        
+        <Route path="/registerLogin" element={<RegisterLogin />} />
         <Route path="/customerDetail/:customerId" element={<CustomerDetail  />} />
         <Route path="/customerList" element={<CustomerList />} />
         <Route path="/update-customer/:customerId" element={<UpdateCustomer/>} />

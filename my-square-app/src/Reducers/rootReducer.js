@@ -8,12 +8,15 @@ import catalogSearchItemReducer from './catalogApisReducer/catalogSearchItemRedu
 import catalogImageReducer from './catalogApisReducer/catalogImageReducer'; 
 
 import inventoryReducer from './inventoryReducer';
+
 import paymentReducer from './paymentApisReducer/paymentFormReducer';
 import paymentStatusReducer from './paymentApisReducer/paymentStatusReducer';
 import paymentHistoryReducer from './paymentApisReducer/paymentHistoryReducer';
+
 import customerListReducer from './customerApisReducer/customersListReducer';
 import CustomerDetailsReducer from './customerApisReducer/customerDetailsReducer';
 import customerUpdateReducer from './customerApisReducer/customerUpdateReducer';
+
 import bookingReducer from './bookingApisReducer/bookingReducer';
 import bookingUpdateReducer from './bookingApisReducer/bookingUpdateReducer';
 import bookingCancelReducer from './bookingApisReducer/bookingCancelReducer';
@@ -21,6 +24,7 @@ import bookingRetriveReducer from './bookingApisReducer/bookingRetriveReducer';
 import bookingsListReducer from './bookingApisReducer/bookingListReducer';
 import bookingSearchAvailabilityReducer from './bookingApisReducer/bookingSearchAvailabilityReducer';
 import bookingBulkRetrieveReducer from './bookingApisReducer/bookingBulkRetriveReducer';
+
 import inventoryCountsReducer from './inventoryApiReducer/inventoryBatchRetrieveReducer';
 import inventoryAdjustmentReducer from './inventoryApiReducer/inventoryAdjustmentReducer';
 import loyaltyAccountReducer from './loyaltyApiReducer/loyaltyAccountReducer';
@@ -54,6 +58,7 @@ const rootReducer = combineReducers({
   customers: customerListReducer,
   customerDetails: CustomerDetailsReducer,
   customerUpdate: customerUpdateReducer,
+
   booking: bookingReducer,
   bookingUpdate: bookingUpdateReducer,
   bookingCancel: bookingCancelReducer,
@@ -61,6 +66,7 @@ const rootReducer = combineReducers({
   bookingsList: bookingsListReducer,
   bookingAvailabilitySearch: bookingSearchAvailabilityReducer,
   bookingBulkRetrieve: bookingBulkRetrieveReducer,
+  
   inventoryCounts: inventoryCountsReducer,
   inventoryAdjustment: inventoryAdjustmentReducer,
   loyaltyAccount: loyaltyAccountReducer,
