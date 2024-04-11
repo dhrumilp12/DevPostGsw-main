@@ -1,34 +1,34 @@
+import axios from 'axios';
 import {
     REGISTER_USER_REQUEST,
     REGISTER_USER_SUCCESS,
     REGISTER_USER_FAILURE,
-    LOGIN_USER
-  } from '../actionTypes';
+    LOGIN_USER_REQUEST,
+    LOGIN_USER_SUCCESS,
+    LOGIN_USER_FAILURE
+} from '../actionTypes';
 
 export const registerUser = (userData) => async (dispatch) => {
     dispatch({ type: REGISTER_USER_REQUEST });
-
     try {
-        const response = await fetch('/api/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(userData) 
-        });
-
-        if (!response.ok) {
-            throw new Error('Registration failed');
-        }
-
-        const registeredUserData = await response.json();
-        dispatch({ type: REGISTER_USER_SUCCESS, payload: registeredUserData });
+        const response = await axios.post('/api/customers/create-customer', userData);
+        dispatch({ type: REGISTER_USER_SUCCESS, payload: response.data });
     } catch (error) {
-        dispatch({ type: REGISTER_USER_FAILURE, payload: error.message }); 
+        dispatch({ 
+            type: REGISTER_USER_FAILURE, 
+            payload: error.response ? error.response.data.error : error.message 
+        });
     }
 };
 
-export const loginUser = (userData) => {
-    return {
-        type: LOGIN_USER,
-        payload: userData
+export const loginUser = (userData, navigate) => async (dispatch) => {
+    dispatch({ type: LOGIN_USER_REQUEST });
+    try {
+        const response = await axios.post('/api/customers/login', userData);
+        dispatch({ type: LOGIN_USER_SUCCESS, payload: response.data });
+        navigate('/'); // Redirect to the home page after successful login
+      } catch (error) {
+        dispatch({ type: LOGIN_USER_FAILURE, payload: error.response.data.error || 'Login failed. Please check your credentials.' });
+        navigate('/registerLogin'); // Redirect to the signup page if login fails
+      }
     };
-};

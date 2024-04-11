@@ -81,7 +81,7 @@ const rootReducer = combineReducers({
   orderConfirmation: orderConfirmationReducer,
   shoppingCart: shoppingCartReducer,
   paymentDetails: paymentDetailsReducer,
-  registerLogic: registerLogicReducer,
+  registerLogin: registerLogicReducer,
   customerList: customerListReducer,
 });
 

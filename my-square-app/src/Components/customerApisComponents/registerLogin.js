@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector  } from 'react-redux';
 import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
 import { registerUser, loginUser } from '../../Actions/customerApisAction/registerLoginAction';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure this import is at the top level of your app, ideally in index.js
+import { useNavigate } from 'react-router-dom';
 
 const RegisterLogin = () => {
   const [isRegister, setIsRegister] = useState(false);
@@ -21,25 +22,29 @@ const RegisterLogin = () => {
     country: '',
     password: ''
   });
-  const [error, setError] = useState(''); // Added error state for display purposes
-
+  
+  const { error } = useSelector((state) => state.registerLogin);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate(); // Initialize useNavigate hook
+  const { isAuthenticated } = useSelector((state) => state.registerLogin);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/'); // Redirects to the homepage route after successful signup/login
+    }
+  }, [isAuthenticated, navigate]);
+  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Reset error state on new submission
-    setError('');
-
+     
     if (isRegister) {
-      // Here you would include validation and then dispatch or set error
-      dispatch(registerUser({ ...formData, userType }));
+      dispatch(registerUser(formData));
     } else {
-      // Here you would include validation and then dispatch or set error
-      dispatch(loginUser({ email: formData.email, password: formData.password }));
+      dispatch(loginUser(formData, navigate)); // Pass navigate function to loginUser action
     }
   };
 
@@ -100,7 +105,7 @@ const RegisterLogin = () => {
             )}
 
             <Form.Group className="mb-3">
-              <Form.Control type="email" name="email" placeholder="Email" required onChange={handleChange} />
+              <Form.Control type="email" name="emailAddress" placeholder="Email" required onChange={handleChange} />
             </Form.Group>
 
             {isRegister && (
