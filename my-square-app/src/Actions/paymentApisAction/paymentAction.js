@@ -95,14 +95,16 @@ export const fetchPaymentDetailsFailure = error => ({
   payload: error,
 });
 
+// Fetch Payment Details
 export const fetchPaymentDetails = (paymentId) => async (dispatch) => {
+  dispatch({ type: FETCH_PAYMENT_DETAILS_START });
   try {
     const response = await axios.get(`/api/payments/payment-details/${paymentId}`);
-    dispatch({
-      type: 'FETCH_PAYMENT_DETAILS_SUCCESS',
-      payload: response.data,
-    });
+    dispatch({ type: FETCH_PAYMENT_DETAILS_SUCCESS, payload: response.data });
   } catch (error) {
-    dispatch(fetchPaymentDetailsFailure(error.toString()));
+    dispatch({
+      type: FETCH_PAYMENT_DETAILS_FAILURE,
+      payload: error.response?.data?.errors || error.message,
+    });
   }
 };
