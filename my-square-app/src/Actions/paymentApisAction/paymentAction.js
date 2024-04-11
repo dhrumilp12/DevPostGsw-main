@@ -28,15 +28,20 @@ export const processPaymentFailure = error => ({
   payload: error,
 });
 
-export const processPayment = (paymentData) => async dispatch => {
+export const processPayment = (paymentData) => async (dispatch) => {
   dispatch(processPaymentStart());
   try {
-    const response = await axios.post('/api/payments/process-payment', paymentData);
+    const response = await axios.post('/api/payments/process-payment', paymentData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     dispatch(processPaymentSuccess(response.data));
   } catch (error) {
-    dispatch(processPaymentFailure(error.message));
+    dispatch(processPaymentFailure(error.response?.data?.errors || error.message));
   }
 };
+
 
 export const fetchPaymentsHistoryStart = () => ({
   type: FETCH_PAYMENTS_HISTORY_START,
@@ -90,11 +95,13 @@ export const fetchPaymentDetailsFailure = error => ({
   payload: error,
 });
 
-export const fetchPaymentDetails = (paymentId) => async dispatch => {
-  dispatch(fetchPaymentDetailsStart());
+export const fetchPaymentDetails = (paymentId) => async (dispatch) => {
   try {
     const response = await axios.get(`/api/payments/payment-details/${paymentId}`);
-    dispatch(fetchPaymentDetailsSuccess(response.data));
+    dispatch({
+      type: 'FETCH_PAYMENT_DETAILS_SUCCESS',
+      payload: response.data,
+    });
   } catch (error) {
     dispatch(fetchPaymentDetailsFailure(error.toString()));
   }

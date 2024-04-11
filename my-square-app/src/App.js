@@ -39,7 +39,7 @@ import Loyalty from './Components/loyalty';
 import PaymentForm from './Components/paymentApisComponents/paymentForm.js';
 import PaymentStatus from './Components/paymentApisComponents/paymentStatus.js';
 import PaymentHistory from './Components/paymentApisComponents/paymentHistory.js';
-import PaymentDetail from './Components/paymentApisComponents/paymentDetails.js';
+import PaymentDetails from './Components/paymentApisComponents/paymentDetails.js';
 import Navbar from './Components/Navbar';
 import AdminPanel from './Components/adminPanel';
 import Dashboard from './Components/dashboard';
@@ -92,7 +92,7 @@ function App() {
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
         <Route path="/shopping-cart" element={<ShoppingCart />} />
         <Route path="/payment-history" element={<PaymentHistory />} />
-        <Route path="/payment-detail/:paymentId" element={<PaymentDetail />} />
+        <Route path="/payment-detail/:paymentId" element={<PaymentDetails />} />
         {/* Add more routes as needed */}
       </Routes>
     </Router>

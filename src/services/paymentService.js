@@ -2,38 +2,47 @@ const { paymentsApi } = require('../api/squareClient');
 const crypto = require('crypto');
 
 
-
 async function processPayment(sourceId, amount, currency = 'USD', idempotencyKey = crypto.randomUUID()) {
-    const requestBody = {
-        sourceId: sourceId,
-        amountMoney: {
-            amount: amount,
-            currency: currency
-        },
-        idempotencyKey: idempotencyKey,
-    };
+  const requestBody = {
+      sourceId: sourceId,
+      amountMoney: {
+          amount: amount,
+          currency: currency
+      },
+      idempotencyKey: idempotencyKey,
+  };
 
-    console.log('Request body to Square:', JSON.stringify(requestBody, null, 2));
+  // Add cash_details if the sourceId is CASH
+  if (sourceId === 'CASH') {
+      requestBody.cash_details = {
+          buyer_supplied_money: {
+              amount: amount,
+              currency: currency
+          }
+      };
+  }
 
-    try {
-        const response = await paymentsApi.createPayment(requestBody);
+  console.log('Request body to Square:', JSON.stringify(requestBody, null, 2));
 
-        console.log('Square API response status:', response.statusCode);
+  try {
+      const response = await paymentsApi.createPayment(requestBody);
 
-        if (!response || !response.result || !response.result.payment) {
-            throw new Error("API call did not return expected result");
-        }
+      console.log('Square API response status:', response.statusCode);
 
-        // Convert all BigInt properties to strings to ensure proper JSON serialization
-        const paymentResult = JSON.parse(JSON.stringify(response.result.payment, (key, value) =>
-            typeof value === 'bigint' ? value.toString() : value
-        ));
-        
-        return paymentResult;
-    } catch (error) {
-        console.error("Full error details:", error);
-        throw error;
-    }
+      if (!response || !response.result || !response.result.payment) {
+          throw new Error("API call did not return expected result");
+      }
+
+      // Convert all BigInt properties to strings to ensure proper JSON serialization
+      const paymentResult = JSON.parse(JSON.stringify(response.result.payment, (key, value) =>
+          typeof value === 'bigint' ? value.toString() : value
+      ));
+      
+      return paymentResult;
+  } catch (error) {
+      console.error("Full error details:", error);
+      throw error;
+  }
 }
 
 
