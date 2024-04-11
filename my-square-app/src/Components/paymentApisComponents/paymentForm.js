@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { processPayment } from '../../Actions/paymentApisAction/paymentAction';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid'; // Import the UUID generator
+import { useNavigate } from 'react-router-dom';
 
 const PaymentForm = () => {
   const [paymentData, setPaymentData] = useState({
@@ -13,6 +14,7 @@ const PaymentForm = () => {
     amountMoney: { amount: 0, currency: 'USD' }
   });
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,9 +30,19 @@ const PaymentForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const idempotencyKey = uuidv4(); // Generate a new UUID for each submission
-    dispatch(processPayment({ ...paymentData, idempotencyKey }));
+    const idempotencyKey = uuidv4();
+    // Dispatch the payment action with the payment data and idempotencyKey
+    dispatch(processPayment({ ...paymentData, idempotencyKey }))
+      .then((response) => {
+        // If the payment is processed successfully, navigate to the payment details page
+        navigate(`/payment-detail/${response.id}`);
+      })
+      .catch((error) => {
+        // Handle any errors here, such as updating the state to show an error message
+        console.error('Payment processing failed:', error);
+      });
   };
+  
 
   return (
     <Container>

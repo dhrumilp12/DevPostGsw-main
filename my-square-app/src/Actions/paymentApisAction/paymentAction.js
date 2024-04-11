@@ -28,6 +28,8 @@ export const processPaymentFailure = error => ({
   payload: error,
 });
 
+// ... other action creators ...
+
 export const processPayment = (paymentData) => async (dispatch) => {
   dispatch(processPaymentStart());
   try {
@@ -37,10 +39,15 @@ export const processPayment = (paymentData) => async (dispatch) => {
       },
     });
     dispatch(processPaymentSuccess(response.data));
+    return response.data; // Return the response data for the component to use
   } catch (error) {
     dispatch(processPaymentFailure(error.response?.data?.errors || error.message));
+    return Promise.reject(error); // Reject the promise with the error
   }
 };
+
+
+
 
 
 export const fetchPaymentsHistoryStart = () => ({
