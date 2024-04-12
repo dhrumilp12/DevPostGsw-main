@@ -1,30 +1,23 @@
+
 import axios from 'axios';
 import {
   BULK_RETRIEVE_BOOKINGS_START,
   BULK_RETRIEVE_BOOKINGS_SUCCESS,
-  BULK_RETRIEVE_BOOKINGS_FAILURE,
+  BULK_RETRIEVE_BOOKINGS_FAILURE
 } from '../actionTypes';
 
-export const bulkRetrieveBookingsStart = () => ({
-  type: BULK_RETRIEVE_BOOKINGS_START,
-});
-
-export const bulkRetrieveBookingsSuccess = (bookings) => ({
-  type: BULK_RETRIEVE_BOOKINGS_SUCCESS,
-  payload: bookings,
-});
-
-export const bulkRetrieveBookingsFailure = (error) => ({
-  type: BULK_RETRIEVE_BOOKINGS_FAILURE,
-  payload: error,
-});
-
 export const bulkRetrieveBookings = (bookingIds) => async (dispatch) => {
-  dispatch(bulkRetrieveBookingsStart());
+  dispatch({ type: BULK_RETRIEVE_BOOKINGS_START });
   try {
-    const response = await axios.post('/api/bookings/bulk-retrieve', { booking_ids: bookingIds });
-    dispatch(bulkRetrieveBookingsSuccess(response.data.bookings));
+    const response = await axios.post('/api/bookings/bulk-retrieve-bookings', { bookingIds });
+    dispatch({
+      type: BULK_RETRIEVE_BOOKINGS_SUCCESS,
+      payload: response.data
+    });
   } catch (error) {
-    dispatch(bulkRetrieveBookingsFailure(error.message));
+    dispatch({
+      type: BULK_RETRIEVE_BOOKINGS_FAILURE,
+      payload: error.response ? error.response.data : error.message
+    });
   }
 };

@@ -135,8 +135,16 @@ async function searchAvailability(searchCriteria) {
 }
 
 async function bulkRetrieveBookings(bookingIds) {
+    console.log("Received bookingIds:", bookingIds);  // Logging the input to debug
+
+    if (!Array.isArray(bookingIds)) {
+        console.error("Invalid input for bookingIds, expected an array of strings. Received:", bookingIds);
+        throw new Error("Invalid input: Expected an array of booking IDs.");
+    }
+    
     try {
         const response = await bookingApi.bulkRetrieveBookings({ bookingIds });
+        console.log("Bulk retrieve response:", response.result.bookings);
         return response.result.bookings || [];
     } catch (error) {
         console.error("Failed to bulk retrieve bookings:", error);

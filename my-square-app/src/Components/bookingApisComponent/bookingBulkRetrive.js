@@ -4,18 +4,32 @@ import { bulkRetrieveBookings } from '../../Actions/bookingApisAction/bookingBul
 import { Form, Button, Container, Row, Col, ListGroup } from 'react-bootstrap';
 
 const BulkRetrieveBookingsForm = () => {
-  const [bookingIds, setBookingIds] = useState('');
-
+  const [bookingIdsInput, setBookingIdsInput] = useState('');
   const dispatch = useDispatch();
-  const { bookings, loading, error } = useSelector((state) => state.bulkRetrieveBookings);
+  const { bookings, loading, error } = useSelector(state => state.bulkRetrieveBookings);
 
   const handleChange = (e) => {
-    setBookingIds(e.target.value.split(',').map(id => id.trim()));
+    setBookingIdsInput(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(bulkRetrieveBookings(bookingIds));
+    const ids = bookingIdsInput.split(',').map(id => id.trim());
+    console.log('Submitting IDs:', ids); // Log the IDs to ensure they are parsed correctly
+    dispatch(bulkRetrieveBookings(ids));
+  };
+  
+
+  const renderError = () => {
+    // If the error is a string, render it directly.
+    // If the error is an object, attempt to render a nested message property or default to a general message.
+    if (typeof error === 'string') {
+      return error;
+    }
+    if (error && error.response && error.response.data) {
+      return error.response.data.message;
+    }
+    return 'An error occurred';
   };
 
   return (
@@ -28,7 +42,7 @@ const BulkRetrieveBookingsForm = () => {
               <Form.Label>Booking IDs (comma-separated)</Form.Label>
               <Form.Control
                 type="text"
-                value={bookingIds.join(', ')}
+                value={bookingIdsInput}
                 onChange={handleChange}
                 placeholder="Enter booking IDs"
               />
@@ -37,16 +51,16 @@ const BulkRetrieveBookingsForm = () => {
               Retrieve Bookings
             </Button>
           </Form>
-          {error && <div className="error">{error}</div>}
+          {error && <div className="alert alert-danger">{renderError()}</div>}
           {bookings && (
             <ListGroup className="mt-4">
-              {Object.values(bookings).map((booking) => (
-                <ListGroup.Item key={booking.id}>
-                  <div><strong>ID:</strong> {booking.id}</div>
-                  <div><strong>Status:</strong> {booking.status}</div>
-                  <div><strong>Start At:</strong> {booking.start_at}</div>
-                  <div><strong>Customer ID:</strong> {booking.customer_id}</div>
-                  {/* Add more booking details as needed */}
+              {Object.entries(bookings).map(([id, bookingData]) => (
+                <ListGroup.Item key={id}>
+                  <div><strong>ID:</strong> {id}</div>
+                  <div><strong>Status:</strong> {bookingData.booking.status}</div>
+                  <div><strong>Start At:</strong> {new Date(bookingData.booking.startAt).toLocaleString()}</div>
+                  <div><strong>Customer ID:</strong> {bookingData.booking.customerId}</div>
+                  {/* Add more details as necessary */}
                 </ListGroup.Item>
               ))}
             </ListGroup>
