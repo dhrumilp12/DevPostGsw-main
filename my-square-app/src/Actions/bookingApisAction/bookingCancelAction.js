@@ -19,12 +19,18 @@ export const cancelBookingFailure = (error) => ({
   payload: error,
 });
 
-export const cancelBooking = (bookingId) => async (dispatch) => {
+export const cancelBooking = (bookingId, bookingVersion) => async (dispatch) => {
   dispatch(cancelBookingStart());
+  console.log('Dispatching cancel with version:', bookingVersion); // Ensure logging is accurate
   try {
-    const response = await axios.post(`/api/bookings/cancel-booking/${bookingId}`);
+    const response = await axios.post(`/api/bookings/cancel-booking/${bookingId}`, {
+      bookingVersion: bookingVersion  // No need to parse here; ensure it's done before dispatch
+    });
     dispatch(cancelBookingSuccess(response.data));
   } catch (error) {
+    console.error('Error cancelling booking:', error);
     dispatch(cancelBookingFailure(error.message));
   }
 };
+
+

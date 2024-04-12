@@ -52,20 +52,40 @@ async function updateBooking(bookingId, bookingData) {
     }
 }
 
-async function cancelBooking(bookingId) {
+async function cancelBooking(bookingId, details) {
+    console.log("Received details in cancelBooking:", details);  // Ensure you're logging what you receive exactly.
+
+    const currentBooking = await bookingApi.retrieveBooking(bookingId);
+    if (currentBooking.status === 'CANCELLED_BY_SELLER') {
+        console.log("Booking already canceled:", bookingId);
+        return { alreadyCancelled: true, message: "Booking is already canceled." };
+    }
+
+    // Log the specific received version to check it
+    console.log("Received bookingVersion for cancellation:", details.bookingVersion);
+
+    if (!details.bookingVersion || typeof details.bookingVersion !== 'number' || !Number.isInteger(details.bookingVersion)) {
+        console.error("Invalid or missing booking version for booking ID:", bookingId, "Received:", details.bookingVersion);
+        throw new Error("Booking version is required and must be an integer.");
+    }
+
+    const requestBody = {
+        idempotencyKey: `cancel-${bookingId}-${Date.now()}`,
+        bookingVersion: details.bookingVersion
+    };
+
     try {
-        const response = await bookingApi.cancelBooking(bookingId);
-
-        if (!response || !response.result) {
-            throw new Error("API call to cancel booking did not return expected result");
-        }
-
-        return response.result.booking;
+        const response = await bookingApi.cancelBooking(bookingId, requestBody);
+        console.log("Cancellation successful:", response);
+        return response;
     } catch (error) {
-        console.log("Failed to cancel booking:", error);
-        throw new Error("Failed to cancel booking");
+        console.error("Failed to cancel booking:", error);
+        throw error;
     }
 }
+
+
+
 
 async function retrieveBooking(bookingId) {
     try {

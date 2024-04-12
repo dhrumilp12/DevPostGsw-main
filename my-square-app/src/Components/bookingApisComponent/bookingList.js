@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBookings } from '../../Actions/bookingApisAction/bookingListAction';
 import { CircularProgress, Box, Card, CardContent, Typography, List, ListItem, Divider, Grid } from '@mui/material';
+import CancelBookingButton from './bookingCancel';  
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PersonIcon from '@mui/icons-material/Person';
@@ -12,8 +13,12 @@ const BookingList = () => {
     const { bookings, loading, error } = useSelector(state => state.bookingsList);
 
     useEffect(() => {
-        dispatch(fetchBookings());
-    }, [dispatch]);
+        const fetchData = async () => {
+            dispatch(fetchBookings());
+        };
+        fetchData();
+    }, [dispatch]);  // Ensure dependencies are correct to avoid unnecessary re-renders
+    
 
     if (loading) {
         return <Box display="flex" justifyContent="center" mt={5}><CircularProgress /></Box>;
@@ -48,6 +53,9 @@ const BookingList = () => {
                                             <Typography variant="body2">- Duration Minutes: {segment.durationMinutes}</Typography>
                                         </Box>
                                     ))}
+                                   
+                                    <CancelBookingButton bookingId={booking.id} bookingVersion={booking.version} />
+
                                 </CardContent>
                             </Card>
                         </ListItem>
