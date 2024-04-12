@@ -7,12 +7,14 @@ router.post('/create-booking', async (req, res) => {
     try {
         const bookingData = req.body;
         const newBooking = await bookingService.createBooking(bookingData);
-        res.json(newBooking);
+        const jsonString = JSON.stringify(newBooking, (key, value) =>
+            typeof value === 'bigint' ? value.toString() : value
+        );
+        res.json(jsonString);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
-
 // Update a booking
 router.put('/update-booking/:bookingId', async (req, res) => {
     try {
@@ -50,11 +52,15 @@ router.get('/retrieve-booking/:bookingId', async (req, res) => {
 router.get('/list-bookings', async (req, res) => {
     try {
         const bookings = await bookingService.listBookings();
-        res.json(bookings);
+        const jsonString = JSON.stringify(bookings, (key, value) =>
+            typeof value === 'bigint' ? value.toString() : value
+        );
+        res.json(JSON.parse(jsonString));
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
+
 
 router.post('/search-availability', async (req, res) => {
     try {

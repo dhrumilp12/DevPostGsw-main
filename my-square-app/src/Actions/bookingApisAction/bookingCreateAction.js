@@ -1,27 +1,24 @@
-// src/actions/bookingActions.js
+// bookingCreateAction.js
 import axios from 'axios';
 import { CREATE_BOOKING_START, CREATE_BOOKING_SUCCESS, CREATE_BOOKING_FAILURE } from '../actionTypes';
 
-export const createBookingStart = () => ({
-  type: CREATE_BOOKING_START,
-});
 
-export const createBookingSuccess = booking => ({
-  type: CREATE_BOOKING_SUCCESS,
-  payload: booking,
-});
-
-export const createBookingFailure = error => ({
-  type: CREATE_BOOKING_FAILURE,
-  payload: error,
-});
-
-export const createBooking = (bookingData) => async dispatch => {
-  dispatch(createBookingStart());
+export const createBooking = (bookingData) => async (dispatch) => {
+  dispatch({ type: CREATE_BOOKING_START });
   try {
     const response = await axios.post('/api/bookings/create-booking', bookingData);
-    dispatch(createBookingSuccess(response.data));
+    if (response.status >= 200 && response.status < 300) {
+      dispatch({ type: CREATE_BOOKING_SUCCESS, payload: response.data });
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
   } catch (error) {
-    dispatch(createBookingFailure(error.message));
+    let errorMessage = 'An unexpected error occurred';
+    if (error.response && error.response.data && error.response.data.message) {
+      errorMessage = error.response.data.message;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+    dispatch({ type: CREATE_BOOKING_FAILURE, payload: errorMessage });
   }
 };
