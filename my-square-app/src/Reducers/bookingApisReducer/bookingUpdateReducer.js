@@ -16,12 +16,14 @@ import {
         return {
           ...state,
           loading: true,
+          error: null
         };
       case UPDATE_BOOKING_SUCCESS:
         return {
           ...state,
           loading: false,
           booking: action.payload,
+          error: null
         };
       case UPDATE_BOOKING_FAILURE:
         return {

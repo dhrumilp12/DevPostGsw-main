@@ -45,19 +45,16 @@ async function createBooking(bookingData) {
 
 
 async function updateBooking(bookingId, bookingData) {
+    console.log("Updating booking with ID:", bookingId, "Data:", bookingData);
     try {
-        const response = await bookingApi.updateBooking(bookingId, bookingData);
-
-        if (!response || !response.result) {
-            throw new Error("API call to update booking did not return expected result");
-        }
-
-        return response.result.booking;
+        const response = await bookingApi.updateBooking(bookingId, { booking: bookingData });
+        return serializeBigInts(response.result.booking);
     } catch (error) {
-        console.log("Failed to update booking:", error);
-        throw new Error("Failed to update booking");
+        console.error("Failed to update booking:", error);
+        throw error;
     }
 }
+
 
 async function cancelBooking(bookingId, details) {
     console.log("Received details in cancelBooking:", details);  // Ensure you're logging what you receive exactly.

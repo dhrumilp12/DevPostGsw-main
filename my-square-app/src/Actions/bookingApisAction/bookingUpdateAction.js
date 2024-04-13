@@ -22,11 +22,16 @@ export const updateBookingFailure = (error) => ({
 export const updateBooking = (bookingId, bookingData) => async (dispatch) => {
   dispatch(updateBookingStart());
   try {
-    const response = await axios.put(`/api/bookings/update-booking/${bookingId}`, {
-      booking: bookingData,
-    });
-    dispatch(updateBookingSuccess(response.data));
+    const response = await axios.put(`/api/bookings/update-booking/${bookingId}`, { booking: bookingData });
+    if (response.status === 200) {
+      dispatch(updateBookingSuccess(response.data));
+      return Promise.resolve("Booking updated successfully!");
+    } else {
+      throw new Error('The server responded with an error.');
+    }
   } catch (error) {
-    dispatch(updateBookingFailure(error.response?.data?.error || 'Unknown error'));
+    const errorMessage = error.response?.data?.errors[0]?.detail || "Failed to update the booking due to an unknown error.";
+    dispatch(updateBookingFailure(errorMessage));
+    return Promise.reject(errorMessage); // Make sure to reject the promise with the error message
   }
 };

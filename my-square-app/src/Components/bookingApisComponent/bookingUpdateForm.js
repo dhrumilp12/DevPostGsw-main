@@ -4,32 +4,47 @@ import { updateBooking } from '../../Actions/bookingApisAction/bookingUpdateActi
 import { Form, Button, Container, Row, Col, Spinner } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useParams } from 'react-router-dom';
+import moment from 'moment';
 
-const UpdateBookingForm = ({ bookingId }) => {
+const UpdateBookingForm = () => {
+  const { bookingId } = useParams();
+  const dispatch = useDispatch();
+  const { loading } = useSelector(state => state.bookingUpdate);
+
   const [bookingData, setBookingData] = useState({
-    version: 0,
+    version: 1, // Assuming 'version' should be initialized to 1 or fetched from a source
     customerNote: '',
     startAt: '',
     locationId: '',
-    appointmentSegments: [],
-    // Add other necessary fields as needed
+    appointmentSegments: [] // Assuming segments are not needed for simple updates
   });
 
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.bookingUpdate);
-
   const handleChange = (e) => {
-    setBookingData({ ...bookingData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setBookingData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(updateBooking(bookingId, bookingData));
+  
+    const versionNumber = parseInt(bookingData.version, 10);
+    const formattedStartAt = moment(bookingData.startAt).toISOString();
+  
+    const updatedBookingData = {
+      ...bookingData,
+      version: versionNumber,
+      startAt: formattedStartAt
+    };
+  
+    try {
+      const successMessage = await dispatch(updateBooking(bookingId, updatedBookingData));
+      toast.success(successMessage);
+    } catch (error) {
+      toast.error(`Error updating booking: ${error}`);
+    }
   };
-
-  if (error) {
-    toast.error(`Error: ${error}`);
-  }
+  
 
   return (
     <Container>
@@ -78,13 +93,8 @@ const UpdateBookingForm = ({ bookingId }) => {
                 placeholder="Location ID"
               />
             </Form.Group>
-            {/* Add more form fields for other booking attributes */}
             <Button type="submit" variant="primary" className="w-100" disabled={loading}>
-              {loading ? (
-                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-              ) : (
-                'Update Booking'
-              )}
+              {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Update Booking'}
             </Button>
           </Form>
         </Col>

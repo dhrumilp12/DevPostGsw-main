@@ -17,15 +17,19 @@ router.post('/create-booking', async (req, res) => {
 });
 // Update a booking
 router.put('/update-booking/:bookingId', async (req, res) => {
+    const { bookingId } = req.params;
+    const bookingData = req.body.booking;  // Ensure this matches the structure expected by the API
+    console.log("Sending to Square API:", bookingData);
+
     try {
-        const { bookingId } = req.params;
-        const bookingData = req.body;
         const updatedBooking = await bookingService.updateBooking(bookingId, bookingData);
         res.json(updatedBooking);
     } catch (error) {
+        console.error("Error updating booking:", error);
         res.status(500).json({ error: error.message });
     }
 });
+
 
 router.post('/cancel-booking/:bookingId', async (req, res) => {
     console.log("Received body at route:", req.body);  // Confirming body structure
