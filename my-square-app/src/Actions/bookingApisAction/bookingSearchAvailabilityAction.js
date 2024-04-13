@@ -23,7 +23,7 @@ export const searchAvailability = (searchCriteria) => async (dispatch) => {
   dispatch(searchAvailabilityStart());
   try {
     const response = await axios.post('/api/bookings/search-availability', searchCriteria);
-    dispatch(searchAvailabilitySuccess(response.data.availabilities));
+    dispatch(searchAvailabilitySuccess(response.data));
   } catch (error) {
     dispatch(searchAvailabilityFailure(error.message));
   }

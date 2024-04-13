@@ -8,10 +8,10 @@ import 'react-toastify/dist/ReactToastify.css';
 const UpdateBookingForm = ({ bookingId }) => {
   const [bookingData, setBookingData] = useState({
     version: 0,
-    customer_note: '',
-    start_at: '',
-    location_id: '',
-    appointment_segments: [],
+    customerNote: '',
+    startAt: '',
+    locationId: '',
+    appointmentSegments: [],
     // Add other necessary fields as needed
   });
 
@@ -52,8 +52,8 @@ const UpdateBookingForm = ({ bookingId }) => {
               <Form.Label>Customer Note</Form.Label>
               <Form.Control
                 type="text"
-                name="customer_note"
-                value={bookingData.customer_note}
+                name="customerNote"
+                value={bookingData.customerNote}
                 onChange={handleChange}
                 placeholder="Customer Note"
               />
@@ -62,8 +62,8 @@ const UpdateBookingForm = ({ bookingId }) => {
               <Form.Label>Start At</Form.Label>
               <Form.Control
                 type="datetime-local"
-                name="start_at"
-                value={bookingData.start_at}
+                name="startAt"
+                value={bookingData.startAt}
                 onChange={handleChange}
                 placeholder="Start At"
               />
@@ -72,8 +72,8 @@ const UpdateBookingForm = ({ bookingId }) => {
               <Form.Label>Location ID</Form.Label>
               <Form.Control
                 type="text"
-                name="location_id"
-                value={bookingData.location_id}
+                name="locationId"
+                value={bookingData.locationId}
                 onChange={handleChange}
                 placeholder="Location ID"
               />

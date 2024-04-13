@@ -133,20 +133,56 @@ async function listBookings() {
 
 
 async function searchAvailability(searchCriteria) {
-    try {
-    // Assuming searchCriteria is already in the correct format as required by the Square API
-    const response = await bookingApi.searchAvailability({ query: searchCriteria });
-
-    // Serialize the response to handle BigInt serialization
-    const serializedAvailabilities = serializeBigInts(response.result.availabilities);
-    console.log("Serialized search availability response:", serializedAvailabilities);
-    
-    return serializedAvailabilities;
-    } catch (error) {
-    console.error("Failed to search availability:", error);
-    throw new Error("Failed to search availability");
+    // Ensure the search criteria are structured properly and include necessary filters
+    if (!searchCriteria || !searchCriteria.startAt || !searchCriteria.endAt || !searchCriteria.locationId) {
+        console.error("Search criteria must include 'startAt', 'endAt', and 'locationId' properties.");
+        throw new Error("Search criteria must include 'startAt', 'endAt', and 'locationId' properties.");
     }
-}            
+
+    // Constructing the filter property using camelCase
+    const filter = {
+        startAtRange: {  // Changed from start_at_range to startAtRange
+            startAt: new Date(searchCriteria.startAt).toISOString(),  // Changed from start_at to startAt
+            endAt: new Date(searchCriteria.endAt).toISOString()  // Changed from end_at to endAt
+        },
+        locationId: searchCriteria.locationId,
+        segmentFilters: []  // Changed from segment_filters to segmentFilters
+    };
+
+    // Optional: Add segment filters if provided
+    if (searchCriteria.serviceVariationId && searchCriteria.teamMemberId) {
+        filter.segmentFilters.push({  // Changed from segment_filters to segmentFilters
+            serviceVariationId: searchCriteria.serviceVariationId,  // Changed from service_variation_id to serviceVariationId
+            teamMemberIdFilter: {  // Changed from team_member_id_filter to teamMemberIdFilter
+                any: [searchCriteria.teamMemberId]
+            }
+        });
+    }
+
+    // Format the request body as per the API's expectation
+    const requestBody = {
+        query: { filter }
+    };
+
+    try {
+        const response = await bookingApi.searchAvailability(requestBody);
+
+        // Check if response is valid and contains availabilities
+        if (!response || !response.result || !response.result.availabilities) {
+            throw new Error("Received invalid response from the availability search endpoint.");
+        }
+
+        // Serialize the response to handle BigInt serialization
+        const serializedAvailabilities = serializeBigInts(response.result.availabilities);
+        console.log("Serialized search availability response:", serializedAvailabilities);
+
+        return serializedAvailabilities;
+    } catch (error) {
+        console.error("Failed to search availability:", error);
+        throw new Error("Failed to search availability");
+    }
+}
+  
 
 async function bulkRetrieveBookings(bookingIds) {
     console.log("Received bookingIds:", bookingIds);  // Logging the input to debug
