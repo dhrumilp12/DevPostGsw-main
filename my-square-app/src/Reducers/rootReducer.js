@@ -22,7 +22,7 @@ import bookingUpdateReducer from './bookingApisReducer/bookingUpdateReducer';
 import bookingCancelReducer from './bookingApisReducer/bookingCancelReducer';
 import bookingRetriveReducer from './bookingApisReducer/bookingRetriveReducer';
 import bookingsListReducer from './bookingApisReducer/bookingListReducer';
-import bookingSearchAvailabilityReducer from './bookingApisReducer/bookingSearchAvailabilityReducer';
+import searchAvailabilityReducer from './bookingApisReducer/bookingSearchAvailabilityReducer';
 import bulkRetrieveBookingsReducer from './bookingApisReducer/bookingBulkRetriveReducer';
 
 import inventoryCountsReducer from './inventoryApiReducer/inventoryBatchRetrieveReducer';
@@ -64,7 +64,7 @@ const rootReducer = combineReducers({
   bookingCancel: bookingCancelReducer,
   bookingRetrive: bookingRetriveReducer,
   bookingsList: bookingsListReducer,
-  bookingAvailabilitySearch: bookingSearchAvailabilityReducer,
+  bookingAvailabilitySearch: searchAvailabilityReducer,
   bulkRetrieveBookings: bulkRetrieveBookingsReducer,
   
   inventoryCounts: inventoryCountsReducer,

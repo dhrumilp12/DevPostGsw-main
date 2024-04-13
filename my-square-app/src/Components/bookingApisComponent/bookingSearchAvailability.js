@@ -5,15 +5,15 @@ import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 
 const SearchAvailabilityForm = () => {
   const [searchCriteria, setSearchCriteria] = useState({
-    start_at: '',
-    end_at: '',
-    location_id: '',
-    service_variation_id: '',
-    team_member_id: '',
+    startAt: '',
+    endAt: '',
+    locationId: '',
+    serviceVariationId: '',
+    teamMemberId: '',
   });
 
   const dispatch = useDispatch();
-  const { availabilities, loading, error } = useSelector((state) => state.availabilitySearch);
+  const { availabilities, loading, error } = useSelector((state) => state.bookingAvailabilitySearch);
 
   const handleChange = (e) => {
     setSearchCriteria({ ...searchCriteria, [e.target.name]: e.target.value });
@@ -34,8 +34,8 @@ const SearchAvailabilityForm = () => {
               <Form.Label>Start At</Form.Label>
               <Form.Control
                 type="datetime-local"
-                name="start_at"
-                value={searchCriteria.start_at}
+                name="startAt"
+                value={searchCriteria.startAt}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -43,8 +43,8 @@ const SearchAvailabilityForm = () => {
               <Form.Label>End At</Form.Label>
               <Form.Control
                 type="datetime-local"
-                name="end_at"
-                value={searchCriteria.end_at}
+                name="endAt"
+                value={searchCriteria.endAt}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -52,8 +52,8 @@ const SearchAvailabilityForm = () => {
               <Form.Label>Location ID</Form.Label>
               <Form.Control
                 type="text"
-                name="location_id"
-                value={searchCriteria.location_id}
+                name="locationId"
+                value={searchCriteria.locationId}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -61,8 +61,8 @@ const SearchAvailabilityForm = () => {
               <Form.Label>Service Variation ID</Form.Label>
               <Form.Control
                 type="text"
-                name="service_variation_id"
-                value={searchCriteria.service_variation_id}
+                name="serviceVariationId"
+                value={searchCriteria.serviceVariationId}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -70,8 +70,8 @@ const SearchAvailabilityForm = () => {
               <Form.Label>Team Member ID</Form.Label>
               <Form.Control
                 type="text"
-                name="team_member_id"
-                value={searchCriteria.team_member_id}
+                name="teamMemberId"
+                value={searchCriteria.teamMemberId}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -85,7 +85,7 @@ const SearchAvailabilityForm = () => {
               <ul>
                 {availabilities.map((availability, index) => (
                   <li key={index}>
-                    Start At: {availability.start_at} - Location ID: {availability.location_id}
+                    Start At: {availability.startAt} - Location ID: {availability.locationId}
                   </li>
                 ))}
               </ul>

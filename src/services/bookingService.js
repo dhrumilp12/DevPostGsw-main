@@ -1,5 +1,12 @@
 const { bookingApi } = require('../api/squareClient');
 
+// Helper function to serialize objects that may contain BigInt
+const serializeBigInts = (obj) => {
+    const replacer = (key, value) => 
+      typeof value === 'bigint' ? value.toString() : value;
+    return JSON.parse(JSON.stringify(obj, replacer));
+  };
+
 async function createBooking(bookingData) {
     console.log("Received Booking Data:", bookingData);
 
@@ -124,15 +131,22 @@ async function listBookings() {
 }
 
 
+
 async function searchAvailability(searchCriteria) {
     try {
-        const response = await bookingApi.searchAvailability(searchCriteria);
-        return response.result.availabilities || [];
+    // Assuming searchCriteria is already in the correct format as required by the Square API
+    const response = await bookingApi.searchAvailability({ query: searchCriteria });
+
+    // Serialize the response to handle BigInt serialization
+    const serializedAvailabilities = serializeBigInts(response.result.availabilities);
+    console.log("Serialized search availability response:", serializedAvailabilities);
+    
+    return serializedAvailabilities;
     } catch (error) {
-        console.error("Failed to search availability:", error);
-        throw new Error("Failed to search availability");
+    console.error("Failed to search availability:", error);
+    throw new Error("Failed to search availability");
     }
-}
+}            
 
 async function bulkRetrieveBookings(bookingIds) {
     console.log("Received bookingIds:", bookingIds);  // Logging the input to debug
@@ -144,8 +158,12 @@ async function bulkRetrieveBookings(bookingIds) {
     
     try {
         const response = await bookingApi.bulkRetrieveBookings({ bookingIds });
-        console.log("Bulk retrieve response:", response.result.bookings);
-        return response.result.bookings || [];
+        
+         // Serialize the response to convert BigInt to strings
+        const serializedResponse = serializeBigInts(response.result.bookings);
+
+        console.log("Serialized bulk retrieve response:", serializedResponse);
+        return serializedResponse || [];
     } catch (error) {
         console.error("Failed to bulk retrieve bookings:", error);
         throw new Error("Failed to bulk retrieve bookings");

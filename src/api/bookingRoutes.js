@@ -97,6 +97,7 @@ router.post('/bulk-retrieve-bookings', async (req, res) => {
         return res.status(400).json({ error: 'Invalid input for bookingIds, expected an array of strings.' });
       }
       const bookings = await bookingService.bulkRetrieveBookings(bookingIds);
+      console.log('Bookings to send to frontend:', bookings);
       res.json(bookings); // Make sure to return the array of bookings directly
     } catch (error) {
       res.status(500).json({ error: error.message });
