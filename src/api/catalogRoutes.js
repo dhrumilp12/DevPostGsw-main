@@ -1,59 +1,65 @@
-// catalogRoutes.js
 const express = require('express');
 const router = express.Router();
 const catalogService = require('../services/catalogService');
-const path = require('path');
 const multer = require('multer');
+const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 
-// Ensure the uploads directory exists
+
+
+// Setup directory for file uploads
 const uploadsDir = path.join(__dirname, '../uploads');
 if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
+// Configure multer storage for handling files
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: (req, file, cb) => {
       cb(null, uploadsDir);
   },
-  filename: function (req, file, cb) {
-      cb(null, Date.now() + path.extname(file.originalname));
+  filename: (req, file, cb) => {
+      
+      const extension = path.extname(file.originalname);
+      // 'default' is used if objectId is not specified in the query
+      const objectId = req.query.objectId || 'default';
+      cb(null, `${objectId}${extension}`);
   }
 });
 
 const upload = multer({ storage: storage });
 
+// Route to handle image uploads
 router.post('/images', upload.single('image'), async (req, res) => {
-  try {
-      const idempotencyKey = req.body.idempotencyKey;
-      const objectId = req.body.objectId;
-      const imageFile = req.file;
-      const imageData = {
-          name: imageFile.originalname,
-          data: fs.readFileSync(imageFile.path).toString('base64')
-      };
-      const createdImage = await catalogService.createCatalogImage(idempotencyKey, objectId, imageData);
-      res.json(createdImage);
-  } catch (error) {
-      res.status(500).json({ error: error.message });
+  console.log('Query:', req.query);  // Logs the query parameters
+  console.log('Body:', req.body);  // Logs other body fields
+  console.log("File Info:", req.file);  // Logs file information
+
+  if (!req.file) {
+      return res.status(400).send('No file uploaded');
   }
+
+  // Assuming that file upload is the end of the operation
+  res.status(201).send('File uploaded successfully with objectId in filename');
 });
 
-
-
 router.put('/images/:imageId', upload.single('image'), async (req, res) => {
+  if (!req.file) {
+      return res.status(400).json({ error: 'No image file provided.' });
+  }
   try {
-      const imageId = req.params.imageId;
-      const idempotencyKey = req.body.idempotencyKey;
-      const imageFile = req.file;
+      const requestDetails = JSON.parse(req.body.request);
+      const { idempotencyKey } = requestDetails;
       const imageData = {
-          name: imageFile.originalname,
-          data: fs.readFileSync(imageFile.path).toString('base64')
+          name: req.file.originalname,
+          data: fs.readFileSync(req.file.path, 'base64')
       };
-      const updatedImage = await catalogService.updateCatalogImage(imageId, idempotencyKey, imageData);
+      const updatedImage = await catalogService.updateCatalogImage(req.params.imageId, idempotencyKey, imageData);
+      fs.unlinkSync(req.file.path);
       res.json(updatedImage);
   } catch (error) {
+      fs.unlinkSync(req.file.path);
       res.status(500).json({ error: error.message });
   }
 });
@@ -108,12 +114,12 @@ router.get('/search', async (req, res) => {
 });
 
 // Route to get a single catalog item
+// Route to get a single catalog item
 router.get('/search-item/:itemId', async (req, res) => {
   try {
     const itemId = req.params.itemId;
     console.log("Fetching catalog item with ID:", itemId); // Log the item ID being fetched
     const item = await catalogService.getCatalogItem(itemId);
-    console.log("Fetched item:", item); // Log the fetched item
 
     // Convert BigInt values to strings
     const itemWithConvertedBigInts = JSON.parse(JSON.stringify(item, (_, v) => 
@@ -125,6 +131,9 @@ router.get('/search-item/:itemId', async (req, res) => {
     res.status(500).json({ error: 'Failed to get catalog item' });
   }
 });
+
+
+
 
 router.get('/list', async (req, res) => {
   try {

@@ -21,12 +21,11 @@ export const fetchCatalogItemFailure = (error) => ({
 });
 
 export const fetchCatalogItem = (itemId) => async (dispatch) => {
-  dispatch(fetchCatalogItemStart());
+  dispatch({ type: 'FETCH_CATALOG_ITEM_START' });
   try {
-    // Ensure this URL matches the backend route
-    const response = await axios.get(`/api/catalogs/search-item/${itemId}`);
-    dispatch(fetchCatalogItemSuccess(response.data));
+    const response = await axios.get(`http://localhost:3000/api/catalogs/search-item/${itemId}`);
+    dispatch({ type: 'FETCH_CATALOG_ITEM_SUCCESS', payload: response.data });
   } catch (error) {
-    dispatch(fetchCatalogItemFailure(error.message));
+    dispatch({ type: 'FETCH_CATALOG_ITEM_FAILURE', payload: error.response?.data?.error || 'Failed to fetch item' });
   }
 };

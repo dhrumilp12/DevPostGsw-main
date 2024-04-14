@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector  } from 'react-redux';
-import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
+import {Container, Row, Col, Form, Button, Alert, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { registerUser, loginUser } from '../../Actions/customerApisAction/registerLoginAction';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure this import is at the top level of your app, ideally in index.js
 import { useNavigate } from 'react-router-dom';
@@ -35,6 +35,7 @@ const RegisterLogin = () => {
   const { isAuthenticated } = useSelector((state) => state.registerLogin);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    
   };
 
   useEffect(() => {
@@ -58,6 +59,10 @@ const RegisterLogin = () => {
     });
   };
   
+  const renderTooltip = (message) => (
+    <Tooltip>{message}</Tooltip>
+  );
+
   return (
     <Container fluid className="min-vh-100 d-flex align-items-center justify-content-center" style={{ backgroundImage: `url("${backgroundImageUrls[backgroundImageIndex]}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
     <Row>
@@ -67,6 +72,7 @@ const RegisterLogin = () => {
           <h1 className="text-center mb-4 text-white">{isRegister ? 'Create Account' : 'Sign In'}</h1>
           {error && <Alert variant="danger">{error}</Alert>}
           </Form.Group>
+
             {isRegister && (
               <Form.Group className="mb-3">
                 <Form.Select name="userType" value={userType} onChange={(e) => setUserType(e.target.value)} required>
@@ -78,12 +84,17 @@ const RegisterLogin = () => {
 
             {userType === 'buyer' && isRegister && (
               <>
-                <Form.Group className="mb-3">
-                  <Form.Control type="text" name="givenName" placeholder="First Name" required onChange={handleChange} />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Control type="text" name="familyName" placeholder="Last Name" required onChange={handleChange} />
-                </Form.Group>
+                <OverlayTrigger placement="right" overlay={renderTooltip("Please enter your first name")}>
+              <Form.Group className="mb-3">
+                <Form.Control type="text" name="givenName" placeholder="First Name" required onChange={handleChange} />
+              </Form.Group>
+            </OverlayTrigger>
+
+               <OverlayTrigger placement="right" overlay={renderTooltip("Please enter your last name")}>
+              <Form.Group className="mb-3">
+                <Form.Control type="text" name="familyName" placeholder="Last Name" required onChange={handleChange} />
+              </Form.Group>
+            </OverlayTrigger>
               </>
             )}
 
@@ -123,9 +134,11 @@ const RegisterLogin = () => {
               </Form.Group>
             )}
 
-            <Form.Group className="mb-3">
-              <Form.Control type="password" name="password" placeholder="Password" required onChange={handleChange} />
-            </Form.Group>
+            <OverlayTrigger placement="right" overlay={renderTooltip("Create a secure password")}>
+              <Form.Group className="mb-3">
+                <Form.Control type="password" name="password" placeholder="Password" required onChange={handleChange} />
+              </Form.Group>
+            </OverlayTrigger>
 
             {!isRegister && (
               <Form.Group className="mb-3 text-center">
@@ -150,3 +163,4 @@ const RegisterLogin = () => {
 };
 
 export default RegisterLogin;
+

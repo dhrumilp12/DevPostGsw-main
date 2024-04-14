@@ -10,6 +10,7 @@ const initialState = {
   error: null,
 };
 
+
 const catalogSearchItemReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_CATALOG_ITEM_START:
@@ -23,6 +24,8 @@ const catalogSearchItemReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         item: action.payload,
+        
+        
       };
     case FETCH_CATALOG_ITEM_FAILURE:
       return {

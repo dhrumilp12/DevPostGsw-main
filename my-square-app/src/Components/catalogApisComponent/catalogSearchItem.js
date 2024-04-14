@@ -19,7 +19,7 @@ import {
 const CatalogSearchItem = () => {
   const { itemId } = useParams();
   const dispatch = useDispatch();
-  const { item, loading, error } = useSelector((state) => state.catalogSearchItem);
+  const {  item, loading, error } = useSelector((state) => state.catalogSearchItem);
 
   useEffect(() => {
     if (itemId) {
@@ -27,9 +27,11 @@ const CatalogSearchItem = () => {
     }
   }, [dispatch, itemId]);
 
-  if (loading) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}><CircularProgress /></Box>;
-  if (error) return <Typography color="error" textAlign="center">{error}</Typography>;
+  if (loading) return <CircularProgress />;
+  if (error) return <Typography color="error">{error}</Typography>;
 
+
+ 
   return (
     <Box sx={{ p: 3 }}>
       {item ? (
@@ -37,7 +39,7 @@ const CatalogSearchItem = () => {
           <CardMedia
             component="img"
             height="300"
-            image={item.itemData.imageUrl || "https://via.placeholder.com/600x300"}
+            image={item.imageUrl || "https://via.placeholder.com/600x300"}
             alt={item.itemData.name}
           />
           <CardContent>

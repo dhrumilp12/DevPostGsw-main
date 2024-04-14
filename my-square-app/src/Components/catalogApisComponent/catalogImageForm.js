@@ -1,52 +1,45 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { createCatalogImage, updateCatalogImage } from '../../Actions/catalogApisAction/catalogImageAction';
+import { createCatalogImage } from '../../Actions/catalogApisAction/catalogImageAction';
 
 const CatalogImageForm = () => {
-  const [imageData, setImageData] = useState(null);
-  const [objectId, setObjectId] = useState('');
-  const [imageId, setImageId] = useState('');
-  const dispatch = useDispatch();
+    const [file, setFile] = useState(null);
+    const [objectId, setObjectId] = useState('');
+    const dispatch = useDispatch();
 
-  const handleCreateImageSubmit = (e) => {
-    e.preventDefault();
-    if (imageData) {
-      const idempotencyKey = Date.now().toString();
-      dispatch(createCatalogImage(idempotencyKey, objectId, imageData));
-    }
-  };
+    const handleCreateImageSubmit = (e) => {
+        e.preventDefault();
+        if (!file) {
+            console.error("No file selected.");
+            return;
+        }
+        const idempotencyKey = Date.now().toString();
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('idempotencyKey', idempotencyKey);
+    
+        // Construct the URL with objectId as a query parameter
+        const url = `/api/catalogs/images${objectId ? `?objectId=${objectId}` : ''}`;
+        
+        console.log('Submitting image with Object ID:', objectId || "No Object ID provided");
+        
+        dispatch(createCatalogImage(url, formData));
+    };
+    
 
-  const handleUpdateImageSubmit = (e) => {
-    e.preventDefault();
-    if (imageData) {
-      const idempotencyKey = Date.now().toString();
-      dispatch(updateCatalogImage(imageId, idempotencyKey, imageData));
-    }
-  };
-
-  return (
-    <div>
-      <form onSubmit={handleCreateImageSubmit}>
-        <label>Object ID:</label>
-        <input type="text" value={objectId} onChange={(e) => setObjectId(e.target.value)} />
-        <br />
-        <label>Image:</label>
-        <input type="file" onChange={(e) => setImageData(e.target.files[0])} />
-        <br />
-        <button type="submit">Create Image</button>
-      </form>
-
-      <form onSubmit={handleUpdateImageSubmit}>
-        <label>Image ID:</label>
-        <input type="text" value={imageId} onChange={(e) => setImageId(e.target.value)} />
-        <br />
-        <label>Image:</label>
-        <input type="file" onChange={(e) => setImageData(e.target.files[0])} />
-        <br />
-        <button type="submit">Update Image</button>
-      </form>
-    </div>
-  );
+    return (
+        <div>
+             <form onSubmit={handleCreateImageSubmit} encType="multipart/form-data">
+                <label>Object ID (optional):</label>
+                <input type="text" value={objectId} onChange={(e) => setObjectId(e.target.value)} />
+                <br />
+                <label>Image:</label>
+                <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+                <br />
+                <button type="submit">Create Image</button>
+            </form>
+        </div>
+    );
 };
 
 export default CatalogImageForm;

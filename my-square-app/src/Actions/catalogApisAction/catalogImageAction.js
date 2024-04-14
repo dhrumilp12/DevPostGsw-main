@@ -1,22 +1,20 @@
 import axios from 'axios';
-import{
-CREATE_CATALOG_IMAGE_REQUEST ,
- CREATE_CATALOG_IMAGE_SUCCESS,
- CREATE_CATALOG_IMAGE_FAILURE,
- UPDATE_CATALOG_IMAGE_REQUEST,
- UPDATE_CATALOG_IMAGE_SUCCESS ,
- UPDATE_CATALOG_IMAGE_FAILURE} from '../actionTypes';
+import {
+    CREATE_CATALOG_IMAGE_REQUEST,
+    CREATE_CATALOG_IMAGE_SUCCESS,
+    CREATE_CATALOG_IMAGE_FAILURE,
+    UPDATE_CATALOG_IMAGE_REQUEST,
+    UPDATE_CATALOG_IMAGE_SUCCESS,
+    UPDATE_CATALOG_IMAGE_FAILURE
+} from '../actionTypes';
 
-// Action to create a catalog image
-export const createCatalogImage = (idempotencyKey, objectId, imageData) => async (dispatch) => {
+// Updated to include URL as a parameter
+export const createCatalogImage = (url, formData) => async (dispatch) => {
+    dispatch({ type: CREATE_CATALOG_IMAGE_REQUEST });
     try {
-        dispatch({ type: CREATE_CATALOG_IMAGE_REQUEST });
-        const formData = new FormData();
-        formData.append('image', imageData);
-        formData.append('request', JSON.stringify({ idempotencyKey, objectId }));
-        const response = await axios.post('/api/catalogs/images', formData, {
+        const response = await axios.post(url, formData, {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data'  // This might be optional as axios sets it based on formData
             }
         });
         dispatch({ type: CREATE_CATALOG_IMAGE_SUCCESS, payload: response.data });
@@ -25,18 +23,15 @@ export const createCatalogImage = (idempotencyKey, objectId, imageData) => async
     }
 };
 
-
-
-// Action to update a catalog image
 export const updateCatalogImage = (imageId, idempotencyKey, imageData) => async (dispatch) => {
+    const formData = new FormData();
+    formData.append('image', imageData);
+    formData.append('request', JSON.stringify({ idempotencyKey }));
+    dispatch({ type: UPDATE_CATALOG_IMAGE_REQUEST });
     try {
-        dispatch({ type: UPDATE_CATALOG_IMAGE_REQUEST });
-        const formData = new FormData();
-        formData.append('image', imageData);
-        formData.append('request', JSON.stringify({ idempotencyKey }));
         const response = await axios.put(`/api/catalogs/images/${imageId}`, formData, {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data'  // Ensure multipart form data content type
             }
         });
         dispatch({ type: UPDATE_CATALOG_IMAGE_SUCCESS, payload: response.data });

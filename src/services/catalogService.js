@@ -3,6 +3,11 @@ const crypto = require('crypto'); // For generating idempotency keys
 const { catalogApi } = require('../api/squareClient');
 const { inventoryApi} = require('../api/squareClient');
 const fs = require('fs');
+const FormData = require('form-data');
+const { axiosInstance } = require('../api/squareClient');
+const path = require('path');
+const axios = require('axios');
+const { ApiError } = require('square');
 
 async function createCatalogItem(itemData) {
     try {
@@ -77,13 +82,41 @@ async function searchCatalogItems(query) {
   async function getCatalogItem(itemId) {
     try {
       const response = await catalogApi.retrieveCatalogObject(itemId, true);
-      console.log("result:",response.result.object)
-      return response.result.object;
+      
+      // Check if the API call was successful and the object was returned
+      if (!response || !response.result || !response.result.object) {
+        console.error(`No catalog object returned for ID: ${itemId}`);
+        throw new Error(`Catalog object with ID '${itemId}' not found.`);
+      }
+  
+      // Assuming you want to include image information if it exists
+      const item = response.result.object;
+      const imageId = item.imageIds?.[0];
+  
+      if (imageId) {
+        // Fetch the image data using the image ID
+        const imageResponse = await catalogApi.retrieveCatalogObject(imageId, true);
+        const imageUrl = imageResponse.result.object.imageData.url;
+        // Append the imageUrl to the item object
+        item.imageUrl = imageUrl;
+      } else {
+        // Assuming potential extensions could be .png, .jpg, .jpeg
+        const possibleExtensions = ['.png', '.jpg', '.jpeg'];
+        item.imageUrl = possibleExtensions.map(ext => `http://localhost:3000/uploads/${itemId}${ext}`);
+        // This will set item.imageUrl to an array of possible URLs
+    }
+  
+      console.log(item);
+      return item;
     } catch (error) {
-      console.error("Failed to fetch catalog item:", itemId, error);
-      throw error;
+      console.error(`Failed to fetch catalog item: ${itemId}`, error);
+      if (error instanceof ApiError && error.statusCode === 404) {
+        throw new Error(`Catalog object with ID '${itemId}' not found.`);
+      }
+      throw new Error('Failed to get catalog item');
     }
   }
+
 
   
 
@@ -129,23 +162,54 @@ async function listItems() {
 }
 
 
+async function createCatalogImage(idempotencyKey, objectId, imagePath) {
+  console.log(`Uploading image from path: ${imagePath}`);
+  if (!fs.existsSync(imagePath)) {
+    console.error(`Image file not found at path: ${imagePath}`);
+    throw new Error(`Image file not found at path: ${imagePath}`);
+  }
 
-async function createCatalogImage(idempotencyKey, objectId, imageData) {
-  try {
-    // Generate a default idempotencyKey if not provided
-    idempotencyKey = idempotencyKey || crypto.randomUUID();
-    const response = await catalogApi.createCatalogImage({
-      idempotencyKey,
-      objectId,
-      image: {
-        type: 'IMAGE',
-        id: '#tempImageId',
-        imageData
+  // Determine the content type dynamically
+  const mimeType = path.extname(imagePath) === '.png' ? 'image/png' :
+                   path.extname(imagePath) === '.jpg' ? 'image/jpeg' : 
+                   'application/octet-stream';  // Default fallback
+
+  const formData = new FormData();
+  formData.append('image', fs.createReadStream(imagePath), {
+    filename: path.basename(imagePath),
+    contentType: mimeType // Ensure content type matches your file type
+  });
+  formData.append('request', JSON.stringify({
+    idempotency_key: idempotencyKey,
+    object_id: objectId,
+    image: {
+      type: 'IMAGE',
+      id: '#temp-image-id',
+      image_data: {
+        caption: 'A descriptive caption' // Optional
       }
-    });
-    return response.result.image;
+    }
+  }), {
+    contentType: 'application/json'
+  });
+
+  const config = {
+    headers: {
+      ...formData.getHeaders(),
+      'Authorization': `Bearer ${process.env.PRODUCTION_ACCESS_TOKEN}`,
+      'Accept': 'application/json'
+    }
+  };
+
+  try {
+    const response = await axios.post('https://connect.squareup.com/v2/catalog/images', formData, config);
+    console.log('Catalog image created:', response.data);
+    return response.data;
   } catch (error) {
-    console.error("Failed to create catalog image:", error);
+    console.error('Failed to create catalog image:', error);
+    if (error.response) {
+      console.error('Error response data:', error.response.data);
+    }
     throw error;
   }
 }
