@@ -1,3 +1,4 @@
+// Possible actionTypes.js
 import {
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
@@ -5,6 +6,7 @@ import {
   LOGIN_USER_REQUEST,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAILURE,
+  LOGOUT
 } from '../../Actions/actionTypes';
 
 const initialState = {
@@ -38,8 +40,15 @@ const registerLogicReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        isAuthenticated: false,
         error: action.payload,
+        isAuthenticated: false
+      };
+    case LOGOUT:
+      return {
+        ...state,
+        user: null,
+        isAuthenticated: false,
+        squareCustomerId: null
       };
     default:
       return state;

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import store from './Store/store';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
-import ProtectedRoute from './Components/protectedRoute';
+import {store, persistor} from './Store/store';
+import { BrowserRouter as Router, Routes, Route,Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
 import BookingForm from './Components/bookingApisComponent/bookingForm.js';
 import UpdateBookingForm from './Components/bookingApisComponent/bookingUpdateForm';
@@ -34,70 +34,71 @@ import SearchLoyaltyAccountsForm from './Components/loyaltyApiComponent/searchLo
 import RetrieveLoyaltyAccountForm from './Components/loyaltyApiComponent/retrieveLoyaltyAccountAction';
 import AccumulateLoyaltyPointsForm from './Components/loyaltyApiComponent/accumulateLoyaltyPointsForm';
 import AdjustLoyaltyPointsForm from './Components/loyaltyApiComponent/adjustLoyaltyPointsForm';
-import Inventory from './Components/Inventory';
-import Loyalty from './Components/loyalty';
+
 import PaymentForm from './Components/paymentApisComponents/paymentForm.js';
 import PaymentStatus from './Components/paymentApisComponents/paymentStatus.js';
 import PaymentHistory from './Components/paymentApisComponents/paymentHistory.js';
 import PaymentDetails from './Components/paymentApisComponents/paymentDetails.js';
 import Navbar from './Components/Navbar';
-import AdminPanel from './Components/adminPanel';
-import Dashboard from './Components/dashboard';
-import EventPage from './Components/eventPage';
+
+
 import OrderConfirmation from './Components/orderConfirmation';
 import ShoppingCart from './Components/shoppingCart';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure this import is at the top level of your app, ideally in index.js
 
+const ProtectedRoute = ({ children }) => {
+  const isAuthenticated = useSelector(state => state.registerLogin.isAuthenticated);
+  console.log('isAuthenticated:', isAuthenticated);
+  return isAuthenticated ? children : <Navigate to="/registerLogin" replace />;
+};
+
 function App() {
-  const isAuthenticated = true;
   return (
     <Provider store={store}>
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<CatalogList />} />
-        <Route path="/catalog-search" element={<CatalogSearch />} />
-        <Route path="/catalogSearchItem/:itemId" element={<CatalogSearchItem />} />
-        <Route path="/catalogCreate" element={<CatalogCreate />} />
-        <Route path="/catalogDeleteItem/:itemId" element={<CatalogDeleteItem />} />
-        <Route path="/catalog-image" element={<CatalogImageForm />} />
+      <PersistGate loading={null} persistor={persistor}>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<CatalogList />} />
+          <Route path="/catalog-search" element={<CatalogSearch />} />
+          <Route path="/catalogSearchItem/:itemId" element={<CatalogSearchItem />} />
+          <Route path="/catalogCreate" element={<CatalogCreate />} />
+          <Route path="/catalogDeleteItem/:itemId" element={<CatalogDeleteItem />} />
+          <Route path="/catalog-image" element={<CatalogImageForm />} />
 
-        
-        <Route path="/booking" element={<BookingForm />} />
-        <Route path="/updateBooking/:bookingId" element={<UpdateBookingForm />} />
-        <Route path="/cancelBooking/:bookingId" element={<CancelBooking />} />
-        <Route path="/booking/:bookingId" element={<BookingRetrive />} />
-        <Route path="/bookingList" element={<BookingsList />} />
-        <Route path="/search-availability" element={<BookingSearchAvailabilityForm />} />
-        <Route path="/bulk-retrieve-bookings" element={<BookingBulkRetrieveForm />} />
-        
-        <Route path="/batch-retrieve-inventory-counts" element={<BatchRetrieveInventoryCountsForm />} />
-        <Route path="/batch-adjust-inventory" element={<BatchAdjustInventoryForm />} />
-        
-        <Route path="/registerLogin" element={<RegisterLogin />} />
-        <Route path="/customerDetail/:customerId" element={<CustomerDetail  />} />
-        <Route path="/customerList" element={<CustomerList />} />
-        <Route path="/update-customer/:customerId" element={<UpdateCustomer/>} />
+          <Route path="/booking" element={<ProtectedRoute><BookingForm /></ProtectedRoute>} />
+          <Route path="/updateBooking/:bookingId" element={<ProtectedRoute><UpdateBookingForm /></ProtectedRoute>} />
+          <Route path="/cancelBooking/:bookingId" element={<ProtectedRoute><CancelBooking /></ProtectedRoute>} />
+          <Route path="/booking/:bookingId" element={<ProtectedRoute><BookingRetrive /></ProtectedRoute>} />
+          <Route path="/bookingList" element={<ProtectedRoute><BookingsList /></ProtectedRoute>} />
+          <Route path="/search-availability" element={<ProtectedRoute><BookingSearchAvailabilityForm /></ProtectedRoute>} />
+          <Route path="/bulk-retrieve-bookings" element={<ProtectedRoute><BookingBulkRetrieveForm /></ProtectedRoute>} />
 
-        <Route path="/loyalty-Account" element={<LoyaltyAccountForm/>} />
-        <Route path="/search-loyalty-accounts" element={<SearchLoyaltyAccountsForm />} />
-        <Route path="/retrieveLoyaltyAccountForm" element={<RetrieveLoyaltyAccountForm/>} />
-        <Route path="/accumulate-loyalty-points" element={<AccumulateLoyaltyPointsForm/>} />
-        <Route path="/adjust-loyalty-points" element={<AdjustLoyaltyPointsForm />} />
-        <Route path="/inventory" element={<Inventory />} />
-        <Route path="/loyalty" element={<Loyalty />} />
-        <Route path="/payment" element={<><PaymentForm /><PaymentStatus /></>} />
-        <Route path="/admin" element={<ProtectedRoute isAuthenticated={isAuthenticated}><AdminPanel /></ProtectedRoute>} />
-        <Route path="/dashboard" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Dashboard /></ProtectedRoute>} />
-        <Route path="/events" element={<EventPage />} />
-        <Route path="/order-confirmation" element={<OrderConfirmation />} />
-        <Route path="/shopping-cart" element={<ShoppingCart />} />
-        <Route path="/payment-history" element={<PaymentHistory />} />
-        <Route path="/payment-detail/:paymentId" element={<PaymentDetails />} />
-        {/* Add more routes as needed */}
-      </Routes>
-    </Router>
-    </Provider>
+          <Route path="/batch-retrieve-inventory-counts" element={<ProtectedRoute><BatchRetrieveInventoryCountsForm /></ProtectedRoute>} />
+          <Route path="/batch-adjust-inventory" element={<ProtectedRoute><BatchAdjustInventoryForm /></ProtectedRoute>} />
+
+          <Route path="/registerLogin" element={<RegisterLogin />} />
+          <Route path="/customerDetail/:customerId" element={<ProtectedRoute><CustomerDetail /></ProtectedRoute>} />
+          <Route path="/customerList" element={<ProtectedRoute><CustomerList /></ProtectedRoute>} />
+          <Route path="/update-customer/:customerId" element={<ProtectedRoute><UpdateCustomer /></ProtectedRoute>} />
+
+          <Route path="/loyalty-Account" element={<ProtectedRoute><LoyaltyAccountForm /></ProtectedRoute>} />
+          <Route path="/search-loyalty-accounts" element={<ProtectedRoute><SearchLoyaltyAccountsForm /></ProtectedRoute>} />
+          <Route path="/retrieveLoyaltyAccountForm" element={<ProtectedRoute><RetrieveLoyaltyAccountForm /></ProtectedRoute>} />
+          <Route path="/accumulate-loyalty-points" element={<ProtectedRoute><AccumulateLoyaltyPointsForm /></ProtectedRoute>} />
+          <Route path="/adjust-loyalty-points" element={<ProtectedRoute><AdjustLoyaltyPointsForm /></ProtectedRoute>} />
+
+          <Route path="/payment" element={<ProtectedRoute><><PaymentForm /><PaymentStatus /></></ProtectedRoute>} />
+
+          <Route path="/order-confirmation" element={<ProtectedRoute><OrderConfirmation /></ProtectedRoute>} />
+          <Route path="/shopping-cart" element={<ProtectedRoute><ShoppingCart /></ProtectedRoute>} />
+          <Route path="/payment-history" element={<ProtectedRoute><PaymentHistory /></ProtectedRoute>} />
+          <Route path="/payment-detail/:paymentId" element={<ProtectedRoute><PaymentDetails /></ProtectedRoute>} />
+          {/* Add more routes as needed */}
+        </Routes>
+      </Router>
+    </PersistGate>
+  </Provider>
   );
 }
 

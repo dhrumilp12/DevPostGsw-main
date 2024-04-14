@@ -5,7 +5,8 @@ import {
     REGISTER_USER_FAILURE,
     LOGIN_USER_REQUEST,
     LOGIN_USER_SUCCESS,
-    LOGIN_USER_FAILURE
+    LOGIN_USER_FAILURE,
+    LOGOUT
 } from '../actionTypes';
 
 export const registerUser = (userData) => async (dispatch) => {
@@ -31,4 +32,10 @@ export const loginUser = (userData, navigate) => async (dispatch) => {
         dispatch({ type: LOGIN_USER_FAILURE, payload: error.response.data.error || 'Login failed. Please check your credentials.' });
         navigate('/registerLogin'); // Redirect to the signup page if login fails
       }
+    };
+
+    export const logout = () => {
+        return {
+            type: LOGOUT
+        };
     };

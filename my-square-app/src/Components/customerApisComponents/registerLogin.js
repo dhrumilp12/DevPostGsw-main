@@ -23,6 +23,12 @@ const RegisterLogin = () => {
     password: ''
   });
   
+  const [backgroundImageIndex, setBackgroundImageIndex] = useState(0);
+  const backgroundImageUrls = [
+    "https://source.unsplash.com/random/1920x1080?concert",
+    "https://source.unsplash.com/random/1920x1080?festival",
+    "https://source.unsplash.com/random/1920x1080?live-music"
+  ];
   const { error } = useSelector((state) => state.registerLogin);
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Initialize useNavigate hook
@@ -35,29 +41,32 @@ const RegisterLogin = () => {
     if (isAuthenticated) {
       navigate('/'); // Redirects to the homepage route after successful signup/login
     }
-  }, [isAuthenticated, navigate]);
+    const intervalId = setInterval(() => {
+      setBackgroundImageIndex((prevIndex) => (prevIndex + 1) % backgroundImageUrls.length);
+    }, 5000); // Change image every 5 seconds
+    return () => clearInterval(intervalId);
+  }, [isAuthenticated, navigate, backgroundImageUrls.length]);
   
 
   const handleSubmit = (e) => {
     e.preventDefault();
-     
-    if (isRegister) {
-      dispatch(registerUser(formData));
-    } else {
-      dispatch(loginUser(formData, navigate)); // Pass navigate function to loginUser action
-    }
+    const action = isRegister ? registerUser : loginUser;
+    dispatch(action(formData)).then(() => {
+      if (isAuthenticated) navigate('/');
+    }).catch((error) => {
+      console.error("Login/Registration failed:", error);
+    });
   };
-
+  
   return (
-    <Container fluid className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
-      <Row>
+    <Container fluid className="min-vh-100 d-flex align-items-center justify-content-center" style={{ backgroundImage: `url("${backgroundImageUrls[backgroundImageIndex]}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+    <Row>
       <Col xs={12} md={8} lg={8} xl={12} className="mx-auto">
-          <Form onSubmit={handleSubmit} className="border p-4 bg-white rounded-3 shadow">
-            <Form.Group className="mb-3">
-              <h1 className="text-center mb-4">{isRegister ? 'Create Account' : 'Sign In'}</h1>
-              {error && <Alert variant="danger">{error}</Alert>} {/* Display error if exists */}
-            </Form.Group>
-
+        <Form onSubmit={handleSubmit} className="p-4 rounded-3 shadow" style={{ backgroundColor: 'rgba(44,48,59, 0.8)' }}>
+        <Form.Group className="mb-3">
+          <h1 className="text-center mb-4 text-white">{isRegister ? 'Create Account' : 'Sign In'}</h1>
+          {error && <Alert variant="danger">{error}</Alert>}
+          </Form.Group>
             {isRegister && (
               <Form.Group className="mb-3">
                 <Form.Select name="userType" value={userType} onChange={(e) => setUserType(e.target.value)} required>

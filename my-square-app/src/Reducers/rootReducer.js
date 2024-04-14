@@ -1,13 +1,13 @@
 // src/reducers/rootReducer.js
 import { combineReducers } from 'redux';
+
+
 import catalogListReducer from './catalogApisReducer/catalogListReducer';
 import catalogCreateReducer from './catalogApisReducer/catalogCreateReducer';
 import catalogDeleteItemReducer from './catalogApisReducer/catalogDeleteItem';
 import catalogSearchReducer from './catalogApisReducer/catalogSearchReducer';
 import catalogSearchItemReducer from './catalogApisReducer/catalogSearchItemReducer';
 import catalogImageReducer from './catalogApisReducer/catalogImageReducer'; 
-
-import inventoryReducer from './inventoryReducer';
 
 import paymentReducer from './paymentApisReducer/paymentFormReducer';
 import paymentStatusReducer from './paymentApisReducer/paymentStatusReducer';
@@ -32,7 +32,7 @@ import searchLoyaltyAccountsReducer from './loyaltyApiReducer/searchLoyaltyAccou
 import retrieveLoyaltyAccountReducer from './loyaltyApiReducer/retrieveLoyaltyAccountReducer';
 import accumulateLoyaltyPointsReducer from './loyaltyApiReducer/accumulateLoyaltyPointsReducer';
 import adjustLoyaltyPointsReducer from './loyaltyApiReducer/adjustLoyaltyPointsReducer';
-import loyaltyReducer from './loyaltyReducer';
+
 import adminPanelReducer from './adminPanelReducer';
 import dashboardReducer from './dashboardReducer';
 import eventReducer from './eventPageReducer';
@@ -43,6 +43,8 @@ import registerLogicReducer from './customerApisReducer/registerLogicReducer';
 
 
 const rootReducer = combineReducers({
+ 
+
   catalogList: catalogListReducer,
   catalogCreate: catalogCreateReducer,
   catalogDeleteItem: catalogDeleteItemReducer,
@@ -50,11 +52,11 @@ const rootReducer = combineReducers({
   catalogSearchItem: catalogSearchItemReducer,
   catalogImage: catalogImageReducer,
   
-  inventory: inventoryReducer,
   payment: paymentReducer,
   paymentStatus: paymentStatusReducer,
   paymentHistory: paymentHistoryReducer,
 
+  
   customers: customerListReducer,
   customerDetails: CustomerDetailsReducer,
   customerUpdate: customerUpdateReducer,
@@ -74,7 +76,7 @@ const rootReducer = combineReducers({
   retrieveLoyaltyAccount: retrieveLoyaltyAccountReducer,
   loyaltyPointsAccumulation: accumulateLoyaltyPointsReducer,
   adjustLoyaltyPoints: adjustLoyaltyPointsReducer,
-  loyalty: loyaltyReducer,
+ 
   adminPanel: adminPanelReducer,
   dashboard: dashboardReducer,
   events: eventReducer,

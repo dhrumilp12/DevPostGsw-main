@@ -1,29 +1,38 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navbar, Nav, Container, Form, FormControl, Button, NavDropdown } from 'react-bootstrap';
 import { FaSearch, FaUserCircle } from 'react-icons/fa';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-//import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../Actions/customerApisAction/registerLoginAction';
+import logo from '../assets/1.jpg'
 
 const NavigationBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // const dispatch = useDispatch(); // Uncomment when needed
-
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(state => state.registerLogin.isAuthenticated);
 
   const handleLogout = () => {
-    // Optional: dispatch a logout action if you manage authentication state in Redux
-    // dispatch({ type: 'LOGOUT' });
-    navigate('/registerLogin');
+    dispatch(logout());
   };
-  // Do not display the navbar on the RegisterLogin page
+  
+  useEffect(() => {
+    if (!isAuthenticated && location.pathname !== '/registerLogin') {
+      navigate('/registerLogin', { replace: true });
+    }
+  }, [isAuthenticated, navigate, location.pathname]);
+
   if (location.pathname === '/registerLogin') {
     return null;
   }
 
+
   return (
     <Navbar expand="lg" variant="dark" className="shadow navbar-modern" style={{ backgroundColor: '#1a2035' }}>
       <Container fluid>
-        <Link to="/" className="navbar-brand">Your Brand</Link>
+        <Link to="/" className="navbar-brand">
+          <img src={logo} alt="Logo" style={{ height: '50px' }} />
+        </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
@@ -51,12 +60,12 @@ const NavigationBar = () => {
               title={<FaUserCircle size="1.5em" />} 
               id="basic-nav-dropdown" 
               align="end" 
-              className="ms-3" // Add margin-left to NavDropdown for spacing
+              className="ms-3"
             >
-            <NavDropdown.Item as={Link} to="#profile">Profile</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="#settings">Settings</NavDropdown.Item>
-            <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-          </NavDropdown>
+              <NavDropdown.Item as={Link} to="#profile">Profile</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="#settings">Settings</NavDropdown.Item>
+              <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+            </NavDropdown>
           </div>
         </Navbar.Collapse>
       </Container>
@@ -74,11 +83,16 @@ const NavigationBar = () => {
           font-weight: bold;
           transition: transform 0.3s ease;
         }
-        
-        .navbar-modern .navbar-brand:hover {
-          transform: scale(1.1);
-          text-decoration: none;
-          color:#17a2b8;
+
+        .navbar-modern .navbar-brand img {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          border-radius: 5px; // Adds a slight rounding to the corners
+          box-shadow: 2px 2px 10px rgba(0,0,0,0.3); // Adds a subtle shadow
+        }
+
+        .navbar-modern .navbar-brand img:hover {
+          transform: scale(1.05); // Slightly enlarges the logo on hover
+          box-shadow: 3px 3px 15px rgba(0,0,0,0.5); // Enhances the shadow on hover
         }
         
         .navbar-modern .nav-link {
@@ -117,11 +131,10 @@ const NavigationBar = () => {
         .navbar-modern .btn-outline-info:hover {
           background-color: #17a2b8;
           border-color: #17a2b8;
-          
         }
         
         .navbar-modern .dropdown-menu {
-          background-color: #2c303b;
+          background-color: #1a2035;
           border: none;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
           border-radius: 0.5rem;
@@ -134,7 +147,7 @@ const NavigationBar = () => {
           transition: color 0.2s ease;
         }
         
-        .navbar-modern .dropdown-item:hover, .navbar-modern .dropdown-item, .navbar-toggler:focus {
+        .navbar-modern .dropdown-item:hover, .navbar-modern .dropdown-item:focus, .navbar-toggler:focus {
           background-color: #1f2833;
           color:#17a2b8;
         }
