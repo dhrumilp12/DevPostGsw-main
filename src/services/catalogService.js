@@ -101,10 +101,20 @@ async function searchCatalogItems(query) {
         item.imageUrl = imageUrl;
       } else {
         // Assuming potential extensions could be .png, .jpg, .jpeg
+        const uploadsDir = path.join(__dirname, '../uploads');
         const possibleExtensions = ['.png', '.jpg', '.jpeg'];
-        item.imageUrl = possibleExtensions.map(ext => `http://localhost:3000/uploads/${itemId}${ext}`);
-        // This will set item.imageUrl to an array of possible URLs
-    }
+
+            // Find the first existing image file
+            const existingFile = possibleExtensions.find(ext => 
+                fs.existsSync(path.join(uploadsDir, `${itemId}${ext}`))
+            );
+
+            if (existingFile) {
+                item.imageUrl = `http://localhost:3000/uploads/${itemId}${existingFile}`;
+            } else {
+                item.imageUrl = null; // or set a default placeholder image URL
+            }
+        }
   
       console.log(item);
       return item;
@@ -216,22 +226,60 @@ async function createCatalogImage(idempotencyKey, objectId, imagePath) {
 
 
 // Function to update a catalog image
-async function updateCatalogImage(imageId, idempotencyKey, imageData) {
-  try {
-    const response = await catalogApi.updateCatalogImage(imageId, {
-      idempotencyKey,
-      image: {
-        type: 'IMAGE',
-        imageData
+async function updateCatalogImage(imageId, objectId, idempotencyKey, imagePath) {
+  console.log(`Updating image from path: ${imagePath}`);
+  console.log("Params received:", { imageId, objectId, idempotencyKey });
+  if (!fs.existsSync(imagePath)) {
+    console.error(`Image file not found at path: ${imagePath}`);
+    throw new Error(`Image file not found at path: ${imagePath}`);
+  }
+
+  // Determine the content type dynamically
+  const mimeType = path.extname(imagePath) === '.png' ? 'image/png' :
+                   path.extname(imagePath) === '.jpg' ? 'image/jpeg' : 
+                   'application/octet-stream';  // Default fallback
+
+  const formData = new FormData();
+  formData.append('image', fs.createReadStream(imagePath), {
+    filename: path.basename(imagePath),
+    contentType: mimeType  // Use the dynamically determined content type
+  });
+  formData.append('request', JSON.stringify({
+    object_id: objectId, // Use objectId here for consistency
+    idempotency_key: idempotencyKey,
+    
+    image: {
+      type: 'IMAGE',
+      id: imageId, // Reuse imageId for updating the correct image
+      image_data: {
+        caption: 'Updated image caption' // Optional, change as needed
       }
-    });
-    return response.result.image;
+    }
+  }), {
+    contentType: 'application/json'
+  });
+
+  const config = {
+    headers: {
+      ...formData.getHeaders(),
+      'Authorization': `Bearer ${process.env.PRODUCTION_ACCESS_TOKEN}`,
+      'Accept': 'application/json'
+    }
+  };
+  console.log("Updating with:", { imageId, objectId, idempotencyKey });
+  try {
+    const response = await axios.put(`https://connect.squareup.com/v2/catalog/images/${imageId}`, formData, config);
+    console.log('Catalog image updated:', response.data);
+    return response.data;
   } catch (error) {
-    console.error("Failed to update catalog image:", error);
+    console.error('Failed to update catalog image:', error);
+    if (error.response) {
+      console.error('Error response data:', error.response.data);
+    }
     throw error;
   }
 }
-// ... Add other Catalog API interactions as needed 
+
 
 module.exports = {
   createCatalogItem,

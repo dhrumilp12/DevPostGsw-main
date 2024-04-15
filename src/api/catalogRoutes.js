@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
       
       const extension = path.extname(file.originalname);
       // 'default' is used if objectId is not specified in the query
-      const objectId = req.query.objectId || 'default';
+      const objectId = req.query.objectId|| req.body.objectId || 'default';
       cb(null, `${objectId}${extension}`);
   }
 });
@@ -44,23 +44,44 @@ router.post('/images', upload.single('image'), async (req, res) => {
   res.status(201).send('File uploaded successfully with objectId in filename');
 });
 
+
+
 router.put('/images/:imageId', upload.single('image'), async (req, res) => {
+  
   if (!req.file) {
-      return res.status(400).json({ error: 'No image file provided.' });
+    return res.status(400).json({ error: 'No file uploaded' });
   }
+  console.log(req.file.originalname);
+  const objectId = req.body.objectId;
+  console.log("objectID:",objectId);
+  
+  // Find and delete all existing files with the same objectId regardless of extension
+  const existingFiles = fs.readdirSync(uploadsDir).filter(
+    file => file.startsWith(objectId) && file !== `${objectId}${path.extname(req.file.originalname)}`
+);
+
+existingFiles.forEach(file => {
+    try {
+        fs.unlinkSync(path.join(uploadsDir, file));
+        console.log(`Deleted old file: ${file}`);
+    } catch (err) {
+        console.error(`Error deleting old file: ${file}`, err);
+        return res.status(500).json({ error: 'Failed to delete old files' });
+    }
+});
+
+  const { imageId } = req.params;
+  const idempotencyKey = req.headers['idempotency-key'] || crypto.randomUUID();
+  console.log("Received update request for:", { imageId, objectId });
+
   try {
-      const requestDetails = JSON.parse(req.body.request);
-      const { idempotencyKey } = requestDetails;
-      const imageData = {
-          name: req.file.originalname,
-          data: fs.readFileSync(req.file.path, 'base64')
-      };
-      const updatedImage = await catalogService.updateCatalogImage(req.params.imageId, idempotencyKey, imageData);
-      fs.unlinkSync(req.file.path);
-      res.json(updatedImage);
+    const updatedImage = await catalogService.updateCatalogImage(
+      imageId, objectId, idempotencyKey, req.file.path
+    );
+    res.status(200).json(updatedImage);
   } catch (error) {
-      fs.unlinkSync(req.file.path);
-      res.status(500).json({ error: error.message });
+    console.error('Error updating catalog image:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
