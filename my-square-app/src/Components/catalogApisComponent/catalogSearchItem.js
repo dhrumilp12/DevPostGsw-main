@@ -10,83 +10,117 @@ import {
   CircularProgress,
   Box,
   Chip,
-  Stack,
-  List,
-  ListItem,
-  ListItemText
+  Divider
 } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import { keyframes } from '@emotion/react';
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const StyledBox = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(4),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: '100%',
+  maxWidth: '1000px',
+  margin: 'auto',
+  marginTop: theme.spacing(5),
+  background: 'linear-gradient(145deg, #0A192F, #172A45)',
+  borderRadius: theme.spacing(2),
+  animation: `${fadeIn} 1s ease-out`
+}));
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  width: '100%',
+  boxShadow: `0 12px 24px -4px ${theme.palette.primary.dark}`,
+  borderRadius: theme.spacing(2),
+  overflow: 'hidden',
+  background: 'linear-gradient(145deg, #233B58, #152A48)',
+  color: theme.palette.grey[100],
+  transition: 'transform 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'scale(1.03)'
+  }
+}));
 
 const CatalogSearchItem = () => {
   const { itemId } = useParams();
   const dispatch = useDispatch();
-  const {  item, loading, error } = useSelector((state) => state.catalogSearchItem);
+  const { item, loading, error } = useSelector(state => state.catalogSearchItem);
+  const theme = useTheme();
 
   useEffect(() => {
-    if (itemId) {
-      dispatch(fetchCatalogItem(itemId));
-    }
+    dispatch(fetchCatalogItem(itemId));
   }, [dispatch, itemId]);
 
-  if (loading) return <CircularProgress />;
+  if (loading) return <CircularProgress color="secondary" />;
   if (error) return <Typography color="error">{error}</Typography>;
 
+  const formatPrice = (priceMoney) => {
+    if (!priceMoney || !priceMoney.amount) return 'N/A';
+    return `$${(priceMoney.amount / 100).toFixed(2)} ${priceMoney.currency}`;
+  };
 
- 
+  const getItemDetails = (item) => {
+    if (item.type === 'ITEM_VARIATION') {
+      return {
+        name: item.itemVariationData.name,
+        description: item.itemVariationData.description || "No description provided",
+        imageUrl: item.imageUrl,
+        price: formatPrice(item.itemVariationData.priceMoney),
+        additionalInfo: `Stockable: ${item.itemVariationData.stockable}, Sellable: ${item.itemVariationData.sellable}`
+      };
+    } else {
+      return {
+        name: item.itemData.name,
+        description: item.itemData.description || item.itemData.descriptionPlaintext || "No description provided",
+        imageUrl: item.imageUrl,
+        price: formatPrice(item.itemData.priceMoney),
+        additionalInfo: `Archived: ${item.itemData.isArchived}, Product Type: ${item.itemData.productType}`
+      };
+    }
+  };
+
+  const details = item ? getItemDetails(item) : null;
+
   return (
-    <Box sx={{ p: 3 }}>
-      {item ? (
-        <Card sx={{ maxWidth: 600, mx: 'auto', overflow: 'hidden' }}>
+    <StyledBox>
+      {details ? (
+        <StyledCard>
           <CardMedia
             component="img"
-            height="300"
-            image={item.imageUrl || "https://via.placeholder.com/600x300"}
-            alt={item.itemData.name}
+            height="340"
+            image={details.imageUrl || "https://via.placeholder.com/800x340"}
+            alt={details.name || 'No image available'}
           />
           <CardContent>
             <Typography gutterBottom variant="h4" component="div">
-              {item.itemData.name}
+              {details.name}
             </Typography>
-            <Typography variant="body1" color="text.primary" mb={2}>
-              {item.itemData.description}
+            <Divider sx={{ my: 1, bgcolor: theme.palette.primary.light }} />
+            <Typography variant="body1" color="text.secondary">
+              {details.description}
             </Typography>
-            
-            {/* Display price and other important details */}
-            <Typography variant="h6" color="secondary" gutterBottom>
-              Price: ${item.itemData.price} {/* Assuming price is directly on itemData */}
+            <Typography variant="h5" color="secondary" gutterBottom>
+              Price: {details.price}
             </Typography>
-            {/* Example of rendering details with list */}
-            <List dense>
-              {item.itemData.details && item.itemData.details.map((detail, index) => (
-                <ListItem key={index} disableGutters>
-                  <ListItemText
-                    primary={detail.title + ": " + detail.value}
-                  />
-                </ListItem>
-              ))}
-            </List>
-
-            <Stack direction="row" spacing={1} mb={2}>
-              <Chip label={`SKU: ${item.itemData.sku}`} variant="outlined" />
-              {/* More chips for other attributes like size, color etc. */}
-            </Stack>
-
-            {/* Display variations if they exist */}
-            {item.itemData.variations && (
-              <Box>
-                <Typography variant="h6">Available Variations:</Typography>
-                {item.itemData.variations.map(variation => (
-                  <Typography key={variation.id} variant="body2" gutterBottom>
-                    {variation.name}: ${variation.price}
-                  </Typography>
-                ))}
-              </Box>
-            )}
+            <Chip label={details.additionalInfo} color="primary" variant="outlined" sx={{ mt: 2 }} />
           </CardContent>
-        </Card>
+        </StyledCard>
       ) : (
-        <Typography textAlign="center">No item found</Typography>
+        <Typography variant="h4" color="text.secondary" textAlign="center">No item found</Typography>
       )}
-    </Box>
+    </StyledBox>
   );
 };
 

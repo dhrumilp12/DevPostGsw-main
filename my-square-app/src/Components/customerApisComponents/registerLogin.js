@@ -67,7 +67,7 @@ const RegisterLogin = () => {
     <Container fluid className="min-vh-100 d-flex align-items-center justify-content-center" style={{ backgroundImage: `url("${backgroundImageUrls[backgroundImageIndex]}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
     <Row>
       <Col xs={12} md={8} lg={8} xl={12} className="mx-auto">
-        <Form onSubmit={handleSubmit} className="p-4 rounded-3 shadow" style={{ backgroundColor: 'rgba(44,48,59, 0.8)' }}>
+        <Form onSubmit={handleSubmit} className="p-4 rounded-3 shadow" style={{ backgroundColor: 'rgba(26,32,53, 0.8)' }}>
         <Form.Group className="mb-3">
           <h1 className="text-center mb-4 text-white">{isRegister ? 'Create Account' : 'Sign In'}</h1>
           {error && <Alert variant="danger">{error}</Alert>}
