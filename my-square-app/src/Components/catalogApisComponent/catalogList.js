@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchCatalog } from '../../Actions/catalogApisAction/catalogListAction';
 import { ToastContainer, toast } from 'react-toastify';
 import { ThreeDots } from 'react-loader-spinner';
-import { Container, Row, Col, Card, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Card, Badge, Image } from 'react-bootstrap'; // Import Image from react-bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -15,15 +15,17 @@ const Catalog = () => {
     dispatch(fetchCatalog());
   }, [dispatch]);
 
-  if (error) {
-    toast.error(`Error: ${error}`);
-  }
+  useEffect(() => {
+    if (error) {
+      toast.error(`Error: ${error}`);
+    }
+  }, [error]);
 
-  const stockBadge = (quantity) => {
+  const stockBadge = (stockable) => {
     let variant = 'success';
     let text = 'In Stock';
 
-    if (parseInt(quantity) <= 0) {
+    if (!stockable) {
       variant = 'danger';
       text = 'Out of Stock';
     }
@@ -46,22 +48,19 @@ const Catalog = () => {
       ) : (
         <Row>
           {catalog.map((item, index) => (
-            <Col sm={12} md={6} lg={4} xl={3} key={`${item.catalogObjectId}-${index}`} className="mb-4">
+            <Col sm={12} md={6} lg={4} xl={3} key={item.id || index} className="mb-4">
               <Card className="position-relative">
-                {stockBadge(item.quantity)}
+                <Card.Header>
+                  {stockBadge(item.itemVariationData?.stockable)}
+                  <Image src={item.imageUrl || "https://via.placeholder.com/800x340"} fluid />
+                </Card.Header>
                 <Card.Body>
-                  <Card.Title>{item?.item_data?.name || 'No Name'}</Card.Title>
+                  <Card.Title>{item.itemVariationData?.name || 'No Name'}</Card.Title>
                   <Card.Text>
-                    ID: {item.catalogObjectId}
+                    ID: {item.id || 'No ID'}
                     <br />
-                    {item?.item_data?.description || 'No Description'}
+                    {item.itemVariationData?.description || 'No Description'}
                   </Card.Text>
-                  {item?.item_data?.variations?.map((variation) => (
-                    <div key={variation.id}>
-                      <div>Variation Name: {variation?.item_variation_data?.name || 'No Variation Name'}</div>
-                      <div>Price: {variation?.item_variation_data?.price_money?.amount || 'No Price'}</div>
-                    </div>
-                  ))}
                 </Card.Body>
               </Card>
             </Col>

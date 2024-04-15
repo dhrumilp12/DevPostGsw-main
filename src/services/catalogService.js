@@ -130,18 +130,40 @@ async function searchCatalogItems(query) {
 
   
 
-// catalogService.js
-// ... other catalogService functions ...
-
+// catalogList
 async function listItems() {
   try {
     // Search for item variations and get their IDs
     console.log("Listing catalog item variations");
     const searchResponse = await catalogApi.searchCatalogObjects({
-      objectTypes: ['ITEM_VARIATION']
+      objectTypes: ['ITEM_VARIATION']  //objectTypes: ['ITEM_VARIATION' , 'ITEM']- for getting both type
     });
 
     console.log("Search response:", searchResponse.result.objects); 
+    // Assuming you want to include image information if it exists
+    const items = searchResponse.result.objects;
+    // Loop through each item and append imageUrl
+    for (const item of items) {
+      const imageId = item.imageIds?.[0];
+      if (imageId) {
+        // Fetch the image data using the image ID
+        const imageResponse = await catalogApi.retrieveCatalogObject(imageId, true);
+        const imageUrl = imageResponse.result.object.imageData.url;
+        item.imageUrl = imageUrl;
+      } else {
+        // Attempt to find local image file
+        const uploadsDir = path.join(__dirname, '../uploads');
+        const possibleExtensions = ['.png', '.jpg', '.jpeg'];
+        const existingFile = possibleExtensions.find(ext => 
+          fs.existsSync(path.join(uploadsDir, `${item.id}${ext}`))
+        );
+        if (existingFile) {
+          item.imageUrl = `http://localhost:3000/uploads/${item.id}${existingFile}`;
+        } else {
+          item.imageUrl = null; // or set a default placeholder image URL
+        }
+      }
+    }
 
     const variationIds = searchResponse.result.objects.map(variation => variation.id);
     console.log("Variation IDs:", variationIds); 
@@ -161,9 +183,9 @@ async function listItems() {
     console.log("Inventory counts response:", response.result); 
 
     // Convert any potential BigInt values to strings
-    const countsWithConvertedBigInts = JSON.parse(JSON.stringify(response.result.counts || [], (_, v) =>
+    const countsWithConvertedBigInts = JSON.parse(JSON.stringify(items || [], (_, v) =>
       typeof v === 'bigint' ? v.toString() : v));
-    
+    console.log("response:", countsWithConvertedBigInts);
     return countsWithConvertedBigInts;
   } catch (error) {
     console.error("Failed to list inventory items:", error);
