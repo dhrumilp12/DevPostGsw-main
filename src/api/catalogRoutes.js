@@ -162,8 +162,10 @@ router.get('/list', async (req, res) => {
       
       res.json(items);
   } catch (error) {
-      res.status(500).json({ error: 'Failed to retrieve inventory' });
-  }
+    console.error("Failed to retrieve inventory", error);
+    res.status(500).json({ error: 'Failed to retrieve inventory' });
+}
+
 });
 
 
