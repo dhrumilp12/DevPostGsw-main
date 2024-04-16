@@ -106,7 +106,7 @@ router.post('/login', async (req, res) => {
       };
 
       // Log success message on terminal
-      console.log(`User ${customer.emailAddress} logged in successfully.`);
+      console.log(`User ${customer.givenName} with id:${customer.id} and email: ${customer.emailAddress} logged in successfully.`);
 
       // Here, you would usually generate a JWT token or session
       res.json({ message: 'Login successful', customer: customerWithConvertedBigInt });

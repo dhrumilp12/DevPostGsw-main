@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import {store, persistor} from './Store/store';
 import { BrowserRouter as Router, Routes, Route,Navigate } from 'react-router-dom';
@@ -52,7 +52,12 @@ const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/registerLogin" replace />;
 };
 
+
+
 function App() {
+  useEffect(() => {
+    document.body.style.backgroundColor = '#b0b8c5';
+  }, []);
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

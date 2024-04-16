@@ -1,19 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navbar, Nav, Container, Form, FormControl, Button, NavDropdown } from 'react-bootstrap';
 import { FaSearch, FaUserCircle } from 'react-icons/fa';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../Actions/customerApisAction/registerLoginAction';
 import logo from '../assets/1.jpg'
-
+import {catalogSearch} from '../Actions/catalogApisAction/catalogSearch';
+import { fetchCustomerDetails } from '../Actions/customerApisAction/customerDetailsAction';  // Check the correct path
 const NavigationBar = () => {
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(state => state.registerLogin.isAuthenticated);
+  const customerInfo = useSelector(state => state.registerLogin.user);  // Assuming user details are stored here
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    dispatch(catalogSearch(searchTerm));
+    navigate(`/search-results?query=${searchTerm}`); // Navigate to a search results page or handle dynamically in the current page
+  };
   const handleLogout = () => {
     dispatch(logout());
+  };
+  const handleProfileClick = () => {
+    if (customerInfo && customerInfo.squareCustomerId) {
+      dispatch(fetchCustomerDetails(customerInfo.squareCustomerId));  // Fetching customer details
+      navigate(`/customerDetail/${customerInfo.squareCustomerId}`);  // Redirecting to profile page
+    }
   };
   
   useEffect(() => {
@@ -45,12 +59,14 @@ const NavigationBar = () => {
             <Link to="/payment" className="nav-link">Payment</Link>
           </Nav>
           <div className="d-flex align-items-center">
-            <Form className="me-3">
+            <Form className="me-3"onSubmit={handleSearch}>
               <FormControl
-                type="search"
-                placeholder="Search"
-                className="me-2"
-                aria-label="Search"
+               type="search"
+              placeholder="Search"
+              className="me-2"
+              aria-label="Search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               />
             </Form>
             <Button variant="outline-info" className="text-white">
@@ -62,7 +78,7 @@ const NavigationBar = () => {
               align="end" 
               className="ms-3"
             >
-              <NavDropdown.Item as={Link} to="#profile">Profile</NavDropdown.Item>
+              <NavDropdown.Item onClick={handleProfileClick}>Profile</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="#settings">Settings</NavDropdown.Item>
               <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
             </NavDropdown>

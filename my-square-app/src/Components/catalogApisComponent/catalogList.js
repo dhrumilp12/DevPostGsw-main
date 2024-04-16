@@ -43,7 +43,7 @@ const Catalog = () => {
   };
 
   return (
-    <Container>
+    <Container >
       <ToastContainer />
       <h2 className="text-center my-4 fw-bold">Catalog</h2>
       {loading ? (
@@ -53,15 +53,15 @@ const Catalog = () => {
       ) : (
         <Row>
           {catalog.map((item, index) => (
-            <Col sm={12} md={6} lg={4} xl={3} key={item.id || index} className="mb-4">
-              <Card className="shadow border-0 h-100">
+            <Col sm={12} md={6} lg={4} xl={3} key={item.id || index} className="mb-4" >
+              <Card className="shadow-lg border-0 h-100">
                 <Card.Header className="p-0 overflow-hidden">
                   <Image src={item.imageUrl || "https://via.placeholder.com/800x340"} alt="Catalog item" className="w-100" style={{ height: '200px', objectFit: 'cover' }} />
                   {stockBadge(item.itemVariationData?.stockable)}
                 </Card.Header>
                 <Card.Body>
-                  <Card.Title>{item.itemVariationData?.name || 'No Name'}</Card.Title>
-                  <Card.Text>
+                  <Card.Title style={{ color: '#1a2035' }}>{item.itemVariationData?.name || 'No Name'}</Card.Title>
+                  <Card.Text style={{ color: '#1a2035' }}>
                     ID: {item.id || 'No ID'}
                     <br />
                     Price: {formatPrice(item.itemVariationData?.priceMoney)}
@@ -71,8 +71,8 @@ const Catalog = () => {
                     Status: {sellableStatus(item.itemVariationData?.sellable)}
                   </Card.Text>
                   <div className="d-flex justify-content-between mt-3">
-                    <Button as={Link} to={`/catalogSearchItem/${item.id}`} variant="primary" className="btn-sm flex-grow-1 me-2">Details</Button>
-                    <Button as={Link} to={`/catalogDeleteItem/${item.id}`} variant="danger" className="btn-sm flex-grow-1">Delete</Button>
+                    <Button as={Link} to={`/catalogSearchItem/${item.id}`} variant="outline-primary" className="btn-sm flex-grow-1 me-2">Details</Button>
+                    <Button as={Link} to={`/catalogDeleteItem/${item.id}`} variant="outline-danger" className="btn-sm flex-grow-1">Delete</Button>
                   </div>
                 </Card.Body>
               </Card>

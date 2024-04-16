@@ -13,7 +13,7 @@ export const registerUser = (userData) => async (dispatch) => {
     dispatch({ type: REGISTER_USER_REQUEST });
     try {
         const response = await axios.post('/api/customers/create-customer', userData);
-        dispatch({ type: REGISTER_USER_SUCCESS, payload: response.data });
+        dispatch({ type: REGISTER_USER_SUCCESS, payload: response.data, squareCustomerId: response.data.customer.id });
     } catch (error) {
         dispatch({ 
             type: REGISTER_USER_FAILURE, 
@@ -26,7 +26,13 @@ export const loginUser = (userData, navigate) => async (dispatch) => {
     dispatch({ type: LOGIN_USER_REQUEST });
     try {
         const response = await axios.post('/api/customers/login', userData);
-        dispatch({ type: LOGIN_USER_SUCCESS, payload: response.data });
+        dispatch({ 
+            type: LOGIN_USER_SUCCESS, 
+            payload: {
+                user: response.data.customer,
+                squareCustomerId: response.data.customer.id
+            }
+        });
         navigate('/'); // Redirect to the home page after successful login
       } catch (error) {
         dispatch({ type: LOGIN_USER_FAILURE, payload: error.response.data.error || 'Login failed. Please check your credentials.' });
