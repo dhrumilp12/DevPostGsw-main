@@ -27,3 +27,8 @@ export const fetchCatalog = () => async dispatch => {
     dispatch(fetchCatalogFailure(error.message));
   }
 };
+
+export const sortCatalog = (sortKey) => ({
+  type: 'SORT_CATALOG',
+  payload: sortKey,
+});

@@ -64,7 +64,7 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/" element={<CatalogList />} />
+          <Route path="/" element={<ProtectedRoute><CatalogList /></ProtectedRoute>} />
           <Route path="/catalog-search" element={<CatalogSearch />} />
           <Route path="/catalogSearchItem/:itemId" element={<CatalogSearchItem />} />
           <Route path="/catalogCreate" element={<CatalogCreate />} />

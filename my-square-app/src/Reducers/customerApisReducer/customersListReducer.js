@@ -30,6 +30,19 @@ const customerListReducer = (state = initialState, action) => {
         loading: false,
         error: action.payload,
       };
+      case 'SORT_CATALOG':
+      let sortedCatalog = [...state.catalog];
+      if (action.payload === 'name') {
+        sortedCatalog.sort((a, b) => a.itemVariationData.name.localeCompare(b.itemVariationData.name));
+      } else if (action.payload === 'priceLowHigh') {
+        sortedCatalog.sort((a, b) => a.itemVariationData.priceMoney.amount - b.itemVariationData.priceMoney.amount);
+      } else if (action.payload === 'priceHighLow') {
+        sortedCatalog.sort((a, b) => b.itemVariationData.priceMoney.amount - a.itemVariationData.priceMoney.amount);
+      }
+      return {
+        ...state,
+        catalog: sortedCatalog
+      };
     default:
       return state;
   }
