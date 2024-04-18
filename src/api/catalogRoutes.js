@@ -32,19 +32,21 @@ const upload = multer({ storage: storage });
 
 // Route to handle image uploads
 router.post('/images', upload.single('image'), async (req, res) => {
+  const objectId = req.query || req.body;
   console.log('Query:', req.query);  // Logs the query parameters
   console.log('Body:', req.body);  // Logs other body fields
-  console.log("File Info:", req.file);  // Logs file information
+  console.log('File Upload Info:', req.file, 'Object ID:', objectId);  // Logs file information
 
   if (!req.file) {
       return res.status(400).send('No file uploaded');
   }
-
-  // Assuming that file upload is the end of the operation
-  res.status(201).send('File uploaded successfully with objectId in filename');
+    
+  try {
+    res.status(201).send('File uploaded successfully with objectId in filename');
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
-
-
 
 router.put('/images/:imageId', upload.single('image'), async (req, res) => {
   
@@ -54,7 +56,7 @@ router.put('/images/:imageId', upload.single('image'), async (req, res) => {
   console.log(req.file.originalname);
   const objectId = req.body.objectId;
   console.log("objectID:",objectId);
-  
+
   // Find and delete all existing files with the same objectId regardless of extension
   const existingFiles = fs.readdirSync(uploadsDir).filter(
     file => file.startsWith(objectId) && file !== `${objectId}${path.extname(req.file.originalname)}`
@@ -159,7 +161,6 @@ router.get('/search-item/:itemId', async (req, res) => {
 router.get('/list', async (req, res) => {
   try {
       const items = await catalogService.listItems();
-      
       res.json(items);
   } catch (error) {
     console.error("Failed to retrieve inventory", error);

@@ -195,7 +195,31 @@ async function listItems() {
 
 
 async function createCatalogImage(idempotencyKey, objectId, imagePath) {
-  console.log(`Uploading image from path: ${imagePath}`);
+  console.log(`Preparing to upload image for object ID: ${objectId} from path: ${imagePath}`);
+
+   // Check for existing images and delete them
+   const uploadsDir = path.join(__dirname, '../uploads');
+   const possibleExtensions = ['.png', '.jpg', '.jpeg'];
+   const existingFiles = fs.readdirSync(uploadsDir).filter(
+     file => file.startsWith(objectId) && fs.existsSync(path.join(uploadsDir, file))
+   );
+ 
+   // Deleting existing files
+   existingFiles.forEach(file => {
+     try {
+       fs.unlinkSync(path.join(uploadsDir, file));
+       console.log(`Deleted old file: ${file}`);
+     } catch (err) {
+       console.error(`Error deleting old file: ${file}`, err);
+       throw new Error('Failed to clean up old image files.');
+     }
+   });
+   
+   if (!fs.existsSync(imagePath)) {
+     console.error(`Image file not found at path: ${imagePath}`);
+     throw new Error(`Image file not found at path: ${imagePath}`);
+   }
+
   if (!fs.existsSync(imagePath)) {
     console.error(`Image file not found at path: ${imagePath}`);
     throw new Error(`Image file not found at path: ${imagePath}`);

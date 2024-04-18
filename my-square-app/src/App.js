@@ -40,7 +40,7 @@ import PaymentStatus from './Components/paymentApisComponents/paymentStatus.js';
 import PaymentHistory from './Components/paymentApisComponents/paymentHistory.js';
 import PaymentDetails from './Components/paymentApisComponents/paymentDetails.js';
 import Navbar from './Components/Navbar';
-
+import Footer from './Components/footer';
 
 import OrderConfirmation from './Components/orderConfirmation';
 import ShoppingCart from './Components/shoppingCart';
@@ -101,6 +101,7 @@ function App() {
           <Route path="/payment-detail/:paymentId" element={<ProtectedRoute><PaymentDetails /></ProtectedRoute>} />
           {/* Add more routes as needed */}
         </Routes>
+        <Footer />
       </Router>
     </PersistGate>
   </Provider>
