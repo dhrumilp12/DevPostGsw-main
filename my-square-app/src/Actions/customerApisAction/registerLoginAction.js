@@ -13,7 +13,11 @@ export const registerUser = (userData) => async (dispatch) => {
     dispatch({ type: REGISTER_USER_REQUEST });
     try {
         const response = await axios.post('/api/customers/create-customer', userData);
-        dispatch({ type: REGISTER_USER_SUCCESS, payload: response.data, squareCustomerId: response.data.customer.id });
+        console.log("Registration response:", response.data);
+        dispatch({ type: REGISTER_USER_SUCCESS, payload: {
+                user: response.data,
+                squareCustomerId: response.data.id
+            }});
     } catch (error) {
         dispatch({ 
             type: REGISTER_USER_FAILURE, 

@@ -13,11 +13,13 @@ import { useSpring, animated } from 'react-spring';
 const Catalog = () => {
   const dispatch = useDispatch();
   const { catalog, loading, error } = useSelector(state => state.catalogList);
-  const user = useSelector((state) => state.registerLogin.user.user); // Access user details from the state
+  const user = useSelector((state) => state.registerLogin.user?.user); // Access user details from the state
+  
   const [sortKey, setSortKey] = useState('name');
   const [selectedFile, setSelectedFile] = useState(null);
   const[objectId, setObjectId] = useState(null);
 
+  
   useEffect(() => {
     dispatch(fetchCatalog());
   }, [dispatch, sortKey]);
