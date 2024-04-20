@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fetchCatalogItem } from '../../Actions/catalogApisAction/catalogSearchItem';
-import { Card, CardContent, CardMedia, Typography, CircularProgress, Box, Chip, Divider, Grid, useMediaQuery, createTheme, ThemeProvider } from '@mui/material';
+import { Card, CardContent, CardMedia, Typography, CircularProgress, Box, Chip, Divider, Grid, useMediaQuery, createTheme, ThemeProvider, Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import BookingForm from '../bookingApisComponent/bookingForm'
 
 const darkTheme = createTheme({
   palette: {
@@ -65,6 +66,8 @@ const CatalogSearchItem = () => {
   const { item, loading, error } = useSelector(state => state.catalogSearchItem);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [showBookingForm, setShowBookingForm] = useState(false);
+  const [bookingDetails, setBookingDetails] = useState({});
 
   useEffect(() => {
     dispatch(fetchCatalogItem(itemId));
@@ -82,6 +85,7 @@ const CatalogSearchItem = () => {
     if (item.type === 'ITEM_VARIATION') {
       return {
         name: item.itemVariationData.name,
+        priceType: item.itemVariationData.priceType,
         description: item.itemVariationData.description || "No description provided",
         imageUrl: item.imageUrl,
         price: formatPrice(item.itemVariationData.priceMoney),
@@ -99,6 +103,22 @@ const CatalogSearchItem = () => {
   };
 
   const details = item ? getItemDetails(item) : null;
+  const handleToggleBookingForm = () => {
+    setShowBookingForm(!showBookingForm);
+    if (!showBookingForm) { // Only when opening the form
+      setBookingDetails({
+        startAt: new Date().toISOString(), // Set to current time or a specific time
+        locationId: '', // Example field
+        customerId: '', // Preset or leave empty for user to fill
+        appointmentSegments: [{
+          teamMemberId: '', // Example field
+          serviceVariationId: item.id, // Example field
+          serviceVariationVersion: item.version, // Example field
+          durationMinutes: 60 // Default duration or based on item details
+        }],
+      });
+    }
+  };
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -128,8 +148,15 @@ const CatalogSearchItem = () => {
                     Price: {details.price}
                   </Typography>
                   <Chip label={details.additionalInfo} color="primary" variant="outlined" sx={{ mt: 2 }} />
+                  <Button variant="contained" color="primary" onClick={handleToggleBookingForm} sx={{ mt: 2 }}>
+                  Book Now
+                </Button>
                 </CardContent>
               </Grid>
+              <Grid item xs={12} md={6}>
+              {/* Booking Form */}
+              {showBookingForm && <BookingForm initialBookingDetails={bookingDetails} />}
+          </Grid>
             </Grid>
           </Card>
         ) : (

@@ -29,6 +29,9 @@ import CustomerList from './Components/customerApisComponents/customerList';
 import UpdateCustomer from './Components/customerApisComponents/customerUpdate.js';
 import RegisterLogin from './Components/customerApisComponents/registerLogin.js';
 
+import TeamMembers from './Components/teamMembers';
+import LocationsComponent from './Components/locationId';
+
 import LoyaltyAccountForm from './Components/loyaltyApiComponent/createLoyaltyAccountForm.js';
 import SearchLoyaltyAccountsForm from './Components/loyaltyApiComponent/searchLoyaltyAccount';
 import RetrieveLoyaltyAccountForm from './Components/loyaltyApiComponent/retrieveLoyaltyAccountAction';
@@ -64,6 +67,7 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
+          
           <Route path="/" element={<ProtectedRoute><CatalogList /></ProtectedRoute>} />
           <Route path="/catalog-search" element={<CatalogSearch />} />
           <Route path="/catalogSearchItem/:itemId" element={<CatalogSearchItem />} />
@@ -87,6 +91,8 @@ function App() {
           <Route path="/customerList" element={<ProtectedRoute><CustomerList /></ProtectedRoute>} />
           <Route path="/update-customer/:customerId" element={<ProtectedRoute><UpdateCustomer /></ProtectedRoute>} />
 
+          <Route path="/team-members" element={<protectedRoute><TeamMembers /></protectedRoute>} />
+          <Route path="/locationId" element={<protectedRoute><LocationsComponent /></protectedRoute>} />
           <Route path="/loyalty-Account" element={<ProtectedRoute><LoyaltyAccountForm /></ProtectedRoute>} />
           <Route path="/search-loyalty-accounts" element={<ProtectedRoute><SearchLoyaltyAccountsForm /></ProtectedRoute>} />
           <Route path="/retrieveLoyaltyAccountForm" element={<ProtectedRoute><RetrieveLoyaltyAccountForm /></ProtectedRoute>} />

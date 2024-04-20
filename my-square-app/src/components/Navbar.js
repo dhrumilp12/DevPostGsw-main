@@ -50,13 +50,11 @@ const NavigationBar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Link to="/" className="nav-link">CatalogList</Link>
-            <Link to="/booking" className="nav-link">Booking</Link>
-            <Link to="/customers" className="nav-link">Customers</Link>
-            <Link to="/inventory" className="nav-link">Inventory</Link>
-            <Link to="/loyalty" className="nav-link">Loyalty</Link>
-            <Link to="/auth" className="nav-link">Auth</Link>
-            <Link to="/payment" className="nav-link">Payment</Link>
+            <Link to="/catalog-image" className="nav-link">Catalog Image</Link>
+            <Link to="/bookingList" className="nav-link">Booking List</Link>
+            <Link to="/customerList" className="nav-link">Customers List</Link>
+            <Link to="/catalogCreate" className="nav-link">Create Catalog</Link>
+            <Link to="/payment-history" className="nav-link">Payment History</Link>
           </Nav>
           <div className="d-flex align-items-center">
             <Form className="me-3"onSubmit={handleSearch}>

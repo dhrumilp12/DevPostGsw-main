@@ -23,6 +23,8 @@ const axiosInstance = axios.create({
 module.exports = { 
     axiosInstance,
     squareClient,
+    locationApi: squareClient.locationsApi,
+    teamApi : squareClient.teamApi,
     paymentsApi: squareClient.paymentsApi,
     bookingApi: squareClient.bookingsApi,
     customersApi: squareClient.customersApi,

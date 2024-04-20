@@ -6,7 +6,8 @@ import { ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Form, Button, Container, Row, Col, Spinner } from 'react-bootstrap';
 
-const BookingForm = () => {
+
+const BookingForm = ({ initialBookingDetails }) => {
   const [bookingDetails, setBookingDetails] = useState({
     startAt: '',
     locationId: '',
@@ -17,12 +18,66 @@ const BookingForm = () => {
       serviceVariationVersion: '',
       durationMinutes: ''
     }],
+    ...initialBookingDetails
   });
-
+  // Access the logged-in user's customer ID from Redux state
+  const { squareCustomerId } = useSelector(state => state.registerLogin);
+  const [locations, setLocations] = useState([]);
+  const [teamMembers, setTeamMembers] = useState([]);
   const dispatch = useDispatch();
   const { loading, error, booking } = useSelector(state => state.booking);
 
+  // Set the customer ID from the logged-in user's information
+  useEffect(() => {
+    if (squareCustomerId) {
+        setBookingDetails(prevDetails => ({ ...prevDetails, customerId: squareCustomerId }));
+    }
+}, [squareCustomerId]);
 
+  useEffect(() => {
+    // Use POST request to match the updated backend endpoint
+    fetch('http://localhost:3000/api/teams/members/search', {
+        method: 'POST',  // Change method to POST
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer EAAAll40XS3OFGqEFTGfKovs3albhQW59-U0yIuGM_kxI6qXHVPIZM5WHWyBBbkV',  // Make sure to handle your access token correctly
+        },
+        body: JSON.stringify({
+            query: {
+                filter: {
+                    status: "ACTIVE"
+                }
+            },
+            limit: 10  // You can adjust the limit as per your requirements
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (!data.error) {
+        setTeamMembers(data);
+    } else {
+        toast.error('Failed to load team members');
+      }
+  })
+  .catch(err => {
+    console.error('Failed to fetch team members:', err);
+    toast.error('Failed to fetch team members');
+  });
+  }, []);
+
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/location/locations', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer EAAAll40XS3OFGqEFTGfKovs3albhQW59-U0yIuGM_kxI6qXHVPIZM5WHWyBBbkV',  // Make sure to handle your access token correctly
+        }
+    })
+    .then(response => response.json())
+    .then(data => setLocations(data))
+    .catch(err => console.error('Failed to fetch locations:', err));
+}, []);
 
   const handleChange = (e) => {
     if (e.target.name === 'teamMemberId' || e.target.name === 'serviceVariationId' || e.target.name === 'serviceVariationVersion' || e.target.name === 'durationMinutes') {
@@ -75,34 +130,31 @@ console.log({ booking, error });
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Location ID:</Form.Label>
-              <Form.Control
-                type="text"
-                name="locationId"
-                value={bookingDetails.locationId}
-                onChange={handleChange}
-                placeholder="Location ID"
-              />
+                <Form.Label>Location ID:</Form.Label>
+                <Form.Control as="select" name="locationId" value={bookingDetails.locationId} onChange={handleChange}>
+                    <option value="">Select Location</option>
+                    {locations.map(location => (
+                        <option key={location.id} value={location.id}>{location.name} - {location.id}</option>
+                    ))}
+                </Form.Control>
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Customer ID:</Form.Label>
               <Form.Control
-                type="text"
-                name="customerId"
-                value={bookingDetails.customerId}
-                onChange={handleChange}
-                placeholder="Customer ID"
-              />
-            </Form.Group>
+                 type="text"               
+                 readOnly
+                 name="customerId"
+                 value={bookingDetails.customerId}
+                 placeholder="Customer ID"
+                />
+             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Team Member ID:</Form.Label>
-              <Form.Control
-                type="text"
-                name="teamMemberId"
-                value={bookingDetails.appointmentSegments[0].teamMemberId}
-                onChange={handleChange}
-                placeholder="Team Member ID"
-              />
+                <Form.Label>Team Member ID:</Form.Label>
+                    <Form.Control as="select" name="teamMemberId" value={bookingDetails.appointmentSegments[0].teamMemberId} onChange={handleChange}>
+                      <option value="">Select Team Member</option>
+                          {teamMembers.map((member) => (<option key={member.id} value={member.id}>{member.givenName} {member.familyName} - {member.id}</option>
+                        ))}
+                    </Form.Control>
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Service Variation ID:</Form.Label>
