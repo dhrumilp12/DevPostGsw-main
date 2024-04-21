@@ -55,27 +55,55 @@ async function createCatalogItem(itemData) {
   }
   
 
-async function searchCatalogItems(query) {
+  async function searchCatalogItems(query) {
     try {
-      // Check if query is undefined, empty, or too short 
-    if (typeof query === 'undefined' || query.trim() === '' || query.trim().length < 2) {
+      if (typeof query === 'undefined' || query.trim() === '' || query.trim().length < 2) {
         throw new Error('Query parameter is required and must be at least two characters long.');
       }
   
       const response = await catalogApi.searchCatalogObjects({
-        objectTypes: ['ITEM'], // May want to search other object types
+        objectTypes: ['ITEM_VARIATION'],
         query: {
           textQuery: {
-            keywords: [query], // query is now an array element
+            keywords: [query],
           },
         },
       });
-      return response.result.objects || []; 
+  
+      if (!response || !response.result || !response.result.objects) {
+        throw new Error("No items found for the provided query.");
+      }
+  
+      // Assuming you want to include image information if it exists
+      const items = response.result.objects;
+      await Promise.all(items.map(async (item) => {
+        if (item.imageIds && item.imageIds.length > 0) {
+          const imageResponse = await catalogApi.retrieveCatalogObject(item.imageIds[0], true);
+          if (imageResponse.result && imageResponse.result.object && imageResponse.result.object.imageData) {
+            item.imageUrl = imageResponse.result.object.imageData.url;
+          }
+        } else {
+          // Check for local images if no image ID is associated
+          const uploadsDir = path.join(__dirname, '../uploads');
+          const possibleExtensions = ['.png', '.jpg', '.jpeg'];
+          const existingFile = possibleExtensions.find(ext =>
+            fs.existsSync(path.join(uploadsDir, `${item.id}${ext}`))
+          );
+          if (existingFile) {
+            item.imageUrl = `http://localhost:3000/uploads/${item.id}${existingFile}`;
+          } else {
+            item.imageUrl = null; // or set a default placeholder image URL
+          }
+        }
+      }));
+  
+      return items;
     } catch (error) {
       console.error("Failed to search catalog items:", error);
-      throw error; 
+      throw error;
     }
   }
+  
   
   
 

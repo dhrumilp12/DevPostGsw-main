@@ -71,7 +71,8 @@ const CatalogSearchItem = () => {
   const [bookingDetails, setBookingDetails] = useState({});
   const [showAdjustmentForm, setShowAdjustmentForm] = useState(false);
   const [adjustmentDetails, setAdjustmentDetails] = useState({});
-
+  const userRole = useSelector((state) => state.registerLogin.user?.role);
+  
   useEffect(() => {
     dispatch(fetchCatalogItem(itemId));
   }, [dispatch, itemId]);
@@ -123,6 +124,7 @@ const CatalogSearchItem = () => {
     }
   };
   const handleToggleAdjustmentForm = () => {
+    if (userRole !== 'seller') return;
     setShowAdjustmentForm(!showAdjustmentForm);
     if (!showAdjustmentForm) { // Only set details when opening the form
       setAdjustmentDetails({
@@ -164,16 +166,17 @@ const CatalogSearchItem = () => {
                   <Button variant="contained" color="primary" onClick={handleToggleBookingForm} sx={{ mt: 2 }}>
                   Book Now
                 </Button>
+                {userRole === 'seller' && (
                 <Button variant="contained" color="primary" onClick={handleToggleAdjustmentForm} sx={{ mt: 2 }}>
                   Adjust Inventory
-                </Button>
+                </Button>)}
                 </CardContent>
               </Grid>
               <Grid item xs={12} md={6}>
               {/* Booking Form */}
               {showBookingForm && <BookingForm initialBookingDetails={bookingDetails} />}
           </Grid>
-          {showAdjustmentForm && (
+          {userRole === 'seller'&& showAdjustmentForm && (
                 <Grid item xs={12}>
                   <BatchAdjustInventoryForm initialItemId={adjustmentDetails.initialItemId} initialQuantity={adjustmentDetails.initialQuantity} />
                 </Grid>

@@ -7,20 +7,25 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Make sure you have this import
 
 const CatalogSearch = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
   const { catalogItems, loading, error } = useSelector(state => state.catalogSearch);
-
-  const stockStatus = (item) => {
-    // Check if any variation is in stock (quantity greater than 0)
-    const isInStock = item.itemData?.variations?.some(variation => 
-      parseInt(variation.itemVariationData.quantity) > 0
-    );
-    return isInStock ? 'In Stock' : 'Out of Stock';
+  // Function to format price information
+  const formatPrice = (price) => {
+    return `${price.currency} ${price.amount / 100}`;
   };
+  
+    // Simple function to determine stock status based on item properties
+  const stockStatus = (item) => item.itemVariationData.stockable ? 'In Stock' : 'Out of Stock';
 
   const handleSearch = (e) => {
     e.preventDefault();
+    if (searchQuery.trim().length < 2) {
+      setErrorMessage('Please enter at least 2 characters.');
+      return;
+    }
     dispatch(catalogSearch(searchQuery));
+    setErrorMessage(''); // Clear any existing error messages
   };
 
   return (
@@ -36,7 +41,11 @@ const CatalogSearch = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="mb-2"
+                isInvalid={!!errorMessage}
               />
+              <Form.Control.Feedback type="invalid">
+                {errorMessage}
+              </Form.Control.Feedback>
             </Form.Group>
             <Button variant="primary" type="submit" disabled={loading}>
               Search
@@ -49,11 +58,14 @@ const CatalogSearch = () => {
         {catalogItems.map((item) => (
           <Col sm={12} md={6} lg={4} xl={3} key={item.id} className="mb-4">
             <Card>
-              <Card.Img variant="top" src={item.itemData?.image_url || '/path/to/placeholder-image.png'} />
+              <Card.Img variant="top" src={item.imageUrl || '/path/to/placeholder-image.png'} />
               <Card.Body>
-                <Card.Title>{item.itemData?.name || 'No Name'}</Card.Title>
+                <Card.Title>{item.itemVariationData?.name || 'No Name'}</Card.Title>
                 <Card.Text>
-                  {item.itemData?.description || 'No Description'}
+                  Price: {formatPrice(item.itemVariationData.priceMoney)}
+                </Card.Text>
+                <Card.Text>
+                  Updated At: {new Date(item.updatedAt).toLocaleDateString()}
                 </Card.Text>
                 <Badge bg={stockStatus(item) === 'In Stock' ? 'success' : 'danger'} className="mb-2">
                   {stockStatus(item)}

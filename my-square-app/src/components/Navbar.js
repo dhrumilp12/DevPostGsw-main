@@ -9,20 +9,27 @@ import {catalogSearch} from '../Actions/catalogApisAction/catalogSearch';
 import { fetchCustomerDetails } from '../Actions/customerApisAction/customerDetailsAction';  // Check the correct path
 const NavigationBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [expanded, setExpanded] = useState(false); 
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(state => state.registerLogin.isAuthenticated);
   const customerInfo = useSelector(state => state.registerLogin.user);  // Assuming user details are stored here
+  const userRole = useSelector((state) => state.registerLogin.user?.role);
 
   const handleSearch = (e) => {
     e.preventDefault();
-    dispatch(catalogSearch(searchTerm));
-    navigate(`/search-results?query=${searchTerm}`); // Navigate to a search results page or handle dynamically in the current page
+    if (searchTerm.trim()) {
+      dispatch(catalogSearch(searchTerm));
+      navigate(`/catalog-search?query=${searchTerm}`);
+      setExpanded(false);  // Close navbar toggle after search
+    }
   };
+
   const handleLogout = () => {
     dispatch(logout());
   };
+
   const handleProfileClick = () => {
     if (customerInfo && customerInfo.squareCustomerId) {
       dispatch(fetchCustomerDetails(customerInfo.squareCustomerId));  // Fetching customer details
@@ -42,7 +49,7 @@ const NavigationBar = () => {
 
 
   return (
-    <Navbar expand="lg" variant="dark" className="shadow navbar-modern" style={{ backgroundColor: '#1a2035' }}>
+    <Navbar expand="lg" variant="dark" className="shadow navbar-modern" style={{ backgroundColor: '#1a2035' }}expanded={expanded} onToggle={() => setExpanded(!expanded)}>
       <Container fluid>
         <Link to="/" className="navbar-brand">
           <img src={logo} alt="Logo" style={{ height: '50px' }} />
@@ -50,27 +57,31 @@ const NavigationBar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
+          {userRole === 'seller' && (
+            <>
             <Link to="/catalog-image" className="nav-link">Catalog Image</Link>
-            <Link to="/bookingList" className="nav-link">Booking List</Link>
             <Link to="/customerList" className="nav-link">Customers List</Link>
             <Link to="/catalogCreate" className="nav-link">Create Catalog</Link>
-            <Link to="/payment-history" className="nav-link">Payment History</Link>
             <Link to="/batch-retrieve-inventory-counts" className="nav-link">Inventory Counts</Link>
+            </>)}
+            <Link to="/bookingList" className="nav-link">Booking List</Link>
+            <Link to="/payment-history" className="nav-link">Payment History</Link>
           </Nav>
           <div className="d-flex align-items-center">
             <Form className="me-3"onSubmit={handleSearch}>
               <FormControl
-               type="search"
+              type="search"
               placeholder="Search"
               className="me-2"
               aria-label="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               />
-            </Form>
-            <Button variant="outline-info" className="text-white">
+              <Button variant="outline-info"type="submit" className="text-white">
               <FaSearch />
             </Button>
+            </Form>
+            
             <NavDropdown 
               title={<FaUserCircle size="1.5em" />} 
               id="basic-nav-dropdown" 

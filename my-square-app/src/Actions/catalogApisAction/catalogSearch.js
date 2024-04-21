@@ -24,9 +24,10 @@ export const catalogSearch = (query) => async (dispatch) => {
   try {
     // Use GET method and pass query as a query parameter
     const response = await axios.get(`/api/catalogs/search?q=${query}`);
-    console.log(response.data);
+    console.log("Fetched data:", response.data);  // Make sure this logs the expected array
     dispatch(catalogSearchSuccess(response.data));
   } catch (error) {
+    console.error("Search error:", error);
     dispatch(catalogSearchFailure(error.message));
   }
 };

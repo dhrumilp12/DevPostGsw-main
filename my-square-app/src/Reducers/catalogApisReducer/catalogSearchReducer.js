@@ -19,10 +19,12 @@ const catalogSearchReducer = (state = initialState, action) => {
         error: null,
       };
     case CATALOG_SEARCH_SUCCESS:
+      console.log('Search Results:', action.payload);
     return {
       ...state,
       loading: false,
       catalogItems: action.payload,
+      error:null,
     };
   
     case CATALOG_SEARCH_FAILURE:
