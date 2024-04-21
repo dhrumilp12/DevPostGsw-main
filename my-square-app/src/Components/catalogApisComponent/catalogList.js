@@ -14,7 +14,7 @@ const Catalog = () => {
   const dispatch = useDispatch();
   const { catalog, loading, error } = useSelector(state => state.catalogList);
   const user = useSelector((state) => state.registerLogin.user?.user); // Access user details from the state
-  
+  const userRole = useSelector((state) => state.registerLogin.user?.role);
   const [sortKey, setSortKey] = useState('name');
   const [selectedFile, setSelectedFile] = useState(null);
   const[objectId, setObjectId] = useState(null);
@@ -149,7 +149,8 @@ const Catalog = () => {
                 <Card.Header className="p-0 overflow-hidden">
                   <Image src={item.imageUrl || "https://via.placeholder.com/800x340"} alt="Catalog item" className="w-100" style={{ height: '200px', objectFit: 'cover' }} />
                   {stockBadge(item.itemVariationData?.stockable)}
-                  {(!item.imageUrl) && (
+                  
+                   {userRole === 'seller' && !item.imageUrl && (
                     <>
                       <input type="file" onChange={(e) => handleFileChange(e.target.files[0], item.id)} hidden id={`file-upload-${item.id}`} />
                       <label htmlFor={`file-upload-${item.id}`} className="btn btn-sm btn-secondary">Upload Image</label>
@@ -169,8 +170,10 @@ const Catalog = () => {
                   </Card.Text>
                   <div className="d-flex justify-content-between mt-3">
                     <Button as={Link} to={`/catalogSearchItem/${item.id}`} variant="outline-primary" className="btn-sm flex-grow-1 me-2">Details</Button>
-                    <Button as={Link} to={`/catalogDeleteItem/${item.id}`} variant="outline-danger" className="btn-sm flex-grow-1">Delete</Button>
-                    {(!item.imageUrl) && <Button onClick={handleUploadImage} variant="success" className="mt-2">Upload</Button>}
+                    {userRole === 'seller' && (
+                      <Button as={Link} to={`/catalogDeleteItem/${item.id}`} variant="outline-danger" className="btn-sm flex-grow-1">Delete</Button>
+                    )}
+                    {userRole === 'seller' && (!item.imageUrl) && <Button onClick={handleUploadImage} variant="success" className="mt-2">Upload</Button>}
                   </div>
                 </Card.Body>
               </Card>
