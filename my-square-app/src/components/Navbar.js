@@ -68,7 +68,7 @@ const NavigationBar = () => {
             <Link to="/payment-history" className="nav-link">Payment History</Link>
           </Nav>
           <div className="d-flex align-items-center">
-            <Form className="me-3"onSubmit={handleSearch}>
+            <Form className="d-flex"onSubmit={handleSearch}>
               <FormControl
               type="search"
               placeholder="Search"
@@ -76,7 +76,7 @@ const NavigationBar = () => {
               aria-label="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              />
+              /> 
               <Button variant="outline-info"type="submit" className="text-white">
               <FaSearch />
             </Button>

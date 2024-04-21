@@ -31,8 +31,9 @@ const Catalog = () => {
   }, [error]);
 
   const handleSortChange = (e) => {
-    setSortKey(e.target.value);
-    dispatch(sortCatalog(e.target.value));
+    const newSortKey = e.target.value; 
+    setSortKey(newSortKey); 
+    dispatch(sortCatalog(newSortKey)); 
   };
   const handleFileChange = (file, itemId) => {
     setSelectedFile(file);
@@ -44,6 +45,8 @@ const Catalog = () => {
       toast.error('File or item ID missing');
       return;
     }
+
+
     
     const formData = new FormData();
     formData.append('image', selectedFile);

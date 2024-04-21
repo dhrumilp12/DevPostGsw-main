@@ -7,6 +7,22 @@ const initialState = {
   error: null,
 };
 
+const sortItems = (items, sortKey) => {
+  return [...items].sort((a, b) => {
+      switch (sortKey) {
+          case 'name':
+              return (a.itemVariationData?.name || "").localeCompare(b.itemVariationData?.name || "");
+          case 'priceLowHigh':
+              return (+a.itemVariationData.priceMoney?.amount || 0) - (+b.itemVariationData.priceMoney?.amount || 0);
+          case 'priceHighLow':
+              return (+b.itemVariationData.priceMoney?.amount || 0) - (+a.itemVariationData.priceMoney?.amount || 0);
+          default:
+              return 0;
+      }
+  });
+};
+
+
 const catalogReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_CATALOG_START:
@@ -26,23 +42,11 @@ const catalogReducer = (state = initialState, action) => {
         loading: false,
         error: action.payload,
       };
-      case 'SORT_CATALOG':
-        let sortedCatalog = [...state.catalog];
-        if (action.payload === 'name') {
-          sortedCatalog.sort((a, b) => (a.itemVariationData.name || "").localeCompare(b.itemVariationData.name || ""));
-        } else if (action.payload === 'priceLowHigh') {
-          sortedCatalog.sort((a, b) => {
-            return (a.itemVariationData.priceMoney?.amount || 0) - (b.itemVariationData.priceMoney?.amount || 0);
-          });
-        } else if (action.payload === 'priceHighLow') {
-          sortedCatalog.sort((a, b) => {
-            return (b.itemVariationData.priceMoney?.amount || 0) - (a.itemVariationData.priceMoney?.amount || 0);
-          });
-        }
-        return {
-          ...state,
-          catalog: sortedCatalog
-        };
+    case 'SORT_CATALOG':
+      return {
+        ...state,
+        catalog: sortItems(state.catalog, action.payload),
+      };
       
     default:
       return state;

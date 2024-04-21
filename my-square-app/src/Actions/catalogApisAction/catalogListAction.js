@@ -17,6 +17,11 @@ export const fetchCatalogFailure = error => ({
   payload: error,
 });
 
+export const sortCatalog = (sortKey) => ({
+  type: 'SORT_CATALOG',
+  payload: sortKey,
+});
+
 export const fetchCatalog = () => async dispatch => {
   dispatch(fetchCatalogStart());
   try {
@@ -28,7 +33,4 @@ export const fetchCatalog = () => async dispatch => {
   }
 };
 
-export const sortCatalog = (sortKey) => ({
-  type: 'SORT_CATALOG',
-  payload: sortKey,
-});
+
