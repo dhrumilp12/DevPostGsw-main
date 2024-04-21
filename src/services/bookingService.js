@@ -34,6 +34,10 @@ async function createBooking(bookingData) {
         if (!response || !response.result) {
             throw new Error("API call to create booking did not return expected result");
         }
+        if (response.result.booking.status === "CANCELLED_BY_SELLER") {
+            console.warn("Booking was cancelled by the seller:", response.result.booking);
+            // Implement any specific logic or notifications related to cancelled bookings
+        }
         return response.result.booking;
     } catch (error) {
         console.error("Failed to create booking:", error);

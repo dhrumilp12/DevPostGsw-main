@@ -1,12 +1,16 @@
 
 import React, { useState, useEffect } from 'react'; // Import useEffect
 import { useDispatch, useSelector } from 'react-redux';
-import { batchAdjustInventory } from '../../Actions/inventoryApi/inventoryBatchAdjustAction';
-import { Form, Button, Container, Row, Col, Alert, Card } from 'react-bootstrap';
+import { batchAdjustInventory, clearInventoryErrors } from '../../Actions/inventoryApi/inventoryBatchAdjustAction';
+import { Form, Button, Container, Row, Col, Alert, Card, Spinner, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import LocationsComponent from '../locationId';
 
-const BatchAdjustInventoryForm = () => {
-  const [adjustments, setAdjustments] = useState([]);
+const BatchAdjustInventoryForm = ({ initialItemId = '', initialQuantity = '' }) => {
+  const [adjustments, setAdjustments] = useState([{
+    catalogObjectId: initialItemId,
+    quantity: initialQuantity
+  }]);
   const [locationId, setLocationId] = useState('');
   const [validated, setValidated] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState(null); // New state variable
@@ -14,12 +18,25 @@ const BatchAdjustInventoryForm = () => {
   const dispatch = useDispatch();
   const { loading, error, result } = useSelector((state) => state.inventoryAdjustment);
   const navigate = useNavigate();
-
+  
+  useEffect(() => {
+    // Clear errors when the component mounts or before a new operation starts
+    dispatch(clearInventoryErrors());
+  }, [dispatch]);
+  
+  
   useEffect(() => {
     if (submissionStatus === 'success' && !error) {
-      navigate('/'); // Redirect to the home page
+      const timer = setTimeout(() => {
+        navigate('/'); // Navigate away after showing success
+      }, 2000);
+      return () => clearTimeout(timer);
+    } else if (error) {
+      // Optionally log or handle errors more visibly here
+      console.error("Encountered an error:", error);
     }
-  }, [submissionStatus, error, navigate]);
+  }, [submissionStatus, error, navigate, dispatch]);
+  
 
   const handleAddAdjustment = () => {
     setAdjustments([...adjustments, { catalogObjectId: '', quantity: '' }]);
@@ -47,7 +64,7 @@ const BatchAdjustInventoryForm = () => {
         type: 'ADJUSTMENT',
         adjustment: {
           catalogObjectId: adj.catalogObjectId,
-          quantity: adj.quantity,
+          quantity: parseInt(adj.quantity),
           fromState: 'IN_STOCK',
           toState: 'IN_STOCK',
           locationId: locationId,
@@ -67,19 +84,17 @@ const BatchAdjustInventoryForm = () => {
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
               <Form.Label>Location ID</Form.Label>
-              <Form.Control
-                type="text"
-                value={locationId}
-                onChange={(e) => setLocationId(e.target.value)}
-                placeholder="Enter location ID"
-                required
-              />
+              <LocationsComponent value={locationId} onChange={(e) => setLocationId(e.target.value)} />
               <Form.Control.Feedback type="invalid">
                 Please provide a location ID.
               </Form.Control.Feedback>
             </Form.Group>
             {adjustments.map((adj, index) => (
               <div key={index} className="mb-3">
+                <OverlayTrigger
+                  placement="right"
+                  overlay={<Tooltip>Enter the unique item ID.</Tooltip>}
+                >
                 <Form.Group>
                   <Form.Label>Item ID</Form.Label>
                   <Form.Control
@@ -93,6 +108,7 @@ const BatchAdjustInventoryForm = () => {
                     Please provide an item ID.
                   </Form.Control.Feedback>
                 </Form.Group>
+                </OverlayTrigger>
                 <Form.Group>
                   <Form.Label>Quantity</Form.Label>
                   <Form.Control
@@ -115,11 +131,11 @@ const BatchAdjustInventoryForm = () => {
               Add Adjustment
             </Button>
             <Button type="submit" variant="primary" className="w-100" disabled={loading}>
-              {loading ? 'Submitting...' : 'Submit'}
+            {loading ?  <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Submit Adjustment'}
             </Button>
             </Form>
-          {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
-          {result && !error && (
+            {error && <Alert variant="danger" className="mt-3">We encountered an issue loading the form: {error}. Please refresh or try again later.</Alert>}
+            {submissionStatus && !error && (
             <Alert variant="success" className="mt-3">Inventory adjusted successfully!</Alert>
           )}
           {result && (

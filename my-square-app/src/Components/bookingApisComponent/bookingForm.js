@@ -92,10 +92,14 @@ const BookingForm = ({ initialBookingDetails }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Example validation: ensure all IDs are string and not empty
+    if (!bookingDetails.locationId || !bookingDetails.customerId || !bookingDetails.appointmentSegments.every(seg => seg.serviceVariationId)) {
+      toast.error("Please fill all required fields correctly.");
+      return;
+    }
     dispatch(createBooking({ booking: bookingDetails }));
   };
-
-// BookingForm.js
+  
 
 useEffect(() => {
   console.log(booking); // Check if booking is updated
@@ -104,13 +108,14 @@ useEffect(() => {
   }
 }, [booking]);
 
- useEffect(() => {
-        if (error) {
-            toast.error(`Error: ${error}`);
-            // Consider dispatching an action to clear the error after displaying it
-            // dispatch(clearBookingErrorAction());
-        }
-    }, [error]);
+useEffect(() => {
+  if (error) {
+      toast.error(`Error: ${error}`);
+      // Consider dispatching an action to clear the error after displaying it
+      // dispatch(clearBookingErrorAction());
+  }
+}, [error]);
+
 console.log({ booking, error });
   return (
     <Container>

@@ -5,6 +5,7 @@ import { fetchCatalogItem } from '../../Actions/catalogApisAction/catalogSearchI
 import { Card, CardContent, CardMedia, Typography, CircularProgress, Box, Chip, Divider, Grid, useMediaQuery, createTheme, ThemeProvider, Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import BookingForm from '../bookingApisComponent/bookingForm'
+import BatchAdjustInventoryForm from '../inventoryApiComponent/inventoryBatchAdjust';
 
 const darkTheme = createTheme({
   palette: {
@@ -68,6 +69,8 @@ const CatalogSearchItem = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [bookingDetails, setBookingDetails] = useState({});
+  const [showAdjustmentForm, setShowAdjustmentForm] = useState(false);
+  const [adjustmentDetails, setAdjustmentDetails] = useState({});
 
   useEffect(() => {
     dispatch(fetchCatalogItem(itemId));
@@ -119,10 +122,20 @@ const CatalogSearchItem = () => {
       });
     }
   };
-
+  const handleToggleAdjustmentForm = () => {
+    setShowAdjustmentForm(!showAdjustmentForm);
+    if (!showAdjustmentForm) { // Only set details when opening the form
+      setAdjustmentDetails({
+        initialItemId: item.id, // Assuming 'item.id' is your ITEM_VARIATION ID
+        initialQuantity: 0 // Default or fetched quantity
+      });
+    }
+  };
+  
+  
   return (
     <ThemeProvider theme={darkTheme}>
-      <Box p={isMobile ? 2 : 5}>
+      <Box p={isMobile ? 2 : 5} sx={{mb:4}}>
         {details ? (
           <Card raised elevation={6}>
             <Grid container spacing={2}>
@@ -151,12 +164,20 @@ const CatalogSearchItem = () => {
                   <Button variant="contained" color="primary" onClick={handleToggleBookingForm} sx={{ mt: 2 }}>
                   Book Now
                 </Button>
+                <Button variant="contained" color="primary" onClick={handleToggleAdjustmentForm} sx={{ mt: 2 }}>
+                  Adjust Inventory
+                </Button>
                 </CardContent>
               </Grid>
               <Grid item xs={12} md={6}>
               {/* Booking Form */}
               {showBookingForm && <BookingForm initialBookingDetails={bookingDetails} />}
           </Grid>
+          {showAdjustmentForm && (
+                <Grid item xs={12}>
+                  <BatchAdjustInventoryForm initialItemId={adjustmentDetails.initialItemId} initialQuantity={adjustmentDetails.initialQuantity} />
+                </Grid>
+              )}
             </Grid>
           </Card>
         ) : (

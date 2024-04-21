@@ -2,6 +2,7 @@ import {
     BATCH_ADJUST_INVENTORY_START,
     BATCH_ADJUST_INVENTORY_SUCCESS,
     BATCH_ADJUST_INVENTORY_FAILURE,
+    CLEAR_INVENTORY_ERRORS,
   } from '../../Actions/actionTypes';
   
   const initialState = {
@@ -16,12 +17,14 @@ import {
         return {
           ...state,
           loading: true,
+          error:null,
         };
       case BATCH_ADJUST_INVENTORY_SUCCESS:
         return {
           ...state,
           loading: false,
           counts: action.payload,
+          error:null,
         };
       case BATCH_ADJUST_INVENTORY_FAILURE:
         return {
@@ -29,9 +32,14 @@ import {
           loading: false,
           error: action.payload,
         };
-      default:
-        return state;
-    }
+        case CLEAR_INVENTORY_ERRORS:
+          return {
+            ...state,
+            error: null,
+          };
+        default:
+          return state;
+      }
   };
   
   export default inventoryAdjustmentReducer;

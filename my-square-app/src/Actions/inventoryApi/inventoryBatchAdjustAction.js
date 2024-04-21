@@ -3,7 +3,12 @@ import {
   BATCH_ADJUST_INVENTORY_START,
   BATCH_ADJUST_INVENTORY_SUCCESS,
   BATCH_ADJUST_INVENTORY_FAILURE,
+  CLEAR_INVENTORY_ERRORS,
 } from '../actionTypes';
+
+export const clearInventoryErrors = () => ({
+  type: CLEAR_INVENTORY_ERRORS,
+});
 
 export const batchAdjustInventoryStart = () => ({
   type: BATCH_ADJUST_INVENTORY_START,

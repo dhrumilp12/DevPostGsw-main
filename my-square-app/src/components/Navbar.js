@@ -55,6 +55,7 @@ const NavigationBar = () => {
             <Link to="/customerList" className="nav-link">Customers List</Link>
             <Link to="/catalogCreate" className="nav-link">Create Catalog</Link>
             <Link to="/payment-history" className="nav-link">Payment History</Link>
+            <Link to="/batch-retrieve-inventory-counts" className="nav-link">Inventory Counts</Link>
           </Nav>
           <div className="d-flex align-items-center">
             <Form className="me-3"onSubmit={handleSearch}>

@@ -16,12 +16,14 @@ import {
         return {
           ...state,
           loading: true,
+          error: null,
         };
       case BATCH_RETRIEVE_INVENTORY_COUNTS_SUCCESS:
         return {
           ...state,
           loading: false,
           counts: action.payload,
+          error: null,
         };
       case BATCH_RETRIEVE_INVENTORY_COUNTS_FAILURE:
         return {
