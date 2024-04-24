@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createCatalog } from '../../Actions/catalogApisAction/catalogCreateAction';
 import { Form, Button, Container, Row, Col, Spinner } from 'react-bootstrap';
@@ -17,38 +17,52 @@ const CatalogCreate = () => {
           amount: 0,
           currency: 'USD',
         },
+        serviceDuration: 3600000, // Default 1 hour in milliseconds
+        availableForBooking: true,
+        teamMemberIds: [] 
       },
     ],
-  });
+});
+
+// Add inputs to your form to adjust these new properties
+
 
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.catalogCreate);
-
-  const handleChange = (e, index) => {
-    if (index !== undefined) {
-      // Handle change in variations
-      const updatedVariations = [...itemData.variations];
-      if (e.target.name === 'amount') {
-        updatedVariations[index].priceMoney[e.target.name] = Number(e.target.value);
-      } else {
-        updatedVariations[index][e.target.name] = e.target.value;
-      }
-      setItemData({ ...itemData, variations: updatedVariations });
-    } else {
-      // Handle change in itemData
-      setItemData({ ...itemData, [e.target.name]: e.target.value });
+  useEffect(() => {
+    if (error) {
+      toast.error(`Error: ${error}`);
     }
-  };
+  }, [error]);
+  const handleChange = (e, index, fieldName) => {
+    const { name, value } = e.target;
+    if (index !== undefined) { // Check if this change is for variations
+        const updatedVariations = [...itemData.variations];
+        if (name === 'amount') { // Directly check if the field is 'amount'
+            updatedVariations[index].priceMoney.amount = Number(value); // Update the amount correctly
+        } else if (name === 'teamMemberIds') {
+            updatedVariations[index].teamMemberIds = value.split(',').map(id => id.trim());
+        } else {
+            updatedVariations[index][name] = value;
+        }
+        setItemData({ ...itemData, variations: updatedVariations });
+    } else {
+        // This is for updating top-level fields like 'name' and 'description'
+        setItemData({ ...itemData, [name]: value });
+    }
+};
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!itemData.name || itemData.variations.some(variation => !variation.name)) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
     dispatch(createCatalog(itemData));
   };
-
-  if (error) {
-    toast.error(`Error: ${error}`);
-  }
-
+  
   return (
     <Container>
       <ToastContainer />
@@ -57,16 +71,18 @@ const CatalogCreate = () => {
           <h2 className="text-center mb-4">Create Catalog Item</h2>
           <Form onSubmit={handleSubmit} className="border p-4 bg-white rounded shadow-sm">
             <Form.Group className="mb-3">
+            <Form.Label>Item Name</Form.Label>
               <Form.Control
                 type="text"
                 name="name"
                 value={itemData.name}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e)}
                 placeholder="Item Name"
                 className="form-modern"
               />
             </Form.Group>
             <Form.Group className="mb-3">
+            <Form.Label>Description</Form.Label>
               <Form.Control
                 as="textarea"
                 name="description"
@@ -81,6 +97,7 @@ const CatalogCreate = () => {
               <div key={index} className="mb-3 border p-3 rounded">
                 <h5>Variation {index + 1}</h5>
                 <Form.Group className="mb-3">
+                <Form.Label>Variation Name</Form.Label>
                   <Form.Control
                     type="text"
                     name="name"
@@ -91,12 +108,24 @@ const CatalogCreate = () => {
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
+                <Form.Label>Price (in cents)</Form.Label>
                   <Form.Control
                     type="number"
                     name="amount"
                     value={variation.priceMoney.amount}
                     onChange={(e) => handleChange(e, index)}
                     placeholder="Price (in cents)"
+                    className="form-modern"
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Team Member IDs</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="teamMemberIds"
+                    value={variation.teamMemberIds.join(',')}
+                    onChange={(e) => handleChange(e, index, 'teamMemberIds')}
+                    placeholder="Enter Team Member IDs, separated by commas"
                     className="form-modern"
                   />
                 </Form.Group>

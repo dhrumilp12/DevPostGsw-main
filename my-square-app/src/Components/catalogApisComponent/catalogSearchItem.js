@@ -138,6 +138,10 @@ const CatalogSearchItem = () => {
         }],
       });
     }
+    else {
+      // Handle case where data might be missing
+      console.error("Missing data for booking form initialization");
+  }
   };
   // Function to handle booking confirmation
   const onBookingConfirmed = () => {

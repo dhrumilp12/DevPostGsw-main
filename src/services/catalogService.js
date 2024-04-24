@@ -23,9 +23,12 @@ async function createCatalogItem(itemData) {
               type: 'ITEM_VARIATION',
               id: '#' + variation.name.toLowerCase().replace(/\s+/g, '-'),
               itemVariationData: {
-                name: variation.name,
-                pricingType: variation.pricingType,
-                priceMoney: variation.priceMoney,
+                            name: variation.name,
+                            pricingType: variation.pricingType,
+                            priceMoney: variation.priceMoney,
+                            serviceDuration: variation.serviceDuration,
+                            availableForBooking: variation.availableForBooking,
+                            teamMemberIds: variation.teamMemberIds, 
               },
             })),
           },
@@ -43,7 +46,54 @@ async function createCatalogItem(itemData) {
     }
   }
     
+  /*
+  async function updateCatalogItem(itemData) {
+  try {
+    // Retrieve the current catalog object to get the latest version
+    const currentObjectResponse = await catalogApi.retrieveCatalogObject(itemData.id);
+    if (!currentObjectResponse || !currentObjectResponse.result || !currentObjectResponse.result.object) {
+      throw new Error(`Failed to retrieve the current version of the catalog item with ID: ${itemData.id}`);
+    }
 
+    const currentVersion = currentObjectResponse.result.object.version;
+
+    // Update catalog object with the correct version number
+    const updateResponse = await catalogApi.upsertCatalogObject({
+      idempotencyKey: crypto.randomUUID().toString(),
+      object: {
+        type: 'ITEM',
+        id: itemData.id,
+        version: currentVersion,
+        itemData: {
+          name: itemData.name,
+          description: itemData.description,
+          variations: itemData.variations.map(variation => ({
+            type: 'ITEM_VARIATION',
+            id: variation.id,
+            version: variation.version, // Ensure variations also carry the latest version
+            itemVariationData: {
+              name: variation.name,
+              pricingType: variation.pricingType,
+              priceMoney: variation.priceMoney,
+              serviceDuration: variation.serviceDuration,
+              availableForBooking: variation.availableForBooking,
+            },
+          })),
+        },
+      },
+    });
+
+    if (!updateResponse || !updateResponse.result || !updateResponse.result.catalogObject) {
+      throw new Error('Failed to update catalog item, API response does not contain the expected catalog object');
+    }
+
+    return updateResponse.result.catalogObject;
+  } catch (error) {
+    console.error("Failed to update catalog item:", error);
+    throw error;
+  }
+}
+*/
   async function deleteCatalogItem(itemId) {
     try {
       await catalogApi.deleteCatalogObject(itemId);
