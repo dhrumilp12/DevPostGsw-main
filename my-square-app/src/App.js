@@ -8,7 +8,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import BookingForm from './Components/bookingApisComponent/bookingForm.js';
 import UpdateBookingForm from './Components/bookingApisComponent/bookingUpdateForm';
 import CancelBooking from './Components/bookingApisComponent/bookingCancel';
-import BookingRetrive from './Components/bookingApisComponent/bookingRetrive';
+//import BookingRetrive from './Components/bookingApisComponent/bookingRetrive'; we are not using this, since we are using booking bulk Retrive
 import BookingsList from './Components/bookingApisComponent/bookingList';
 import BookingSearchAvailabilityForm from './Components/bookingApisComponent/bookingSearchAvailability';
 import BookingBulkRetrieveForm from './Components/bookingApisComponent/bookingBulkRetrive';
@@ -60,6 +60,7 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   useEffect(() => {
     document.body.style.backgroundColor = '#b0b8c5';
+    
   }, []);
   return (
     <Provider store={store}>
@@ -78,7 +79,6 @@ function App() {
           <Route path="/booking" element={<ProtectedRoute><BookingForm /></ProtectedRoute>} />
           <Route path="/updateBooking/:bookingId" element={<ProtectedRoute><UpdateBookingForm /></ProtectedRoute>} />
           <Route path="/cancelBooking/:bookingId" element={<ProtectedRoute><CancelBooking /></ProtectedRoute>} />
-          <Route path="/booking/:bookingId" element={<ProtectedRoute><BookingRetrive /></ProtectedRoute>} />
           <Route path="/bookingList" element={<ProtectedRoute><BookingsList /></ProtectedRoute>} />
           <Route path="/search-availability" element={<ProtectedRoute><BookingSearchAvailabilityForm /></ProtectedRoute>} />
           <Route path="/bulk-retrieve-bookings" element={<ProtectedRoute><BookingBulkRetrieveForm /></ProtectedRoute>} />

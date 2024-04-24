@@ -1,3 +1,4 @@
+//we are not using this since we are using booking bulk retrive
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { retrieveBooking } from '../../Actions/bookingApisAction/bookingRetriveAction';

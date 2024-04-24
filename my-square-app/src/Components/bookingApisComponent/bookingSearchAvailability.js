@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { searchAvailability } from '../../Actions/bookingApisAction/bookingSearchAvailabilityAction';
 import { Form, Button, Container, Row, Col, Alert, Spinner, Card, ListGroup } from 'react-bootstrap';
@@ -17,7 +17,59 @@ const SearchAvailabilityForm = () => {
   });
 
   const dispatch = useDispatch();
+  const [locations, setLocations] = useState([]);
+  const [teamMembers, setTeamMembers] = useState([]);
   const { availabilities, loading, error } = useSelector((state) => state.bookingAvailabilitySearch);
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/teams/members/search', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer EAAAll40XS3OFGqEFTGfKovs3albhQW59-U0yIuGM_kxI6qXHVPIZM5WHWyBBbkV'
+        },
+        body: JSON.stringify({
+            query: {
+                filter: {
+                    status: "ACTIVE"
+                }
+            },
+            limit: 10
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        throw new Error('Failed to load team members');
+      }
+      setTeamMembers(data);
+    })
+    .catch(err => {
+      console.error('Failed to fetch team members:', err);
+      toast.error('Failed to fetch team members');
+    });
+  }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/location/locations', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer EAAAll40XS3OFGqEFTGfKovs3albhQW59-U0yIuGM_kxI6qXHVPIZM5WHWyBBbkV'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        throw new Error('Failed to load locations');
+      }
+      setLocations(data);
+    })
+    .catch(err => {
+      console.error('Failed to fetch locations:', err);
+      toast.error('Failed to fetch locations');
+    });
+  }, []);
 
   const handleChange = (e) => {
     setSearchCriteria({ ...searchCriteria, [e.target.name]: e.target.value });
@@ -80,7 +132,12 @@ const SearchAvailabilityForm = () => {
                 </Row>
                 <Form.Group className="mb-3">
                   <Form.Label>Location ID</Form.Label>
-                  <Form.Control type="text" name="locationId" value={searchCriteria.locationId} onChange={handleChange} />
+                  <Form.Control as="select" name="locationId" value={searchCriteria.locationId} onChange={handleChange}>
+                    <option value="">Select Location</option>
+                    {locations.map(location => (
+                      <option key={location.id} value={location.id}>{location.name} - {location.id}</option>
+                    ))}
+                  </Form.Control>
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label>Service Variation ID</Form.Label>
@@ -88,7 +145,12 @@ const SearchAvailabilityForm = () => {
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label>Team Member ID</Form.Label>
-                  <Form.Control type="text" name="teamMemberId" value={searchCriteria.teamMemberId} onChange={handleChange} />
+                  <Form.Control as="select" name="teamMemberId" value={searchCriteria.teamMemberId} onChange={handleChange}>
+                    <option value="">Select Team Member</option>
+                    {teamMembers.map(member => (
+                      <option key={member.id} value={member.id}>{member.givenName} {member.familyName} - {member.id}</option>
+                    ))}
+                  </Form.Control>
                 </Form.Group>
                 <Button type="submit" variant="primary" className="w-100" disabled={loading}>
                   {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : <><FaSearch className="me-2" />Search</>}

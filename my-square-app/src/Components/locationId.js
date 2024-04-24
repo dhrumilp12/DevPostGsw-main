@@ -9,7 +9,7 @@ function LocationsComponent({ onChange, value }) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer EAAAll40XS3OFGqEFTGfKovs3albhQW59-U0yIuGM_kxI6qXHVPIZM5WHWyBBbkV',  // Make sure to handle your access token correctly
+                'Authorization': 'Bearer EAAAlpMoPYCX_avoU3PpfK5kMAQDg2qkIWj41ydnrkdRjSTvdfP7hERZBDNfDXUp',  // Make sure to handle your access token correctly
             }
         })
         .then(response => response.json())

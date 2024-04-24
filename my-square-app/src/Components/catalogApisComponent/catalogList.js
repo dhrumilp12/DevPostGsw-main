@@ -4,17 +4,24 @@ import { fetchCatalog, sortCatalog } from '../../Actions/catalogApisAction/catal
 import { createCatalogImage} from '../../Actions/catalogApisAction/catalogImageAction'
 import { ToastContainer, toast } from 'react-toastify';
 import { ThreeDots } from 'react-loader-spinner';
-import { Container, Row, Col, Card, Badge, Image , Button, Carousel, Form,} from 'react-bootstrap';
+import { Modal,Container, Row, Col, Card, Badge, Image , Button, Carousel, Form,} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import { useSpring, animated } from 'react-spring';
+import { FaSearch, FaSortAmountDown, FaUpload} from 'react-icons/fa';
+import { FaArrowDownShortWide,FaArrowDownWideShort  } from "react-icons/fa6";
+import { MdDelete } from "react-icons/md";
+import { FcViewDetails } from "react-icons/fc";
+import BulkRetrieveBookingsForm from '../bookingApisComponent/bookingBulkRetrive';
+import SearchAvailabilityForm from '../bookingApisComponent/bookingSearchAvailability';
 
 const Catalog = () => {
   const dispatch = useDispatch();
   const { catalog, loading, error } = useSelector(state => state.catalogList);
+  const [showSearchAvailabilityModal, setShowSearchAvailabilityModal] = useState(false);
+  const [showBulkRetrieveModal, setShowBulkRetrieveModal] = useState(false);
   const user = useSelector((state) => state.registerLogin.user?.user); // Access user details from the state
-  const userRole = useSelector((state) => state.registerLogin.user?.role);
   const [sortKey, setSortKey] = useState('name');
   const [selectedFile, setSelectedFile] = useState(null);
   const[objectId, setObjectId] = useState(null);
@@ -22,7 +29,7 @@ const Catalog = () => {
   
   useEffect(() => {
     dispatch(fetchCatalog());
-  }, [dispatch, sortKey]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (error) {
@@ -38,6 +45,10 @@ const Catalog = () => {
   const handleFileChange = (file, itemId) => {
     setSelectedFile(file);
     setObjectId(itemId);
+  };
+  const handleClose = () => {
+    setShowSearchAvailabilityModal(false);
+    setShowBulkRetrieveModal(false);
   };
 
   const handleUploadImage = () => {
@@ -126,25 +137,54 @@ const Catalog = () => {
       ) : (
         <>
           {renderFeaturedItems()}
-          <Row className="align-items-center justify-content-between mb-4">
-              <Col xs={12} md={4} lg={3} xl={2}>
-              <Form.Group controlId="sortControl" className="d-flex align-items-center">
-              <Form.Label className="me-3" >Sort By:</Form.Label>
+          
+          <Row className="mb-4 align-items-center justify-content-between">
+            <Col xs={12} md={4} lg={3}>
+              <Form.Group controlId="sortControl">
+                <Form.Label className="me-2">Sort By:</Form.Label>
                 <Form.Select
                   aria-label="Sort by"
                   value={sortKey}
                   onChange={handleSortChange}
-                  className="py-2"
-                  size="lg"
-                  style={{ color: '#1a2035' }}
+                  className="py-1" // Smaller padding for a more compact look
+                  style={{ color: '#1a2035', minWidth: '180px' }} // Ensure dropdown does not become too small on narrower screens
                 >
                   <option value="name">Name</option>
-                  <option value="priceLowHigh">Price: Low to High</option>
-                  <option value="priceHighLow">Price: High to Low</option>
+                  <option value="priceLowHigh">Price: Low to High <FaArrowDownShortWide /></option>
+                  <option value="priceHighLow">Price: High to Low <FaArrowDownWideShort /></option>
                 </Form.Select>
-                </Form.Group>
-              </Col>
-            </Row>
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={4} lg={3} className="mt-3 mt-md-0"> {/* Adjustments for top margin on smaller screens */}
+              <Button variant="primary" onClick={() => setShowSearchAvailabilityModal(true)} className="w-100">
+                Search Booking Availability <FaSearch />
+              </Button>
+              <Modal show={showSearchAvailabilityModal} onHide={handleClose} size="lg">
+                <Modal.Header closeButton>
+                  <Modal.Title>Search Booking Availability</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <SearchAvailabilityForm />
+                </Modal.Body>
+              </Modal>
+            </Col>
+
+            <Col xs={12} md={4} lg={3} className="mt-3 mt-md-0"> {/* Consistent spacing and alignment for the second button */}
+              <Button variant="secondary" onClick={() => setShowBulkRetrieveModal(true)} className="w-100">
+                Bulk Retrieve Bookings <FaSortAmountDown />
+              </Button>
+              <Modal show={showBulkRetrieveModal} onHide={handleClose} size="lg">
+                <Modal.Header closeButton>
+                  <Modal.Title>Bulk Retrieve Bookings</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <BulkRetrieveBookingsForm />
+                </Modal.Body>
+              </Modal>
+            </Col>
+          </Row>
+
          <Row xs={1} md={2} lg={3} className="g-4">
           {catalog.map((item, index) => (
             <Col sm={12} md={6} lg={4} xl={3} key={item.id || index} className="mb-4" >
@@ -153,10 +193,10 @@ const Catalog = () => {
                   <Image src={item.imageUrl || "https://via.placeholder.com/800x340"} alt="Catalog item" className="w-100" style={{ height: '200px', objectFit: 'cover' }} />
                   {stockBadge(item.itemVariationData?.stockable)}
                   
-                   {userRole === 'seller' && !item.imageUrl && (
+                   {!item.imageUrl && (
                     <>
                       <input type="file" onChange={(e) => handleFileChange(e.target.files[0], item.id)} hidden id={`file-upload-${item.id}`} />
-                      <label htmlFor={`file-upload-${item.id}`} className="btn btn-sm btn-secondary">Upload Image</label>
+                      <label htmlFor={`file-upload-${item.id}`} className="btn btn-sm btn-secondary">Upload Image <FaUpload /></label>
                     </>
                   )}
                 </Card.Header>
@@ -167,16 +207,14 @@ const Catalog = () => {
                     <br />
                     Price: {formatPrice(item.itemVariationData?.priceMoney)}
                     <br />
-                    Duration: {formatDuration(item.itemVariationData?.serviceDuration)}
+                    Duration: {formatDuration(item.itemVariationData?.serviceDuration)} 
                     <br />
                     Status: {sellableStatus(item.itemVariationData?.sellable)}
                   </Card.Text>
                   <div className="d-flex justify-content-between mt-3">
-                    <Button as={Link} to={`/catalogSearchItem/${item.id}`} variant="outline-primary" className="btn-sm flex-grow-1 me-2">Details</Button>
-                    {userRole === 'seller' && (
-                      <Button as={Link} to={`/catalogDeleteItem/${item.id}`} variant="outline-danger" className="btn-sm flex-grow-1">Delete</Button>
-                    )}
-                    {userRole === 'seller' && (!item.imageUrl) && <Button onClick={handleUploadImage} variant="success" className="mt-2">Upload</Button>}
+                    <Button as={Link} to={`/catalogSearchItem/${item.id}`} variant="outline-primary" className="btn-sm flex-grow-1 me-2">Details <FcViewDetails /></Button>
+                    <Button as={Link} to={`/catalogDeleteItem/${item.id}`} variant="outline-danger" className="btn-sm flex-grow-1">Delete <MdDelete /></Button>
+                    { (!item.imageUrl) && <Button onClick={handleUploadImage} variant="success" className="mt-2">Upload <FaUpload /></Button>}
                   </div>
                 </Card.Body>
               </Card>
@@ -191,3 +229,8 @@ const Catalog = () => {
 };
 
 export default Catalog;
+
+
+
+
+

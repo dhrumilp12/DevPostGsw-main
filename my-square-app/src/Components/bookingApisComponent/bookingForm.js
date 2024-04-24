@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Form, Button, Container, Row, Col, Spinner } from 'react-bootstrap';
 
 
-const BookingForm = ({ initialBookingDetails }) => {
+const BookingForm = ({ initialBookingDetails, onBookingConfirmed}) => {
   const [bookingDetails, setBookingDetails] = useState({
     startAt: '',
     locationId: '',
@@ -21,6 +21,7 @@ const BookingForm = ({ initialBookingDetails }) => {
     ...initialBookingDetails
   });
   // Access the logged-in user's customer ID from Redux state
+  
   const { squareCustomerId } = useSelector(state => state.registerLogin);
   const [locations, setLocations] = useState([]);
   const [teamMembers, setTeamMembers] = useState([]);
@@ -40,7 +41,7 @@ const BookingForm = ({ initialBookingDetails }) => {
         method: 'POST',  // Change method to POST
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer EAAAll40XS3OFGqEFTGfKovs3albhQW59-U0yIuGM_kxI6qXHVPIZM5WHWyBBbkV',  // Make sure to handle your access token correctly
+            'Authorization': 'Bearer EAAAlpMoPYCX_avoU3PpfK5kMAQDg2qkIWj41ydnrkdRjSTvdfP7hERZBDNfDXUp',  // Make sure to handle your access token correctly
         },
         body: JSON.stringify({
             query: {
@@ -71,7 +72,7 @@ const BookingForm = ({ initialBookingDetails }) => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer EAAAll40XS3OFGqEFTGfKovs3albhQW59-U0yIuGM_kxI6qXHVPIZM5WHWyBBbkV',  // Make sure to handle your access token correctly
+            'Authorization': 'Bearer EAAAlpMoPYCX_avoU3PpfK5kMAQDg2qkIWj41ydnrkdRjSTvdfP7hERZBDNfDXUp',  // Make sure to handle your access token correctly
         }
     })
     .then(response => response.json())
@@ -94,11 +95,21 @@ const BookingForm = ({ initialBookingDetails }) => {
     e.preventDefault();
     // Example validation: ensure all IDs are string and not empty
     if (!bookingDetails.locationId || !bookingDetails.customerId || !bookingDetails.appointmentSegments.every(seg => seg.serviceVariationId)) {
-      toast.error("Please fill all required fields correctly.");
-      return;
+        toast.error("Please fill all required fields correctly.");
+        return;
     }
-    dispatch(createBooking({ booking: bookingDetails }));
-  };
+
+    // Wrap dispatch in parentheses to correctly chain then and catch
+    dispatch(createBooking({ booking: bookingDetails }))
+    .then(() => {
+        toast.success('Booking successful!');
+        onBookingConfirmed(); // Trigger the callback passed as prop
+    })
+    .catch(error => {
+        toast.error(`Booking failed: ${error.message}`);
+    });
+};
+
   
 
 useEffect(() => {

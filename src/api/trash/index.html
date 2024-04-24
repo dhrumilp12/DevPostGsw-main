@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Square SDK Test</title>
+    <script type="text/javascript" src="https://web.squarecdn.com/v1/square.js"></script>
+</head>
+<body>
+    <div id="card-container"></div>
+    <button id="pay-button">Pay</button>
+    <script>
+        const payment = Square.payments('sq0idp-78KXxKm_tHlqBRbX5gvc1A', 'L7X4FSM2Z2H0B');
+        payment.card().then(card => {
+            card.attach('#card-container');
+            document.getElementById('pay-button').addEventListener('click', async () => {
+                const result = await card.tokenize();
+                if (result.status === 'OK') {
+                    alert('Token: ' + result.token);
+                } else {
+                    alert('Error: ' + JSON.stringify(result.errors));
+                }
+            });
+        }).catch(err => {
+            console.error('Error initializing the card:', err);
+        });
+    </script>
+</body>
+</html>

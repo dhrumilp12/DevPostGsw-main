@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate  } from 'react-router-dom';
 import { fetchCatalogItem } from '../../Actions/catalogApisAction/catalogSearchItem';
 import { Card, CardContent, CardMedia, Typography, CircularProgress, Box, Chip, Divider, Grid, useMediaQuery, createTheme, ThemeProvider, Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -71,7 +71,7 @@ const CatalogSearchItem = () => {
   const [bookingDetails, setBookingDetails] = useState({});
   const [showAdjustmentForm, setShowAdjustmentForm] = useState(false);
   const [adjustmentDetails, setAdjustmentDetails] = useState({});
-  const userRole = useSelector((state) => state.registerLogin.user?.role);
+  const navigate = useNavigate();
   
   useEffect(() => {
     dispatch(fetchCatalogItem(itemId));
@@ -84,27 +84,43 @@ const CatalogSearchItem = () => {
     if (!priceMoney || !priceMoney.amount) return 'N/A';
     return `$${(priceMoney.amount / 100).toFixed(2)} ${priceMoney.currency}`;
   };
-
+  const formatServiceDuration = (milliseconds) => `${milliseconds / 60000} minutes`;
   const getItemDetails = (item) => {
-    if (item.type === 'ITEM_VARIATION') {
+    let additionalInfo = []; // Initialize as an empty array to avoid undefined errors.
+  
+    if (item && item.itemVariationData) {
+      additionalInfo = [
+        `Stockable: ${item.itemVariationData.stockable ? 'Yes' : 'No'}`,
+        `Sellable: ${item.itemVariationData.sellable ? 'Yes' : 'No'}`,
+        `Available for Booking: ${item.itemVariationData.availableForBooking ? 'Yes' : 'No'}`,
+        `Present at All Locations: ${item.itemVariationData.presentAtAllLocations ? 'Yes' : 'No'}`,
+        `Service Duration: ${item.itemVariationData.serviceDuration ? formatServiceDuration(item.itemVariationData.serviceDuration) : 'N/A'}`,
+        `Team Member IDs: ${item.itemVariationData.teamMemberIds ? item.itemVariationData.teamMemberIds.join(', ') : 'None'}`
+      ];
       return {
         name: item.itemVariationData.name,
-        priceType: item.itemVariationData.priceType,
+        pricingType: item.itemVariationData.pricingType,
         description: item.itemVariationData.description || "No description provided",
-        imageUrl: item.imageUrl,
+        imageUrl: item.imageUrl || "https://via.placeholder.com/800x340",
         price: formatPrice(item.itemVariationData.priceMoney),
-        additionalInfo: `Stockable: ${item.itemVariationData.stockable}, Sellable: ${item.itemVariationData.sellable}`
+        additionalInfo: additionalInfo,
+        updatedAt: new Date(item.updatedAt).toLocaleString(),
+        version: item.version
       };
-    } else {
+    } else if (item && item.itemData) {
+      additionalInfo.push(`Archived: ${item.itemData.isArchived}, Product Type: ${item.itemData.productType}`);
       return {
         name: item.itemData.name,
         description: item.itemData.description || item.itemData.descriptionPlaintext || "No description provided",
         imageUrl: item.imageUrl,
         price: formatPrice(item.itemData.priceMoney),
-        additionalInfo: `Archived: ${item.itemData.isArchived}, Product Type: ${item.itemData.productType}`
+        additionalInfo: additionalInfo
       };
     }
+  
+    return null; // Return null if no item data is available.
   };
+  
 
   const details = item ? getItemDetails(item) : null;
   const handleToggleBookingForm = () => {
@@ -115,7 +131,7 @@ const CatalogSearchItem = () => {
         locationId: '', // Example field
         customerId: '', // Preset or leave empty for user to fill
         appointmentSegments: [{
-          teamMemberId: '', // Example field
+          teamMemberId: item.itemVariationData.teamMemberIds[0], // Example field
           serviceVariationId: item.id, // Example field
           serviceVariationVersion: item.version, // Example field
           durationMinutes: 60 // Default duration or based on item details
@@ -123,8 +139,18 @@ const CatalogSearchItem = () => {
       });
     }
   };
+  // Function to handle booking confirmation
+  const onBookingConfirmed = () => {
+    console.log("Attempting to navigate to payment form...");
+    if (item && item.itemVariationData && item.itemVariationData.priceMoney) {
+        console.log("Navigating to payment form with price:", item.itemVariationData.priceMoney);
+        navigate('/payment', { state: { amountMoney: item.itemVariationData.priceMoney } });
+    } else {
+        console.error('Price details are missing.');
+    }
+};
+
   const handleToggleAdjustmentForm = () => {
-    if (userRole !== 'seller') return;
     setShowAdjustmentForm(!showAdjustmentForm);
     if (!showAdjustmentForm) { // Only set details when opening the form
       setAdjustmentDetails({
@@ -162,23 +188,26 @@ const CatalogSearchItem = () => {
                   <Typography variant="h6" color="secondary" gutterBottom>
                     Price: {details.price}
                   </Typography>
-                  <Chip label={details.additionalInfo} color="primary" variant="outlined" sx={{ mt: 2 }} />
+                  {Array.isArray(details.additionalInfo) ? details.additionalInfo.map((info, index) => (
+                    <Chip key={index} label={info} color="primary" variant="outlined" sx={{ mt: 1, mr: 1 }} />
+                  )) : <Typography color="error">Error: Additional Info is not available.</Typography>}
+
                   <Button variant="contained" color="primary" onClick={handleToggleBookingForm} sx={{ mt: 2 }}>
                   Book Now
                 </Button>
-                {userRole === 'seller' && (
+               
                 <Button variant="contained" color="primary" onClick={handleToggleAdjustmentForm} sx={{ mt: 2 }}>
                   Adjust Inventory
-                </Button>)}
+                </Button>
                 </CardContent>
               </Grid>
               <Grid item xs={12} md={6}>
               {/* Booking Form */}
-              {showBookingForm && <BookingForm initialBookingDetails={bookingDetails} />}
+              {showBookingForm && <BookingForm initialBookingDetails={bookingDetails} onBookingConfirmed={onBookingConfirmed} />}
           </Grid>
-          {userRole === 'seller'&& showAdjustmentForm && (
+          {showAdjustmentForm && (
                 <Grid item xs={12}>
-                  <BatchAdjustInventoryForm initialItemId={adjustmentDetails.initialItemId} initialQuantity={adjustmentDetails.initialQuantity} />
+                  <BatchAdjustInventoryForm initialItemId={adjustmentDetails.initialItemId} initialQuantity={adjustmentDetails.initialQuantity}  />
                 </Grid>
               )}
             </Grid>

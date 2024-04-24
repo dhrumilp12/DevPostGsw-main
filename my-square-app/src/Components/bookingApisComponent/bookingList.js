@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBookings } from '../../Actions/bookingApisAction/bookingListAction';
-import { CircularProgress, Box, Card, CardContent, Typography, List, ListItem, Divider, Grid } from '@mui/material';
+import { CircularProgress, Box, Card, CardContent, Typography, List, ListItem, Divider, Grid , Button} from '@mui/material';
+import { Link } from 'react-router-dom';
 import CancelBookingButton from './bookingCancel';  
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -55,7 +56,9 @@ const BookingList = () => {
                                     ))}
                                    
                                     <CancelBookingButton bookingId={booking.id} bookingVersion={booking.version} />
-
+                                    <Button component={Link} to={`/updateBooking/${booking.id}`} variant="contained" color="primary" sx={{ mt: 2 }}>
+                                        Update
+                                    </Button>
                                 </CardContent>
                             </Card>
                         </ListItem>

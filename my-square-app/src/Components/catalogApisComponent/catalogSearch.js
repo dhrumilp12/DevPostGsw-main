@@ -2,21 +2,33 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { catalogSearch } from '../../Actions/catalogApisAction/catalogSearch';
-import { Form, Button, Badge,Container, Row, Col, Card } from 'react-bootstrap';
+import { Form, Button, Badge,Container, Row, Col, Card, ListGroup } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Make sure you have this import for Bootstrap styles
+import { Link } from 'react-router-dom';
+import { createCatalogImage} from '../../Actions/catalogApisAction/catalogImageAction';
 
 const CatalogSearch = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [objectId, setObjectId] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
   const { catalogItems, loading, error } = useSelector(state => state.catalogSearch);
-  // Function to format price information
-  const formatPrice = (price) => {
-    return `${price.currency} ${price.amount / 100}`;
+ 
+   // Function to format price information
+   const formatPrice = (priceMoney) => {
+    if (priceMoney && priceMoney.currency && priceMoney.amount) {
+      const amount = parseFloat(priceMoney.amount); // Convert the amount to a float
+      if (!isNaN(amount)) { // Check if the conversion was successful
+        return `${priceMoney.currency} ${(amount / 100).toFixed(2)}`;
+      }
+    }
+    return 'Price Not Available';
   };
   
-    // Simple function to determine stock status based on item properties
-  const stockStatus = (item) => item.itemVariationData.stockable ? 'In Stock' : 'Out of Stock';
+  
+  const serviceDuration = (milliseconds) => `${milliseconds / 60000} minutes`;
+    
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -26,6 +38,25 @@ const CatalogSearch = () => {
     }
     dispatch(catalogSearch(searchQuery));
     setErrorMessage(''); // Clear any existing error messages
+  };
+
+  const handleFileChange = (file, itemId) => {
+    setSelectedFile(file);
+    setObjectId(itemId);
+  };
+
+  const handleUploadImage = () => {
+    if (!selectedFile || !objectId) {
+      alert('File or item ID missing');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('image', selectedFile);
+    formData.append('objectId', objectId);
+    dispatch(createCatalogImage(`/api/catalogs/images?objectId=${objectId}`, formData));
+    setSelectedFile(null);
+    setObjectId(null);
   };
 
   return (
@@ -61,15 +92,26 @@ const CatalogSearch = () => {
               <Card.Img variant="top" src={item.imageUrl || '/path/to/placeholder-image.png'} />
               <Card.Body>
                 <Card.Title>{item.itemVariationData?.name || 'No Name'}</Card.Title>
-                <Card.Text>
-                  Price: {formatPrice(item.itemVariationData.priceMoney)}
-                </Card.Text>
-                <Card.Text>
-                  Updated At: {new Date(item.updatedAt).toLocaleDateString()}
-                </Card.Text>
-                <Badge bg={stockStatus(item) === 'In Stock' ? 'success' : 'danger'} className="mb-2">
-                  {stockStatus(item)}
+                <ListGroup variant="flush">
+                  <ListGroup.Item>Price: {formatPrice(item.itemVariationData.priceMoney)}</ListGroup.Item>
+                  <ListGroup.Item>Updated At: {new Date(item.updatedAt).toLocaleDateString()}</ListGroup.Item>
+                  <ListGroup.Item>Service Duration: {serviceDuration(item.itemVariationData.serviceDuration)}</ListGroup.Item>
+                  <ListGroup.Item>Available for Booking: {item.itemVariationData.availableForBooking ? 'Yes' : 'No'}</ListGroup.Item>
+                  <ListGroup.Item>Present at All Locations: {item.itemVariationData.presentAtAllLocations ? 'Yes' : 'No'}</ListGroup.Item>
+                  <ListGroup.Item>Team Members: {item.itemVariationData.teamMemberIds.join(', ')}</ListGroup.Item>
+                </ListGroup>
+                <Badge bg={item.itemVariationData.stockable ? 'success' : 'danger'} className="mb-2">
+                  {item.itemVariationData.stockable ? 'In Stock' : 'Out of Stock'}
                 </Badge>
+                <Button as={Link} to={`/catalogSearchItem/${item.id}`} variant="outline-primary" className="me-2">Details</Button>
+                <Button as={Link} to={`/catalogDeleteItem/${item.id}`} variant="outline-danger" className="me-2">Delete</Button>
+                {!item.imageUrl && (
+                  <>
+                    <input type="file" onChange={(e) => handleFileChange(e.target.files[0], item.id)} hidden id={`file-upload-${item.id}`} />
+                    <label htmlFor={`file-upload-${item.id}`} className="btn btn-sm btn-secondary">Upload Image</label>
+                    <Button onClick={handleUploadImage} variant="success" className="mt-2">Upload</Button>
+                  </>
+                )}
               </Card.Body>
             </Card>
           </Col>

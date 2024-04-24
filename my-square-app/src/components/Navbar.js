@@ -15,7 +15,7 @@ const NavigationBar = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(state => state.registerLogin.isAuthenticated);
   const customerInfo = useSelector(state => state.registerLogin.user);  // Assuming user details are stored here
-  const userRole = useSelector((state) => state.registerLogin.user?.role);
+  
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -57,13 +57,12 @@ const NavigationBar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-          {userRole === 'seller' && (
-            <>
+         
             <Link to="/catalog-image" className="nav-link">Catalog Image</Link>
             <Link to="/customerList" className="nav-link">Customers List</Link>
             <Link to="/catalogCreate" className="nav-link">Create Catalog</Link>
             <Link to="/batch-retrieve-inventory-counts" className="nav-link">Inventory Counts</Link>
-            </>)}
+            <Link to="/search-availability" className="nav-link">Booking-Availables</Link>
             <Link to="/bookingList" className="nav-link">Booking List</Link>
             <Link to="/payment-history" className="nav-link">Payment History</Link>
           </Nav>

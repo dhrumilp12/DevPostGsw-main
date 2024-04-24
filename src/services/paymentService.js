@@ -4,7 +4,7 @@ const crypto = require('crypto');
 
 async function processPayment(sourceId, amount, currency = 'USD', idempotencyKey = crypto.randomUUID()) {
   const requestBody = {
-      sourceId: sourceId,
+      sourceId,
       amountMoney: {
           amount: amount,
           currency: currency

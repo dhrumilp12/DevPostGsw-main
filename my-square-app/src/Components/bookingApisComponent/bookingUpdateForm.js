@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBooking } from '../../Actions/bookingApisAction/bookingUpdateAction';
 import { Form, Button, Container, Row, Col, Spinner } from 'react-bootstrap';
@@ -10,15 +10,29 @@ import moment from 'moment';
 const UpdateBookingForm = () => {
   const { bookingId } = useParams();
   const dispatch = useDispatch();
-  const { loading } = useSelector(state => state.bookingUpdate);
+  const { bookings, loading } = useSelector(state => state.bookingsList);
+  const booking = bookings.find(b => b.id === bookingId);
 
-  const [bookingData, setBookingData] = useState({
-    version: 1, // Assuming 'version' should be initialized to 1 or fetched from a source
-    customerNote: '',
-    startAt: '',
-    locationId: '',
-    appointmentSegments: [] // Assuming segments are not needed for simple updates
+   const [bookingData, setBookingData] = useState({
+    version: booking?.version || 1, // Initialize with existing version if available, otherwise default to 1
+    customerNote: booking?.customerNote || '',
+    startAt: booking?.startAt ? moment(booking.startAt).format('YYYY-MM-DDTHH:mm') : '',
+    locationId: booking?.locationId || '', // Pre-fill the locationId
+    appointmentSegments: booking?.appointmentSegments || [] // Pre-fill if needed
   });
+
+  useEffect(() => {
+    // Update the form state if booking data is fetched after component mounts
+    if (booking) {
+      setBookingData({
+        version: booking.version,
+        customerNote: booking.customerNote,
+        startAt: moment(booking.startAt).format('YYYY-MM-DDTHH:mm'),
+        locationId: booking.locationId,
+        appointmentSegments: booking.appointmentSegments
+      });
+    }
+  }, [booking]); // Re-run this effect if booking changes (which it shouldn't in normal conditions)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,12 +42,11 @@ const UpdateBookingForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    const versionNumber = parseInt(bookingData.version, 10);
     const formattedStartAt = moment(bookingData.startAt).toISOString();
   
     const updatedBookingData = {
       ...bookingData,
-      version: versionNumber,
+      version: parseInt(bookingData.version, 10),
       startAt: formattedStartAt
     };
   

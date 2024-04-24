@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector  } from 'react-redux';
 import {Container, Row, Col, Form, Button, Alert, Tooltip, OverlayTrigger } from 'react-bootstrap';
@@ -198,7 +199,3 @@ const RegisterLogin = () => {
 };
 
 export default RegisterLogin;
-
-
-
-

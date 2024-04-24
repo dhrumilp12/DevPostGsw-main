@@ -1,25 +1,49 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { fetchBookings } from '../../Actions/bookingApisAction/bookingListAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { bulkRetrieveBookings } from '../../Actions/bookingApisAction/bookingBulkRetriveAction';
 import { Form, Button, Container, Row, Col, Card, Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import Select from 'react-select';
 
 const BulkRetrieveBookingsForm = () => {
-  const [bookingIdsInput, setBookingIdsInput] = useState('');
+  
   const dispatch = useDispatch();
+  const { bookings: bookingList, loading: bookingsLoading } = useSelector(state => state.bookingsList);
   const { bookings, loading, error } = useSelector(state => state.bulkRetrieveBookings);
 
-  const handleChange = (e) => {
-    setBookingIdsInput(e.target.value);
+  useEffect(() => {
+    dispatch(fetchBookings());
+  }, [dispatch]);
+  const [bookingIds, setBookingIds] = useState([]);
+ const handleChange = (selectedOptions) => {
+    setBookingIds(selectedOptions.map(option => option.value));
   };
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const ids = bookingIdsInput.split(',').map(id => id.trim());
-    dispatch(bulkRetrieveBookings(ids));
+    if (bookingIds.length > 0) {
+      dispatch(bulkRetrieveBookings(bookingIds));
+    } else {
+      alert('Please select at least one booking ID.');
+    }
+  };
+
+ 
+
+  const getOptions = () => {
+    return bookingList.map(booking => ({ value: booking.id, label: `ID: ${booking.id}, Customer: ${booking.customerId}` }));
   };
 
   const renderError = () => {
-    return typeof error === 'string' ? error : error?.response?.data?.message || 'An error occurred';
+    if (typeof error === 'string') {
+      return error;
+    }
+    if (error && typeof error === 'object' && error.error) {
+      return error.error; // Adjust based on the actual error object structure
+    }
+    return 'An unexpected error occurred';
   };
 
   const renderTooltip = (props) => (
@@ -27,7 +51,6 @@ const BulkRetrieveBookingsForm = () => {
       Click to copy ID
     </Tooltip>
   );
-
   return (
     <Container className="my-5">
       <Row>
@@ -38,18 +61,19 @@ const BulkRetrieveBookingsForm = () => {
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
                   <Form.Label>Booking IDs (comma-separated)</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={bookingIdsInput}
+                  <Select
+                    options={getOptions()}
+                    isMulti
+                    className="basic-multi-select"
+                    classNamePrefix="select"
                     onChange={handleChange}
-                    placeholder="Enter booking IDs"
                   />
                 </Form.Group>
-                <Button type="submit" variant="primary" className="w-100" disabled={loading}>
-                  {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Retrieve Bookings'}
+                <Button type="submit" variant="primary" className="w-100" disabled={loading || bookingsLoading}>
+                  {loading || bookingsLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Retrieve Bookings'}
                 </Button>
-              </Form>
-              {error && <div className="alert alert-danger mt-3">{renderError()}</div>}
+                </Form>
+                {error && <div className="alert alert-danger mt-3">{renderError()}</div>}
             </Card.Body>
           </Card>
 
@@ -96,3 +120,7 @@ const BulkRetrieveBookingsForm = () => {
 };
 
 export default BulkRetrieveBookingsForm;
+
+
+
+
