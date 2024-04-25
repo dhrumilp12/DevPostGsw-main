@@ -20,7 +20,9 @@ export const createCatalog = (itemData) => async (dispatch) => {
   try {
     const response = await axios.post('/api/catalogs/create-catalog', itemData);
     dispatch(createCatalogSuccess(response.data));
+    return response.data;
   } catch (error) {
     dispatch(createCatalogFailure(error.response?.data?.error || 'Unknown error'));
+    throw error;
   }
 };
