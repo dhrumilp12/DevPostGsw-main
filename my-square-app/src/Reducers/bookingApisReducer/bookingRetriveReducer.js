@@ -1,3 +1,6 @@
+//we are not using this since we are using "bookingBulkRetrive".
+// Manages the retrieval of details for a specific booking. It maintains the state of the booking being retrieved, including loading states and any errors that occur during the retrieval process.
+
 import {
     RETRIEVE_BOOKING_START,
     RETRIEVE_BOOKING_SUCCESS,

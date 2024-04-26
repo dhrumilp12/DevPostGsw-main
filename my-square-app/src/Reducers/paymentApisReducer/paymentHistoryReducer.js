@@ -1,4 +1,6 @@
 // src/reducers/paymentHistoryReducer.js
+// Handles the state for fetching the history of payments. This reducer manages the loading state, stores an array of payment transactions, and handles errors. It processes actions related to the start, successful retrieval, and failure of fetching payment history.
+
 import {
     FETCH_PAYMENTS_HISTORY_START,
     FETCH_PAYMENTS_HISTORY_SUCCESS,

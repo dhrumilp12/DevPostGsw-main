@@ -1,3 +1,4 @@
+// Manages the state for deleting catalog items. This reducer handles the loading state, tracks the ID of the deleted item, and captures any errors during the deletion process. It updates the state based on the lifecycle of a catalog item deletion request: start, success, and failure.
 import { DELETE_CATALOG_ITEM_START, DELETE_CATALOG_ITEM_SUCCESS, DELETE_CATALOG_ITEM_FAILURE } from '../../Actions/actionTypes';
 
 const initialState = {

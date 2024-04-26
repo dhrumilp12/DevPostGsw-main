@@ -1,3 +1,7 @@
+// SearchAvailabilityForm allows users to search for booking availability based on specific criteria including dates, location, and team members.
+// The component fetches and lists available slots, handling potential errors with user feedback.
+// It ensures the start and end dates are valid and within a permissible range before submitting the search.
+
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { searchAvailability } from '../../Actions/bookingApisAction/bookingSearchAvailabilityAction';

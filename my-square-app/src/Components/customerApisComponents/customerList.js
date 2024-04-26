@@ -1,3 +1,7 @@
+// CustomerList fetches and displays a list of customers from the Redux store.
+// It handles loading states with a spinner and errors with an alert.
+// Each customer is displayed with their name, email, and a unique identifier, utilizing icons for a better visual representation.
+
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCustomers } from '../../Actions/customerApisAction/customerListAction';

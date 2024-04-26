@@ -1,3 +1,7 @@
+// PaymentHistory fetches and displays a list of past payment transactions.
+// Allows users to click on any payment to view detailed information.
+// Handles loading and error states and provides a responsive table layout.
+
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPaymentsHistory } from '../../Actions/paymentApisAction/paymentAction';

@@ -1,3 +1,7 @@
+// BatchRetrieveInventoryCountsForm provides functionality to fetch inventory counts for selected catalog items.
+// It handles selection of multiple item IDs and submits them to retrieve inventory counts, showing results in a table format.
+// Manages loading states and errors, and includes user instructions via tooltips for selecting multiple items.
+
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { batchRetrieveInventoryCounts } from '../../Actions/inventoryApi/inventoryBatchRetriveAction';

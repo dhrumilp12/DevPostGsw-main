@@ -1,3 +1,6 @@
+//Will work on it.
+// Manages state for accumulating loyalty points. It updates state to indicate loading during processing, captures accumulated events on success, and stores any errors that occur.
+
 import {
     ACCUMULATE_LOYALTY_POINTS_START,
     ACCUMULATE_LOYALTY_POINTS_SUCCESS,

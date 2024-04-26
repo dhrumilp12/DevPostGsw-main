@@ -1,4 +1,6 @@
 // src/reducers/paymentStatusReducer.js
+// Manages state related to the status of payment processing. It handles loading state, success status, and error management during payment processing. Updates state accordingly based on the lifecycle of a payment transaction: start, success, and failure.
+
 import {
     PROCESS_PAYMENT_START,
     PROCESS_PAYMENT_SUCCESS,

@@ -1,3 +1,4 @@
+// Manages state for adjusting inventory counts in batch mode. Handles loading state, error information, and the updated inventory counts after adjustments. It responds to start, success, and failure actions of inventory adjustments and provides a mechanism to clear any existing errors.
 import {
     BATCH_ADJUST_INVENTORY_START,
     BATCH_ADJUST_INVENTORY_SUCCESS,

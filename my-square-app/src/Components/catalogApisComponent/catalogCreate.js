@@ -1,3 +1,7 @@
+// CatalogCreate provides a form to create new catalog items with multiple variations.
+// Users can input details such as item name, description, price, and associate team members.
+// Submits the data through the `createCatalog` action and navigates to the item details page upon successful creation.
+
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createCatalog } from '../../Actions/catalogApisAction/catalogCreateAction';

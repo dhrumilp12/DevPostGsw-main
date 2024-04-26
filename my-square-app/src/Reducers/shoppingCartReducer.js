@@ -1,3 +1,6 @@
+//Not working, will work on it.
+// Manages the shopping cart's state including adding and removing items, fetching and updating the cart summary. It tracks loading states and errors for operations related to the cart's summary.
+
 import {
     ADD_ITEM_TO_CART,
     REMOVE_ITEM_FROM_CART,

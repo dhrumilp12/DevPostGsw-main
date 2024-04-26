@@ -1,3 +1,4 @@
+// Manages the state for fetching specific catalog items and their variations. This reducer tracks the loading state, the fetched item and item variation, and any errors. It handles actions for starting and successfully completing or failing both item and item variation fetches.
 import {
   FETCH_CATALOG_ITEM_START,
   FETCH_CATALOG_ITEM_SUCCESS,

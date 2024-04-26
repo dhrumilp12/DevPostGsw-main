@@ -1,3 +1,7 @@
+// CatalogSearchItem fetches and displays detailed information about a specific catalog item identified by item ID from URL parameters.
+// It provides functionalities like booking and inventory adjustments through subcomponents like BookingForm and BatchAdjustInventoryForm.
+// Utilizes a dark theme consistent with the application's design and handles loading and error states effectively.
+
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate  } from 'react-router-dom';

@@ -1,3 +1,7 @@
+// AccumulateLoyaltyPointsForm allows users to accumulate loyalty points for an order.
+// It submits the orderId and the static locationId to the loyalty API to accumulate points for the given account ID.
+// Handles loading state with a spinner and displays errors through an alert.
+
 import React, { useState } from 'react';
 //replace 'LOCATION_ID' with the actual location ID where the purchase was made.
 import { useDispatch, useSelector } from 'react-redux';

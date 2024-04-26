@@ -1,3 +1,4 @@
+// Manages the state for creating catalog items. This reducer tracks the loading state, newly created item, and any errors that occur during the catalog creation process. It responds to start, success, and failure actions of creating a catalog item.
 import {
   CREATE_CATALOG_START,
   CREATE_CATALOG_SUCCESS,

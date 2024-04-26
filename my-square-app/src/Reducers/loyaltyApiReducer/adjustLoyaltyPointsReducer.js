@@ -1,3 +1,6 @@
+//Will work on it.
+// Manages state for adjusting loyalty points for a customer. Tracks loading state, adjustments data, and errors. It responds to actions for starting adjustments, successfully adjusting points, and handling failures.
+
 import {
     ADJUST_LOYALTY_POINTS_START,
     ADJUST_LOYALTY_POINTS_SUCCESS,

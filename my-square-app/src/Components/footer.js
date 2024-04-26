@@ -1,3 +1,7 @@
+// Footer component provides contact information, social media links, and additional resource links.
+// It conditionally renders based on the route, omitting the footer on the register/login page.
+// Styling is responsive, adapting to different screen sizes while maintaining accessibility and visual hierarchy.
+
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

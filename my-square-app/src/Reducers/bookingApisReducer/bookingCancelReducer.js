@@ -1,3 +1,4 @@
+// Manages the state for cancelling a booking. This reducer tracks the loading state, the currently processed booking, and any errors. It updates state based on the lifecycle of a booking cancellation request: start, success, and failure.
 import {
     CANCEL_BOOKING_START,
     CANCEL_BOOKING_SUCCESS,

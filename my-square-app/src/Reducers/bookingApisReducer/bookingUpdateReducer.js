@@ -1,3 +1,4 @@
+// Manages the state for updating a booking. It tracks the loading state, the booking being updated, and any errors that occur. The state is updated based on the start, success, and failure of a booking update operation.
 import {
     UPDATE_BOOKING_START,
     UPDATE_BOOKING_SUCCESS,

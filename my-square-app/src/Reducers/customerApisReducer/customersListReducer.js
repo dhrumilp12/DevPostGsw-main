@@ -1,3 +1,5 @@
+// Manages the state for fetching a list of customers. This reducer controls loading states and stores the list of customers or any errors. It logs state changes at each action dispatch which helps in debugging and tracing state updates throughout the fetch lifecycle.
+
 import { FETCH_CUSTOMERS_START, FETCH_CUSTOMERS_SUCCESS, FETCH_CUSTOMERS_FAILURE } from '../../Actions/actionTypes';
 
 const initialState = {

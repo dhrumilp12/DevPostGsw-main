@@ -1,3 +1,7 @@
+// The CancelBookingButton component provides functionality to cancel a booking based on its current status and version.
+// It dispatches the `cancelBooking` action with the bookingId and version, handling potential errors with user feedback via toast notifications.
+// The component is disabled if the booking is already cancelled or while the cancellation request is processing to prevent duplicate requests.
+
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { cancelBooking } from '../../Actions/bookingApisAction/bookingCancelAction';

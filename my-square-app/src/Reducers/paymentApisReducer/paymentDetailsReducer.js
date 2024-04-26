@@ -1,3 +1,5 @@
+// Manages state for fetching detailed information about a specific payment. Uses Redux Toolkit's `createReducer` to handle state transitions for start, success, and failure of fetching payment details. Tracks loading state, payment data, and any errors.
+
 import { createReducer } from '@reduxjs/toolkit';
 import {
     FETCH_PAYMENT_DETAILS_START,

@@ -1,3 +1,6 @@
+// CatalogSearch allows users to search catalog items based on a text query.
+// It displays search results with options to view details, delete, or upload images for each item.
+// Includes features such as displaying item price, service duration, and stock status, enhancing the functionality of catalog item listings.
 
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

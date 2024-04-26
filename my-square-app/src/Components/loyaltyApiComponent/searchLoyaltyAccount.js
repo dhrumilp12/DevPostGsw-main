@@ -1,3 +1,6 @@
+// SearchLoyaltyAccountsForm enables searching for loyalty accounts using either a phone number or a customer ID.
+// Displays the search results or any error encountered during the search.
+
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { searchLoyaltyAccounts } from '../../Actions/loyaltyApiAction/searchLoyaltyAccountAction';

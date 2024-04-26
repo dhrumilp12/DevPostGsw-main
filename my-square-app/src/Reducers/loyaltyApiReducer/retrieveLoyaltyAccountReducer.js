@@ -1,3 +1,6 @@
+//Will work on it.
+// Manages state for retrieving loyalty account details. It updates state based on actions that manage loading, successful retrieval of an account, and error handling.
+
 import {
     RETRIEVE_LOYALTY_ACCOUNT_START,
     RETRIEVE_LOYALTY_ACCOUNT_SUCCESS,

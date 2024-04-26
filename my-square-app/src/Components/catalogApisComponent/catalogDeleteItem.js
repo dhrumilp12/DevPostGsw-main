@@ -1,3 +1,7 @@
+// DeleteCatalogItem allows the user to delete a catalog item using its item ID obtained from URL parameters.
+// It dispatches the `deleteCatalogItem` action upon user confirmation and navigates the user to the home page post-deletion.
+// Includes styled components for a responsive button and tooltips for better user interaction.
+
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';

@@ -1,3 +1,4 @@
+// Manages the state for creating and updating catalog images. This reducer tracks loading states, stores created and updated image details, and handles errors for both creating and updating actions. It processes requests, successes, and failures for both creating and updating catalog images.
 import {
     CREATE_CATALOG_IMAGE_REQUEST,
     CREATE_CATALOG_IMAGE_SUCCESS,

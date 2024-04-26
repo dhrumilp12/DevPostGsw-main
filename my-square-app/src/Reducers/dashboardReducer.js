@@ -1,3 +1,6 @@
+//Not wroking, will work on it.
+// Handles a variety of administrative actions such as fetching, creating, updating, and deleting users, as well as managing content. It manages separate loading and error states for users and content management.
+
 import {
     FETCH_SUMMARY_START,
     FETCH_SUMMARY_SUCCESS,

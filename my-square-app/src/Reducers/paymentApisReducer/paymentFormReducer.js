@@ -1,4 +1,6 @@
-// src/reducers/paymentReducer.js
+// src/reducers/paymentFormReducer.js
+// Manages state for processing payments. Tracks the loading state, the payment details upon successful transaction, and any errors encountered during the payment process. It responds to start, success, and failure actions related to payment processing.
+
 import { PROCESS_PAYMENT_START, PROCESS_PAYMENT_SUCCESS, PROCESS_PAYMENT_FAILURE } from '../../Actions/actionTypes.js';
 
 const initialState = {

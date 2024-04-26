@@ -1,3 +1,6 @@
+//Will work on it.
+// Manages state for loyalty account operations, specifically creating loyalty accounts. Handles loading state, successful account creation, and captures any errors during the account creation process.
+
 import {
     CREATE_LOYALTY_ACCOUNT_START,
     CREATE_LOYALTY_ACCOUNT_SUCCESS,

@@ -1,3 +1,7 @@
+// RegisterLogin manages both registration and login functionalities based on user input.
+// It toggles between registration and login forms and handles form submissions through Redux actions.
+// Implements dynamic background images and password validation with visual feedback.
+// Redirects upon successful authentication and provides a mechanism for rotating background images.
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector  } from 'react-redux';

@@ -1,3 +1,6 @@
+// PaymentStatus displays the current status of a payment process.
+// It shows a loading spinner with a message during processing, success alerts for completed payments, and error messages for failed transactions.
+
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { CircularProgress, Box, Typography, Alert } from '@mui/material';

@@ -1,3 +1,8 @@
+// BookingList component fetches and displays a list of bookings.
+// Each booking is shown in a card format with details such as booking ID, status, and timestamps.
+// It provides buttons to update or cancel each booking, utilizing sub-components for specific actions like `CancelBookingButton`.
+// The component also handles loading and error states to provide appropriate feedback to the user.
+
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBookings } from '../../Actions/bookingApisAction/bookingListAction';

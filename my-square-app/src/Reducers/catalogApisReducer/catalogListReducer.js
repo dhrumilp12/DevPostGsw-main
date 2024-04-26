@@ -1,4 +1,6 @@
 // src/reducers/catalogReducer.js
+// Manages the state for fetching and sorting catalog items. This reducer handles the loading state, stores the fetched catalog, and manages errors. Additionally, it includes functionality to sort catalog items based on different criteria like name or price, which is triggered by a custom 'SORT_CATALOG' action.
+
 import { FETCH_CATALOG_START, FETCH_CATALOG_SUCCESS, FETCH_CATALOG_FAILURE } from '../../Actions/actionTypes';
 
 const initialState = {

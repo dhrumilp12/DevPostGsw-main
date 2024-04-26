@@ -1,3 +1,7 @@
+// AdjustLoyaltyPointsForm provides functionality to adjust (add or subtract) loyalty points for a specific loyalty account.
+// Users can input the number of points and the reason for the adjustment.
+// Dispatches the adjustLoyaltyPoints action and manages loading states and error messages.
+
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { adjustLoyaltyPoints } from '../../Actions/loyaltyApiAction/adjustLoyaltyPointsAction';

@@ -1,10 +1,18 @@
+// This is the main React component that sets up the entire application.
+// It uses `BrowserRouter` to handle routing, wrapping all routes with necessary providers like Redux and ThemeProvider.
+// `PersistGate` is used to delay the rendering of the app's UI until the persisted state has been retrieved and saved to redux.
+// `ThemeProvider` is used to manage theming across the application.
+// Various routes are defined using `Route` components, which conditionally render components based on the current URL path.
+// `ProtectedRoute` is a custom component to protect routes that require authentication, redirecting unauthenticated users.
+// Global styles and theming are applied, and the application structure includes a Navbar and Footer that wrap around the dynamic content rendered by the routes.
+
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import {store, persistor} from './Store/store';
 import { BrowserRouter as Router, Routes, Route,Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { ThemeProvider } from './Components/themeContext';
+import { ThemeProvider } from './Components/themeContext.js';
 import BookingForm from './Components/bookingApisComponent/bookingForm.js';
 import UpdateBookingForm from './Components/bookingApisComponent/bookingUpdateForm';
 import CancelBooking from './Components/bookingApisComponent/bookingCancel';

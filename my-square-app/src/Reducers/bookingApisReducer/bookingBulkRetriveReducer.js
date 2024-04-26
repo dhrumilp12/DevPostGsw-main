@@ -1,4 +1,4 @@
-
+// Handles the state for bulk retrieval of bookings. This reducer manages the bookings array, loading states, and any errors that occur during the bulk retrieval process. It responds to three actions: start, success, and failure of bulk booking retrieval.
 import {
   BULK_RETRIEVE_BOOKINGS_START,
   BULK_RETRIEVE_BOOKINGS_SUCCESS,

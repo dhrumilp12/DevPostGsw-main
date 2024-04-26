@@ -1,3 +1,7 @@
+// LocationsComponent fetches and displays a list of locations from a server endpoint.
+// It manages local state for locations and errors, providing a selection interface for users.
+// The component is designed to be reusable wherever a location selection is required.
+
 import React, { useState, useEffect } from 'react';
 
 function LocationsComponent({ onChange, value }) {

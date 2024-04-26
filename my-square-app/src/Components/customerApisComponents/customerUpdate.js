@@ -1,3 +1,7 @@
+// UpdateCustomer provides a form for updating customer details like name, email, and notes.
+// It fetches initial customer data based on the customerId from URL parameters and pre-fills the form.
+// Submits updated data through the Redux action and navigates to the detailed view of the customer upon successful update.
+
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate

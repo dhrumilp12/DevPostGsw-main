@@ -1,3 +1,4 @@
+// Handles state for batch retrieval of inventory counts. This reducer manages loading states, the retrieved inventory counts, and errors. It updates state based on the lifecycle of inventory counts retrieval: start, success, and failure.
 import {
     BATCH_RETRIEVE_INVENTORY_COUNTS_START,
     BATCH_RETRIEVE_INVENTORY_COUNTS_SUCCESS,

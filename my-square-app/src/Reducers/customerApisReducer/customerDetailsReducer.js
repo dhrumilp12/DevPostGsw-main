@@ -1,4 +1,5 @@
-// src/reducers/customerReducer.js
+// src/reducers/customerDetailsReducer.js
+// Manages state for fetching individual customer details. This reducer handles loading states, the fetched customer data, and errors. It processes actions for starting the fetch, successfully receiving data, and handling any errors that occur during the fetch process.
 
 import {
     FETCH_CUSTOMER_DETAILS_REQUEST,

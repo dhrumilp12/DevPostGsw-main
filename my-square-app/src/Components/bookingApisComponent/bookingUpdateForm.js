@@ -1,3 +1,7 @@
+// UpdateBookingForm allows users to update various details of an existing booking.
+// The form pre-fills current booking details fetched from the global state and allows editing fields like start time, customer notes, and location.
+// It dispatches the `updateBooking` action upon form submission and provides feedback via toast notifications based on the outcome.
+
 import React, {useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBooking } from '../../Actions/bookingApisAction/bookingUpdateAction';

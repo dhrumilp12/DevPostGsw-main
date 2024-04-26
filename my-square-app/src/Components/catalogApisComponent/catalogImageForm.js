@@ -1,3 +1,6 @@
+// CatalogImageForm provides functionality to either upload a new image to a catalog object or update an existing one.
+// The form handles file selection, and inputs for object ID and image ID, facilitating both creation and update processes.
+// Dispatches either `createCatalogImage` or `updateCatalogImage` based on user action, with detailed console logging for diagnostics.
 
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';

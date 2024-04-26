@@ -1,3 +1,4 @@
+// Manages the state for searching catalog items. This reducer updates the state based on the search results, managing loading states and errors. It processes the search start, success (logging the results), and failure actions.
 import {
   CATALOG_SEARCH_START,
   CATALOG_SEARCH_SUCCESS,

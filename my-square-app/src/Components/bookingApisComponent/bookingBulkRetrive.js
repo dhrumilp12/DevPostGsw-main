@@ -1,3 +1,7 @@
+// BulkRetrieveBookingsForm enables retrieving multiple bookings at once based on a selection of booking IDs.
+// Users can select multiple bookings from a dropdown, which are fetched in bulk using the `bulkRetrieveBookings` action.
+// It displays each retrieved booking in a detailed card view, with functionality to copy the booking ID to the clipboard.
+
 import React, { useEffect, useState } from 'react';
 import { fetchBookings } from '../../Actions/bookingApisAction/bookingListAction';
 import { useDispatch, useSelector } from 'react-redux';
@@ -5,8 +9,8 @@ import { bulkRetrieveBookings } from '../../Actions/bookingApisAction/bookingBul
 import { Form, Button, Container, Row, Col, Card, Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Select from 'react-select';
 
+// Component to handle bulk retrieval of bookings based on an array of booking IDs
 const BulkRetrieveBookingsForm = () => {
-  
   const dispatch = useDispatch();
   const { bookings: bookingList, loading: bookingsLoading } = useSelector(state => state.bookingsList);
   const { bookings, loading, error } = useSelector(state => state.bulkRetrieveBookings);

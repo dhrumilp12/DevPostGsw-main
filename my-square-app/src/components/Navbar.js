@@ -1,3 +1,7 @@
+// NavigationBar provides navigation links, search functionality, and user account management.
+// It includes dynamic theming, responsive design, and dropdowns for user actions and theme toggling.
+// Integrates search with catalog actions and navigates based on authentication status.
+
 import React, { useEffect, useState } from 'react';
 import { Navbar, Nav, Container, Form, FormControl, Button, NavDropdown } from 'react-bootstrap';
 import { FaSearch, FaUserCircle } from 'react-icons/fa';

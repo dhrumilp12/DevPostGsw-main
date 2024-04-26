@@ -1,3 +1,6 @@
+//Will work on it.
+// Manages the state for searching loyalty accounts based on criteria like phone number or customer ID. Handles loading states, stores retrieved accounts, and tracks any errors.
+
 import {
     SEARCH_LOYALTY_ACCOUNTS_START,
     SEARCH_LOYALTY_ACCOUNTS_SUCCESS,

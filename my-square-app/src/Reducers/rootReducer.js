@@ -1,4 +1,6 @@
 // src/reducers/rootReducer.js
+// Combines all application reducers using Redux's combineReducers method. This setup facilitates modular management of application state segmented into specific domains such as payments, bookings, inventory, loyalty points, and user management.
+
 import { combineReducers } from 'redux';
 
 

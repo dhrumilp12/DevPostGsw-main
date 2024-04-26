@@ -1,3 +1,6 @@
+// CreateLoyaltyAccountForm allows users to create a new loyalty account using a phone number and a loyalty program ID.
+// Submits this information through the createLoyaltyAccount action and handles loading and error states.
+
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createLoyaltyAccount } from '../../Actions/loyaltyApiAction/createLoyaltyAccountAction';

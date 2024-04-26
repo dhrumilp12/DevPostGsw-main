@@ -1,3 +1,4 @@
+// Handles the state for searching booking availability. This reducer updates the state based on the availability search results, managing loading states and errors during the search process.
 import {
     SEARCH_AVAILABILITY_START,
     SEARCH_AVAILABILITY_SUCCESS,

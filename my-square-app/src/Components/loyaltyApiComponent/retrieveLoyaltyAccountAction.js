@@ -1,3 +1,6 @@
+// RetrieveLoyaltyAccountForm provides a form to retrieve a loyalty account by its ID.
+// Upon submission, it dispatches the retrieveLoyaltyAccount action and displays either the account details or an error message.
+
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { retrieveLoyaltyAccount } from '../../Actions/loyaltyApiAction/retrieveLoyaltyAccountAction';

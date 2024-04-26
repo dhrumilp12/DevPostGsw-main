@@ -1,5 +1,6 @@
 
-// Possible actionTypes.js
+// Manages authentication states including registration and login processes. This reducer tracks user authentication status, loading states, and errors. It handles actions related to user registration, login, and logout, updating the state accordingly for each scenario, including tracking the authenticated user's details and their Square customer ID.
+
 import {
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,

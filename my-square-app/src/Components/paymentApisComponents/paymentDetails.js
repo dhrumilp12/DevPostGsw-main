@@ -1,3 +1,6 @@
+// PaymentDetails fetches and displays detailed information about a specific payment transaction.
+// It includes details like amount, currency, status, card details, and provides a link to the payment receipt.
+
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPaymentDetails } from '../../Actions/paymentApisAction/paymentAction';

@@ -1,3 +1,7 @@
+// PaymentForm integrates the Square Payment Form for processing payments.
+// It accepts payment information, tokenizes it, and submits it to the payment API.
+// Manages loading and error states, and navigates to the payment details page upon successful payment.
+
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { processPayment } from '../../Actions/paymentApisAction/paymentAction';

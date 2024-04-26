@@ -1,3 +1,7 @@
+// TeamMembers fetches and displays a list of active team members from an API.
+// It handles errors and manages a list of members, displaying their details in a simple list format.
+// The component is useful for internal team management and visibility.
+
 import React, { useState, useEffect } from 'react';
 
 function TeamMembers() {

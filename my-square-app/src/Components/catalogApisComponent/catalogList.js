@@ -1,3 +1,7 @@
+// CatalogList fetches and displays a list of catalog items in a user-friendly format with features like image upload, sorting, and modals for booking availability.
+// Integrates reactive Spring animations for smoother visual transitions.
+// Provides extensive interactive features including a featured items carousel, detailed sorting options, and direct links to additional actions for each item.
+
 import React, { useEffect, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCatalog, sortCatalog } from '../../Actions/catalogApisAction/catalogListAction';

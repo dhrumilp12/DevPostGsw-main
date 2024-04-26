@@ -1,3 +1,8 @@
+//Will work on it.
+// ShoppingCart displays a list of items currently in the cart, with options to add or remove items.
+// Connects to Redux for state management of cart operations and updates.
+// Handles loading and error states, providing user feedback during cart interactions.
+
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addItemToCart, removeItemFromCart } from '../Actions/shoppingCartAction';

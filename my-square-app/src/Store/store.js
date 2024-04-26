@@ -1,4 +1,11 @@
 // src/store/store.js
+// This file configures the Redux store with middleware and persist capabilities. 
+// `redux-thunk` is used as middleware for handling asynchronous actions. 
+// `redux-persist` is integrated to persist the store in local storage, ensuring that application state persists across sessions.
+// `composeEnhancers` is used for integrating the Redux DevTools extension for easier state debugging.
+// The store is created with a root reducer combined from various feature reducers and is enhanced with middleware.
+// `persistStore` wraps the store to enable the persistence features.
+
 import { createStore, applyMiddleware, compose } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web

@@ -1,7 +1,10 @@
+// BookingForm is used to create a new booking with detailed attributes like start time, location, and service details.
+// It pre-fills the customer ID from the logged-in user's profile and fetches available team members and locations.
+// The form validates input before submission, provides feedback via toast notifications, and calls a callback function when the booking is successfully created.
+
 import React, { useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createBooking } from '../../Actions/bookingApisAction/bookingCreateAction';
-
 import { ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Form, Button, Container, Row, Col, Spinner } from 'react-bootstrap';

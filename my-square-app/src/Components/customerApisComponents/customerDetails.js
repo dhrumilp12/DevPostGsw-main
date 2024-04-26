@@ -1,4 +1,8 @@
 // src/components/CustomerDetails.js
+// CustomerDetails displays detailed information about a specific customer, fetched using customerId from URL parameters.
+// It handles loading and error states and allows toggling visibility of additional customer details.
+// Provides a button to navigate to the customer update form and manages local state for showing/hiding extra details like creation and update timestamps.
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchCustomerDetails } from '../../Actions/customerApisAction/customerDetailsAction';

@@ -1,3 +1,4 @@
+// Manages the state for fetching a list of bookings. It handles loading, success, and failure states of fetching bookings, and updates the bookings list accordingly. Additionally, it handles updating the booking list state when a booking is successfully cancelled.
 import {
   FETCH_BOOKINGS_START,
   FETCH_BOOKINGS_SUCCESS,

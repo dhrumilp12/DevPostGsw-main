@@ -1,3 +1,8 @@
+//will work on it.
+// AdminPanel serves as an interface for managing users and content within the application.
+// It allows administrators to create, update, and delete users as well as manage content.
+// Utilizes Redux actions for CRUD operations and maintains local state for form inputs.
+
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {

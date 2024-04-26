@@ -1,3 +1,6 @@
+// BatchAdjustInventoryForm allows users to adjust inventory quantities for selected catalog items at specified locations.
+// Users can dynamically add or remove adjustment fields and submit batch adjustments.
+// The form handles loading, success, and error states, displaying appropriate feedback and navigating away on successful submission.
 
 import React, { useState, useEffect } from 'react'; // Import useEffect
 import { useDispatch, useSelector } from 'react-redux';
