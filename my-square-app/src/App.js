@@ -5,7 +5,7 @@
 // Various routes are defined using `Route` components, which conditionally render components based on the current URL path.
 // `ProtectedRoute` is a custom component to protect routes that require authentication, redirecting unauthenticated users.
 // Global styles and theming are applied, and the application structure includes a Navbar and Footer that wrap around the dynamic content rendered by the routes.
-
+/*"errors": [ { "category": "AUTHENTICATION_ERROR", "code": "FORBIDDEN", "detail": "Merchant subscription does not support write operations." } ]*/
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import {store, persistor} from './Store/store';

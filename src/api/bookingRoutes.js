@@ -47,7 +47,7 @@ router.post('/cancel-booking/:bookingId', async (req, res) => {
 
     const { bookingVersion } = req.body;
     const { bookingId } = req.params;
-
+    
     console.log("Handling cancel for bookingId:", bookingId, "with version:", bookingVersion);
 
     if (bookingVersion === undefined || typeof bookingVersion !== 'number' || !Number.isInteger(bookingVersion)) {
@@ -63,7 +63,6 @@ router.post('/cancel-booking/:bookingId', async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 });
-
 
 
   

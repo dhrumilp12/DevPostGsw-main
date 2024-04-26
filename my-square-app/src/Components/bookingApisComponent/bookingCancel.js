@@ -34,7 +34,7 @@ const CancelBookingButton = ({ bookingId, bookingVersion, bookingStatus }) => {
             toast.error('Booking version is missing or not a number.');
         }
     };
-
+    
     return (
         <>
             

@@ -14,7 +14,7 @@ function TeamMembers() {
             method: 'POST',  // Change method to POST
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer EAAAlpMoPYCX_avoU3PpfK5kMAQDg2qkIWj41ydnrkdRjSTvdfP7hERZBDNfDXUp',  // Make sure to handle your access token correctly
+                'Authorization': `Bearer ${process.env.PRODUCTION_ACCESS_TOKEN}`,
             },
             body: JSON.stringify({
                 query: {

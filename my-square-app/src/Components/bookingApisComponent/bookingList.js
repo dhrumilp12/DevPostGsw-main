@@ -64,8 +64,9 @@ const BookingList = () => {
                                     <Button component={Link} to={`/updateBooking/${booking.id}`} variant="contained" color="primary">
                                     Update
                                     </Button>
-                                    <CancelBookingButton bookingId={booking.id} bookingVersion={booking.version} />
-                                </Box>                                </CardContent>
+                                    <CancelBookingButton bookingId={booking.id} bookingVersion={booking.version} bookingStatus={booking.status} />
+                                </Box>   
+                            </CardContent>
                             </Card>
                         </ListItem>
                     ))}
