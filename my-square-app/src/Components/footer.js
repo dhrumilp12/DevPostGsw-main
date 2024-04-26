@@ -49,11 +49,13 @@ const Footer = () => {
                 </div>
             </Container>
             <style type="text/css">{`
+            
             .footer-style {
                 background-color: #1a2035;
                 color: #b0b8c5;
                 border-top: 3px solid #335C67;
                 box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+                margin-top: auto;
             }
             
             .footer-style a {

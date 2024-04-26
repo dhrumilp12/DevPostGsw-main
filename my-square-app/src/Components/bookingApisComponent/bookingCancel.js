@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { cancelBooking } from '../../Actions/bookingApisAction/bookingCancelAction';
 import { Button, Spinner } from 'react-bootstrap';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const CancelBookingButton = ({ bookingId, bookingVersion, bookingStatus }) => {
@@ -33,7 +33,7 @@ const CancelBookingButton = ({ bookingId, bookingVersion, bookingStatus }) => {
 
     return (
         <>
-            <ToastContainer />
+            
             <Button variant="danger" onClick={handleCancel} disabled={loading || bookingStatus === 'CANCELLED_BY_SELLER'}>
                 {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Cancel Booking'}
             </Button>

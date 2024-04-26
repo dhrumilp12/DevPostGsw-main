@@ -4,7 +4,7 @@ import {store, persistor} from './Store/store';
 import { BrowserRouter as Router, Routes, Route,Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-
+import { ThemeProvider } from './Components/themeContext';
 import BookingForm from './Components/bookingApisComponent/bookingForm.js';
 import UpdateBookingForm from './Components/bookingApisComponent/bookingUpdateForm';
 import CancelBooking from './Components/bookingApisComponent/bookingCancel';
@@ -45,10 +45,10 @@ import PaymentDetails from './Components/paymentApisComponents/paymentDetails.js
 import Navbar from './Components/Navbar';
 import Footer from './Components/footer';
 
-import OrderConfirmation from './Components/orderConfirmation';
-import ShoppingCart from './Components/shoppingCart';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure this import is at the top level of your app, ideally in index.js
 
+//import ShoppingCart from './Components/shoppingCart';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure this import is at the top level of your app, ideally in index.js
+import './App.css';
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useSelector(state => state.registerLogin.isAuthenticated);
   console.log('isAuthenticated:', isAuthenticated);
@@ -66,7 +66,10 @@ function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
       <Router>
+      <ThemeProvider>
+      <div className="site-container">
         <Navbar />
+        <div className="content-wrap">
         <Routes>
           
           <Route path="/" element={<ProtectedRoute><CatalogList /></ProtectedRoute>} />
@@ -101,13 +104,15 @@ function App() {
 
           <Route path="/payment" element={<ProtectedRoute><><PaymentForm /><PaymentStatus /></></ProtectedRoute>} />
 
-          <Route path="/order-confirmation" element={<ProtectedRoute><OrderConfirmation /></ProtectedRoute>} />
-          <Route path="/shopping-cart" element={<ProtectedRoute><ShoppingCart /></ProtectedRoute>} />
+          
           <Route path="/payment-history" element={<ProtectedRoute><PaymentHistory /></ProtectedRoute>} />
           <Route path="/payment-detail/:paymentId" element={<ProtectedRoute><PaymentDetails /></ProtectedRoute>} />
           {/* Add more routes as needed */}
         </Routes>
+        </div>
         <Footer />
+        </div>
+        </ThemeProvider>
       </Router>
     </PersistGate>
   </Provider>

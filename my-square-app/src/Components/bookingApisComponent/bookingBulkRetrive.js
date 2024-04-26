@@ -78,7 +78,7 @@ const BulkRetrieveBookingsForm = () => {
           </Card>
 
           {bookings && (
-            <Row xs={1} md={2} lg={3} className="g-4 mt-4">
+            <Row xs={1} md={2} lg={1} className="g-4 mt-4">
               {Object.entries(bookings).map(([id, bookingData]) => {
                 const { booking } = bookingData;
                 return (

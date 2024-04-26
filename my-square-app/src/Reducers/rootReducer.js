@@ -33,11 +33,11 @@ import retrieveLoyaltyAccountReducer from './loyaltyApiReducer/retrieveLoyaltyAc
 import accumulateLoyaltyPointsReducer from './loyaltyApiReducer/accumulateLoyaltyPointsReducer';
 import adjustLoyaltyPointsReducer from './loyaltyApiReducer/adjustLoyaltyPointsReducer';
 
-import adminPanelReducer from './adminPanelReducer';
+/*import adminPanelReducer from './adminPanelReducer';
 import dashboardReducer from './dashboardReducer';
+*/
 
-import orderConfirmationReducer from './orderConfirmationReducer';
-import shoppingCartReducer from './shoppingCartReducer';
+//import shoppingCartReducer from './shoppingCartReducer';
 import paymentDetailsReducer from './paymentApisReducer/paymentDetailsReducer';
 import registerLogicReducer from './customerApisReducer/registerLogicReducer';
 
@@ -77,11 +77,8 @@ const rootReducer = combineReducers({
   loyaltyPointsAccumulation: accumulateLoyaltyPointsReducer,
   adjustLoyaltyPoints: adjustLoyaltyPointsReducer,
  
-  adminPanel: adminPanelReducer,
-  dashboard: dashboardReducer,
  
-  orderConfirmation: orderConfirmationReducer,
-  shoppingCart: shoppingCartReducer,
+ 
   paymentDetails: paymentDetailsReducer,
   registerLogin: registerLogicReducer,
   customerList: customerListReducer,

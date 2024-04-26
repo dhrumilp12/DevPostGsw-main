@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { processPayment } from '../../Actions/paymentApisAction/paymentAction';
-import { Container, Row, Col, Alert, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Alert, Spinner, Card } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate, useLocation  } from 'react-router-dom';
 import { PaymentForm as SquarePaymentForm, CreditCard } from 'react-square-web-payments-sdk';
@@ -49,10 +49,18 @@ const PaymentForm = () => {
   };
 
   return (
-    <Container>
+    <Container className='my-5'>
       <Row className="justify-content-md-center">
         <Col md={6}>
-          <h2 className="text-center">Process Payment</h2>
+        <Card className="shadow-sm">
+            <Card.Body>
+              <h2 className="text-center">Process Payment</h2>
+              <div className="text-center mb-4">
+                <h4>Amount to Pay</h4>
+                <p className="fs-4 text-success fw-bold">
+                  {amountMoney.currency} {(amountMoney.amount / 100).toFixed(2)}
+                </p>
+              </div>
           <SquarePaymentForm
             applicationId="sq0idp-78KXxKm_tHlqBRbX5gvc1A"
             locationId="L7X4FSM2Z2H0B"
@@ -60,8 +68,14 @@ const PaymentForm = () => {
           >
             <CreditCard />
           </SquarePaymentForm>
-          {isLoading && <Spinner animation="border" />}
+          {isLoading &&  (
+          <div className="text-center">
+            <Spinner animation="border" />
+          </div>
+        )}
           {error && <Alert variant="danger">{error}</Alert>}
+          </Card.Body>
+          </Card>
         </Col>
       </Row>
     </Container>

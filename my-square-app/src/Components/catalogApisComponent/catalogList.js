@@ -10,7 +10,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import { useSpring, animated } from 'react-spring';
 import { FaSearch, FaSortAmountDown, FaUpload} from 'react-icons/fa';
-import { FaArrowDownShortWide,FaArrowDownWideShort  } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 import { FcViewDetails } from "react-icons/fc";
 import BulkRetrieveBookingsForm from '../bookingApisComponent/bookingBulkRetrive';
@@ -57,7 +56,7 @@ const Catalog = () => {
       return;
     }
 
-
+    
     
     const formData = new FormData();
     formData.append('image', selectedFile);
@@ -150,8 +149,8 @@ const Catalog = () => {
                   style={{ color: '#1a2035', minWidth: '180px' }} // Ensure dropdown does not become too small on narrower screens
                 >
                   <option value="name">Name</option>
-                  <option value="priceLowHigh">Price: Low to High <FaArrowDownShortWide /></option>
-                  <option value="priceHighLow">Price: High to Low <FaArrowDownWideShort /></option>
+                  <option value="priceLowHigh">Price: Low to High </option>
+                  <option value="priceHighLow">Price: High to Low </option>
                 </Form.Select>
               </Form.Group>
             </Col>

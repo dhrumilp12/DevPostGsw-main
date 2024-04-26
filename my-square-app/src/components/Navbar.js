@@ -7,6 +7,7 @@ import { logout } from '../Actions/customerApisAction/registerLoginAction';
 import logo from '../assets/1.jpg'
 import {catalogSearch} from '../Actions/catalogApisAction/catalogSearch';
 import { fetchCustomerDetails } from '../Actions/customerApisAction/customerDetailsAction';  // Check the correct path
+import {useTheme} from './themeContext';
 const NavigationBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expanded, setExpanded] = useState(false); 
@@ -15,7 +16,7 @@ const NavigationBar = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(state => state.registerLogin.isAuthenticated);
   const customerInfo = useSelector(state => state.registerLogin.user);  // Assuming user details are stored here
-  
+  const { theme, toggleTheme } = useTheme();
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -49,7 +50,7 @@ const NavigationBar = () => {
 
 
   return (
-    <Navbar expand="lg" variant="dark" className="shadow navbar-modern" style={{ backgroundColor: '#1a2035' }}expanded={expanded} onToggle={() => setExpanded(!expanded)}>
+    <Navbar expand="lg" variant="dark" className={`shadow navbar-modern ${theme}`} style={{ backgroundColor: theme === 'dark' ? '#1a2035' : '#f8f9fa' }}expanded={expanded} onToggle={() => setExpanded(!expanded)}>
       <Container fluid>
         <Link to="/" className="navbar-brand">
           <img src={logo} alt="Logo" style={{ height: '50px' }} />
@@ -88,7 +89,9 @@ const NavigationBar = () => {
               className="ms-3"
             >
               <NavDropdown.Item onClick={handleProfileClick}>Profile</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="#settings">Settings</NavDropdown.Item>
+              <NavDropdown.Item onClick={toggleTheme}>
+                Toggle Theme
+              </NavDropdown.Item>
               <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
             </NavDropdown>
           </div>

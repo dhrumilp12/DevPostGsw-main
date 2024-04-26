@@ -55,11 +55,12 @@ const BookingList = () => {
                                         </Box>
                                     ))}
                                    
-                                    <CancelBookingButton bookingId={booking.id} bookingVersion={booking.version} />
-                                    <Button component={Link} to={`/updateBooking/${booking.id}`} variant="contained" color="primary" sx={{ mt: 2 }}>
-                                        Update
+                                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                                    <Button component={Link} to={`/updateBooking/${booking.id}`} variant="contained" color="primary">
+                                    Update
                                     </Button>
-                                </CardContent>
+                                    <CancelBookingButton bookingId={booking.id} bookingVersion={booking.version} />
+                                </Box>                                </CardContent>
                             </Card>
                         </ListItem>
                     ))}
