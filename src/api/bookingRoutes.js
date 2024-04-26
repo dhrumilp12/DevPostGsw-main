@@ -1,9 +1,12 @@
+// bookingRoutes.js sets up the routes for handling booking-related requests in the backend.
 const express = require('express');
 const router = express.Router();
 const bookingService = require('../services/bookingService');
 
-// Create a booking
+
+// Route to handle the creation of a new booking. It uses the createBooking service to process the request.
 router.post('/create-booking', async (req, res) => {
+    // Validate the request body, attempt to create the booking using the booking service, and handle the response or errors.
     try {
         const bookingData = req.body;
         const newBooking = await bookingService.createBooking(bookingData);
@@ -15,8 +18,12 @@ router.post('/create-booking', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-// Update a booking
+
+
+
+// Route to update an existing booking. It retrieves booking data from the request and uses the updateBooking service.
 router.put('/update-booking/:bookingId', async (req, res) => {
+    // Fetch booking data, call the updateBooking service with the ID and data, and handle the response or errors.
     const { bookingId } = req.params;
     const bookingData = req.body.booking;  // Ensure this matches the structure expected by the API
     console.log("Sending to Square API:", bookingData);
@@ -31,7 +38,11 @@ router.put('/update-booking/:bookingId', async (req, res) => {
 });
 
 
+
+
+// Route to cancel a booking. It checks for required parameters and uses the cancelBooking service.
 router.post('/cancel-booking/:bookingId', async (req, res) => {
+    // Validate necessary parameters, attempt to cancel the booking using the service, and handle the response or errors.
     console.log("Received body at route:", req.body);  // Confirming body structure
 
     const { bookingVersion } = req.body;
@@ -55,12 +66,11 @@ router.post('/cancel-booking/:bookingId', async (req, res) => {
 
 
 
-
-
   
 
-// Retrieve a booking
+// Route to retrieve details of a specific booking.
 router.get('/retrieve-booking/:bookingId', async (req, res) => {
+   // Call the retrieveBooking service with the booking ID and handle the response or errors.
     try {
         const { bookingId } = req.params;
         const bookingDetails = await bookingService.retrieveBooking(bookingId);
@@ -70,7 +80,11 @@ router.get('/retrieve-booking/:bookingId', async (req, res) => {
     }
 });
 
+
+
+// Route to list all bookings.
 router.get('/list-bookings', async (req, res) => {
+    // Use the listBookings service to get all bookings, handle serialization for BigInt, and manage errors.
     try {
         const bookings = await bookingService.listBookings();
         const jsonString = JSON.stringify(bookings, (key, value) =>
@@ -83,7 +97,10 @@ router.get('/list-bookings', async (req, res) => {
 });
 
 
+
+// Route to search for booking availability based on criteria.
 router.post('/search-availability', async (req, res) => {
+    // Validate the search criteria, use the searchAvailability service to perform the search, and handle the response or errors.
     try {
         const searchCriteria = req.body;
         const availability = await bookingService.searchAvailability(searchCriteria);
@@ -93,7 +110,11 @@ router.post('/search-availability', async (req, res) => {
     }
 });
 
+
+
+// Route to retrieve multiple bookings based on IDs.
 router.post('/bulk-retrieve-bookings', async (req, res) => {
+   // Validate the input IDs, use the bulkRetrieveBookings service to get bookings, and handle the response or errors.
     try {
       const { bookingIds } = req.body;
       
@@ -109,5 +130,5 @@ router.post('/bulk-retrieve-bookings', async (req, res) => {
 });
 
   
-// Add other necessary routes and export the router
+// Export the router for use in the main application.
 module.exports = router;

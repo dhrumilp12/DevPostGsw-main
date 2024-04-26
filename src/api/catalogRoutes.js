@@ -1,3 +1,4 @@
+// catalogRoutes.js defines the HTTP routes for catalog operations, interfacing with the catalogService for processing.
 const express = require('express');
 const router = express.Router();
 const catalogService = require('../services/catalogService');
@@ -30,8 +31,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Route to handle image uploads
+
+
+
+// Route for uploading a new catalog image associated with an item.
 router.post('/images', upload.single('image'), async (req, res) => {
+   // Handles the file upload for catalog images, storing files locally and providing feedback on the operation.
   const objectId = req.query || req.body;
   console.log('Query:', req.query);  // Logs the query parameters
   console.log('Body:', req.body);  // Logs other body fields
@@ -48,8 +53,11 @@ router.post('/images', upload.single('image'), async (req, res) => {
   }
 });
 
+
+
+// Route for updating an existing catalog image with a new file.
 router.put('/images/:imageId', upload.single('image'), async (req, res) => {
-  
+  // Updates an existing catalog image file, managing file replacement and deletion of old files, and updating catalog data.
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
@@ -87,9 +95,12 @@ existingFiles.forEach(file => {
   }
 });
 
-// Route to create a catalog item
+
+
+// Route for creating a new catalog item.
 router.post('/create-catalog', async (req, res) => {
-    try {
+  // Receives data for a new catalog item, calls the service to create it, and handles the JSON response and errors. 
+  try {
         console.log("Request body:", req.body); // Log the request body
         const itemData = req.body; 
         const newItem = await catalogService.createCatalogItem(itemData);
@@ -107,8 +118,9 @@ router.post('/create-catalog', async (req, res) => {
 });
 
 
-// Route to delete a catalog item
+// Route for deleting a catalog item by ID.
 router.delete('/delete/:itemId', async (req, res) => {
+  // Calls the catalog service to delete an item by ID and returns the result or error.
   try {
     const itemId = req.params.itemId;
     const deletedItem = await catalogService.deleteCatalogItem(itemId);
@@ -120,8 +132,9 @@ router.delete('/delete/:itemId', async (req, res) => {
 });
 
 
-// Route to search catalog items
+// Route for searching catalog items based on a query string.
 router.get('/search', async (req, res) => {
+  // Processes a search request, using the catalog service to find items and return them with proper serialization.
   try {
     const query = req.query.q; 
     const items = await catalogService.searchCatalogItems(query);
@@ -136,9 +149,11 @@ router.get('/search', async (req, res) => {
   }
 });
 
-// Route to get a single catalog item
-// Route to get a single catalog item
+
+
+// Route for retrieving detailed information on a single catalog item. 
 router.get('/search-item/:itemId', async (req, res) => {
+ // Fetches detailed catalog item information, including image data if available, and handles responses and errors.
   try {
     const itemId = req.params.itemId;
     console.log("Fetching catalog item with ID:", itemId); // Log the item ID being fetched
@@ -157,17 +172,18 @@ router.get('/search-item/:itemId', async (req, res) => {
 
 
 
-
+// Route for listing all catalog items.
 router.get('/list', async (req, res) => {
+  // Calls the catalogService to fetch all items available in the catalog. This might include additional metadata or associated images depending on the implementation in the service layer.
   try {
-      const items = await catalogService.listItems();
-      res.json(items);
+      const items = await catalogService.listItems();  // Retrieves all catalog items including their image links if applicable.
+      res.json(items);  // Responds with the list of items in JSON format, ensuring all items are properly serialized and suitable for client consumption.
   } catch (error) {
-    console.error("Failed to retrieve inventory", error);
-    res.status(500).json({ error: 'Failed to retrieve inventory' });
-}
-
+      console.error("Failed to retrieve inventory", error);  // Logs any errors that occur during the fetch operation.
+      res.status(500).json({ error: 'Failed to retrieve inventory' });  // Returns an error response indicating that the inventory could not be retrieved.
+  }
 });
 
 
+// Additional routes for listing all items or handling bulk operations might also be included.
 module.exports = router;

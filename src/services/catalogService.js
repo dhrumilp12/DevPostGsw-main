@@ -1,4 +1,4 @@
-// catalogService.js
+// catalogService.js contains functions for interacting with the catalog aspects of the Square API and local filesystem operations for images.
 const crypto = require('crypto'); // For generating idempotency keys
 const { catalogApi } = require('../api/squareClient');
 const { inventoryApi} = require('../api/squareClient');
@@ -9,7 +9,9 @@ const path = require('path');
 const axios = require('axios');
 const { ApiError } = require('square');
 
+// Creates a catalog item using the Square API, ensuring idempotency and handling data serialization for variations and pricing.
 async function createCatalogItem(itemData) {
+  // Validates input data, constructs the request with an idempotency key, and sends it to the Square API.
     try {
       const response = await catalogApi.upsertCatalogObject({
         idempotencyKey: crypto.randomUUID().toString(),
@@ -45,7 +47,9 @@ async function createCatalogItem(itemData) {
       throw error;
     }
   }
-    
+   
+  
+
   /*
   async function updateCatalogItem(itemData) {
   try {
@@ -94,7 +98,12 @@ async function createCatalogItem(itemData) {
   }
 }
 */
+
+
+
+// Deletes a catalog item by ID using the Square API, returning the ID of the deleted item for confirmation.
   async function deleteCatalogItem(itemId) {
+    // Uses the Square API to delete a catalog object and logs the process.
     try {
       await catalogApi.deleteCatalogObject(itemId);
       return { id: itemId }; // Return the ID of the deleted item
@@ -105,7 +114,10 @@ async function createCatalogItem(itemData) {
   }
   
 
+
+  // Searches for catalog items that match a given query, including handling of large text fields and optional inclusion of associated images.
   async function searchCatalogItems(query) {
+    // Performs a search using the Square API and processes the results, including converting BigInts for serialization.
     try {
       if (typeof query === 'undefined' || query.trim() === '' || query.trim().length < 2) {
         throw new Error('Query parameter is required and must be at least two characters long.');
@@ -156,8 +168,9 @@ async function createCatalogItem(itemData) {
   
   
   
-
+  // Retrieves a detailed catalog item by its ID, potentially including related images from both Square and local storage.
   async function getCatalogItem(itemId) {
+    // Fetches an item and its related images using the Square API and local file checks.
     try {
       const response = await catalogApi.retrieveCatalogObject(itemId, true);
       
@@ -208,8 +221,9 @@ async function createCatalogItem(itemData) {
 
   
 
-// catalogList
+// Lists all catalog items and optionally their associated images, handling pagination and data conversion.
 async function listItems() {
+  // Retrieves and lists all items in the catalog, handling potential BigInts and including image information.
   try {
     // Search for item variations and get their IDs
     console.log("Listing catalog item variations");
@@ -272,7 +286,9 @@ async function listItems() {
 }
 
 
+// Creates or updates a catalog image by uploading a file to the server, handling file storage, and calling the Square API.
 async function createCatalogImage(idempotencyKey, objectId, imagePath) {
+  // Manages image file uploads, including error handling and Square API integration for catalog images.
   console.log(`Preparing to upload image for object ID: ${objectId} from path: ${imagePath}`);
 
    // Check for existing images and delete them
@@ -349,8 +365,11 @@ async function createCatalogImage(idempotencyKey, objectId, imagePath) {
 }
 
 
-// Function to update a catalog image
+
+
+// Updates a catalog image, including deletion of old images and uploading new ones while maintaining referential integrity.
 async function updateCatalogImage(imageId, objectId, idempotencyKey, imagePath) {
+  // Handles the replacement of catalog images, including cleanup of old files and update calls to the Square API.
   console.log(`Updating image from path: ${imagePath}`);
   console.log("Params received:", { imageId, objectId, idempotencyKey });
   if (!fs.existsSync(imagePath)) {

@@ -1,3 +1,4 @@
+// bookingService.js provides various functions to interact with the Square API for booking operations.
 const { bookingApi } = require('../api/squareClient');
 
 // Helper function to serialize objects that may contain BigInt
@@ -7,9 +8,11 @@ const serializeBigInts = (obj) => {
     return JSON.parse(JSON.stringify(obj, replacer));
   };
 
+  // Function to handle the creation of bookings. Validates booking data, formats it correctly, and sends it to the Square API. Handles errors and logs relevant information.
 async function createBooking(bookingData) {
     console.log("Received Booking Data:", bookingData);
-
+    // Validate booking data and reformat if necessary, especially handling BigInt serialization.
+    // Try creating a booking using the Square API and handle potential errors or specific scenarios like cancellation by the seller.
     if (!bookingData.booking || !Array.isArray(bookingData.booking.appointmentSegments)) {
         console.error("Invalid booking data structure:", bookingData);
         throw new Error("Invalid booking data structure");
@@ -47,8 +50,9 @@ async function createBooking(bookingData) {
 
 
 
-
+// Function to update an existing booking with new data. It ensures that booking data is serialized to handle BigInt and handles API errors.
 async function updateBooking(bookingId, bookingData) {
+    // Update booking and serialize response to handle BigInt, ensuring correct data format.
     console.log("Updating booking with ID:", bookingId, "Data:", bookingData);
     try {
         const response = await bookingApi.updateBooking(bookingId, { booking: bookingData });
@@ -59,10 +63,10 @@ async function updateBooking(bookingId, bookingData) {
     }
 }
 
-
+// Function to cancel a booking based on the provided bookingId and additional details such as version.
 async function cancelBooking(bookingId, details) {
     console.log("Received details in cancelBooking:", details);  // Ensure you're logging what you receive exactly.
-
+    // Retrieve the current booking status, check for errors or invalid conditions, and attempt to cancel the booking using the Square API.
     const currentBooking = await bookingApi.retrieveBooking(bookingId);
     if (currentBooking.status === 'CANCELLED_BY_SELLER') {
         console.log("Booking already canceled:", bookingId);
@@ -94,8 +98,9 @@ async function cancelBooking(bookingId, details) {
 
 
 
-
+// Function to retrieve the details of a single booking using its ID.
 async function retrieveBooking(bookingId) {
+     // Retrieve booking details from Square API and handle errors appropriately.
     try {
         const response = await bookingApi.retrieveBooking(bookingId);
 
@@ -113,7 +118,10 @@ async function retrieveBooking(bookingId) {
 console.log("Environment:", process.env.SQUARE_ENVIRONMENT);
 console.log("Booking API Access Token:", process.env.PRODUCTION_ACCESS_TOKEN);
 
+
+// Function to list all bookings. This function might serialize bookings to handle BigInt properly before returning to the caller.
 async function listBookings() {
+     // List all bookings, serialize the response to handle BigInt, and handle potential errors.
     try {
         const response = await bookingApi.listBookings();
         const bookings = response.result.bookings || [];
@@ -132,9 +140,9 @@ async function listBookings() {
 }
 
 
-
+// Function to search for booking availability based on certain criteria.
 async function searchAvailability(searchCriteria) {
-    // Ensure the search criteria are structured properly and include necessary filters
+     // Validate search criteria, construct the necessary filters, and perform the search using the Square API.
     if (!searchCriteria || !searchCriteria.startAt || !searchCriteria.endAt || !searchCriteria.locationId) {
         console.error("Search criteria must include 'startAt', 'endAt', and 'locationId' properties.");
         throw new Error("Search criteria must include 'startAt', 'endAt', and 'locationId' properties.");
@@ -185,7 +193,9 @@ async function searchAvailability(searchCriteria) {
 }
   
 
+// Function to retrieve multiple bookings at once based on a list of booking IDs.
 async function bulkRetrieveBookings(bookingIds) {
+    // Validate input, perform the bulk retrieval using the Square API, serialize the response, and handle errors.
     console.log("Received bookingIds:", bookingIds);  // Logging the input to debug
 
     if (!Array.isArray(bookingIds)) {
@@ -207,5 +217,5 @@ async function bulkRetrieveBookings(bookingIds) {
     }
 }
 
-// Add other necessary functions and export them
+// Export all the functions for use in other parts of the application.
 module.exports = { createBooking, updateBooking, cancelBooking, retrieveBooking, bulkRetrieveBookings, searchAvailability,  listBookings};
