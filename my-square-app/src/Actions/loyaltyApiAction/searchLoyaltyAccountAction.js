@@ -5,24 +5,24 @@ import {
   SEARCH_LOYALTY_ACCOUNTS_FAILURE,
 } from '../actionTypes';
 
-// Action to start the search
+// Action to start the search for loyalty accounts
 export const searchLoyaltyAccountsStart = () => ({
   type: SEARCH_LOYALTY_ACCOUNTS_START,
 });
 
-// Action called if the search is successful
+// Action for successful search of loyalty accounts
 export const searchLoyaltyAccountsSuccess = (accounts) => ({
   type: SEARCH_LOYALTY_ACCOUNTS_SUCCESS,
   payload: accounts,
 });
 
-// Action called if the search fails
+// Action for handling failures in searching for loyalty accounts
 export const searchLoyaltyAccountsFailure = (error) => ({
   type: SEARCH_LOYALTY_ACCOUNTS_FAILURE,
   payload: error,
 });
 
-// Async action to perform the search
+// Thunk function to search for loyalty accounts based on given criteria
 export const searchLoyaltyAccounts = (searchCriteria) => async (dispatch) => {
   dispatch(searchLoyaltyAccountsStart());
   try {

@@ -20,7 +20,7 @@ import {
   UPDATE_CONTENT_FAILURE,
 } from './actionTypes';
 
-// Fetch users action creators
+// Action creators for user management
 export const fetchUsersStart = () => ({ type: FETCH_USERS_START });
 export const fetchUsersSuccess = (users) => ({ type: FETCH_USERS_SUCCESS, payload: users });
 export const fetchUsersFailure = (error) => ({ type: FETCH_USERS_FAILURE, payload: error });
@@ -50,7 +50,7 @@ export const updateContentStart = () => ({ type: UPDATE_CONTENT_START });
 export const updateContentSuccess = (content) => ({ type: UPDATE_CONTENT_SUCCESS, payload: content });
 export const updateContentFailure = (error) => ({ type: UPDATE_CONTENT_FAILURE, payload: error });
 
-// Async action creators
+// Async action creators for API interactions
 export const fetchUsers = () => async (dispatch) => {
   dispatch(fetchUsersStart());
   try {

@@ -9,6 +9,7 @@ import {
     LOGOUT
 } from '../actionTypes';
 
+// Thunk function to register a user with given user data
 export const registerUser = (userData) => async (dispatch) => {
     dispatch({ type: REGISTER_USER_REQUEST });
     try {
@@ -26,6 +27,7 @@ export const registerUser = (userData) => async (dispatch) => {
     }
 };
 
+// Thunk function to log in a user, redirecting appropriately based on success or failure
 export const loginUser = (userData, navigate) => async (dispatch) => {
     dispatch({ type: LOGIN_USER_REQUEST });
     try {
@@ -44,6 +46,7 @@ export const loginUser = (userData, navigate) => async (dispatch) => {
       }
     };
 
+    // Action to log out a user
     export const logout = () => {
         return {
             type: LOGOUT

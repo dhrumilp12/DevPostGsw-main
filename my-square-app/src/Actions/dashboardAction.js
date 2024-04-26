@@ -1,6 +1,7 @@
 // src/actions/dashboardActions.js
 import axios from 'axios';
-// Define action types
+
+// Define dashboard-related action types
 export const FETCH_SUMMARY_START = 'FETCH_SUMMARY_START';
 export const FETCH_SUMMARY_SUCCESS = 'FETCH_SUMMARY_SUCCESS';
 export const FETCH_SUMMARY_FAILURE = 'FETCH_SUMMARY_FAILURE';
@@ -9,7 +10,7 @@ export const FETCH_ANALYTICS_START = 'FETCH_ANALYTICS_START';
 export const FETCH_ANALYTICS_SUCCESS = 'FETCH_ANALYTICS_SUCCESS';
 export const FETCH_ANALYTICS_FAILURE = 'FETCH_ANALYTICS_FAILURE';
 
-// Define action creators for fetching summary data
+// Action creators for fetching summary data
 const fetchSummaryStart = () => ({
   type: FETCH_SUMMARY_START,
 });
@@ -24,7 +25,7 @@ const fetchSummaryFailure = (error) => ({
   payload: error,
 });
 
-// Define action creators for fetching analytics data
+// Action creators for fetching analytics data
 const fetchAnalyticsStart = () => ({
   type: FETCH_ANALYTICS_START,
 });
@@ -51,7 +52,7 @@ export const fetchSummary = () => async (dispatch) => {
   }
 };
 
-// Async action creator for fetching analytics
+// Async action creator for fetching dashboard analytics
 export const fetchAnalytics = () => async (dispatch) => {
   dispatch(fetchAnalyticsStart());
   try {

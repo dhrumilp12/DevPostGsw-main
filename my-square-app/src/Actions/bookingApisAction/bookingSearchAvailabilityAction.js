@@ -5,20 +5,24 @@ import {
   SEARCH_AVAILABILITY_FAILURE,
 } from '../actionTypes';
 
+// Action to signify the start of availability search
 export const searchAvailabilityStart = () => ({
   type: SEARCH_AVAILABILITY_START,
 });
 
+// Action to handle successful search for availability
 export const searchAvailabilitySuccess = (availabilities) => ({
   type: SEARCH_AVAILABILITY_SUCCESS,
   payload: availabilities,
 });
 
+// Action to handle failure in searching for availability
 export const searchAvailabilityFailure = (error) => ({
   type: SEARCH_AVAILABILITY_FAILURE,
   payload: error,
 });
 
+// Thunk function to search availability based on criteria
 export const searchAvailability = (searchCriteria) => async (dispatch) => {
   dispatch(searchAvailabilityStart());
   try {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// Shopping cart action types
+// Define shopping cart related action types
 export const ADD_ITEM_TO_CART = 'ADD_ITEM_TO_CART';
 export const REMOVE_ITEM_FROM_CART = 'REMOVE_ITEM_FROM_CART';
 export const UPDATE_CART_SUMMARY_START = 'UPDATE_CART_SUMMARY_START';
@@ -10,18 +10,19 @@ export const FETCH_CART_SUMMARY_START = 'FETCH_CART_SUMMARY_START';
 export const FETCH_CART_SUMMARY_SUCCESS = 'FETCH_CART_SUMMARY_SUCCESS';
 export const FETCH_CART_SUMMARY_FAILURE = 'FETCH_CART_SUMMARY_FAILURE';
 
-// Synchronous action creators for adding and removing items
+// Action creator to add an item to the cart
 export const addItemToCart = (item) => ({
   type: ADD_ITEM_TO_CART,
   payload: item,
 });
 
+// Action creator to remove an item from the cart
 export const removeItemFromCart = (itemId) => ({
   type: REMOVE_ITEM_FROM_CART,
   payload: itemId,
 });
 
-// Asynchronous action creators for fetching and updating cart summary
+// Async action creator to fetch the current cart summary
 export const fetchCartSummary = () => async (dispatch) => {
   dispatch({ type: FETCH_CART_SUMMARY_START });
   try {
@@ -32,6 +33,7 @@ export const fetchCartSummary = () => async (dispatch) => {
   }
 };
 
+// Async action creator to update the cart summary with new cart data
 export const updateCartSummary = (cartData) => async (dispatch) => {
   dispatch({ type: UPDATE_CART_SUMMARY_START });
   try {
@@ -42,4 +44,4 @@ export const updateCartSummary = (cartData) => async (dispatch) => {
   }
 };
 
-// Be sure to define corresponding reducers to handle these actions and update the state.
+// Ensure corresponding reducers are defined to handle these actions.

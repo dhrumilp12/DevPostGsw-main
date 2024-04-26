@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { batchRetrieveInventoryCounts } from '../../Actions/inventoryApi/inventoryBatchReytiveAction';
+import { batchRetrieveInventoryCounts } from '../../Actions/inventoryApi/inventoryBatchRetriveAction';
 import { fetchCatalog } from '../../Actions/catalogApisAction/catalogListAction';
 import { Form, Button, Container, Row, Col, Table, Alert, Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap';
 

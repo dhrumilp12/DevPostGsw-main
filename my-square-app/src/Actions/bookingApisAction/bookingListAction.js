@@ -5,20 +5,24 @@ import {
   FETCH_BOOKINGS_FAILURE,
 } from '../actionTypes';
 
+// Action to signify the start of bookings fetch
 export const fetchBookingsStart = () => ({
   type: FETCH_BOOKINGS_START,
 });
 
+// Action to handle successful bookings fetch
 export const fetchBookingsSuccess = (bookings) => ({
   type: FETCH_BOOKINGS_SUCCESS,
   payload: bookings,
 });
 
+// Action to handle failure in bookings fetch
 export const fetchBookingsFailure = (error) => ({
   type: FETCH_BOOKINGS_FAILURE,
   payload: error,
 });
 
+// Thunk function to fetch bookings from API
 export const fetchBookings = () => async (dispatch) => {
   dispatch(fetchBookingsStart());
   try {

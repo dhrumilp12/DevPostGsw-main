@@ -6,6 +6,7 @@ import {
   BULK_RETRIEVE_BOOKINGS_FAILURE
 } from '../actionTypes';
 
+// Thunk function to retrieve bookings in bulk by their IDs
 export const bulkRetrieveBookings = (bookingIds) => async (dispatch) => {
   dispatch({ type: BULK_RETRIEVE_BOOKINGS_START });
   try {

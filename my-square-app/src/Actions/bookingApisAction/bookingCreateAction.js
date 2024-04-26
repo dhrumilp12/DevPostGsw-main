@@ -3,7 +3,7 @@ import axios from 'axios';
 import { CREATE_BOOKING_START, CREATE_BOOKING_SUCCESS, CREATE_BOOKING_FAILURE } from '../actionTypes';
 
 
-// Add detailed logging in your bookingCreateAction.js
+// Thunk function to create a new booking
 export const createBooking = (bookingData) => async (dispatch) => {
   dispatch({ type: CREATE_BOOKING_START });
   try {

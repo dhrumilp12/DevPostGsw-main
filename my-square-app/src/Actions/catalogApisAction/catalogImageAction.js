@@ -8,7 +8,7 @@ import {
     UPDATE_CATALOG_IMAGE_FAILURE
 } from '../actionTypes';
 
-// Updated to include URL as a parameter
+// Function to create a catalog image
 export const createCatalogImage = (url, formData) => async (dispatch) => {
     dispatch({ type: CREATE_CATALOG_IMAGE_REQUEST });
     try {
@@ -19,6 +19,7 @@ export const createCatalogImage = (url, formData) => async (dispatch) => {
     }
 };
 
+// Function to update a catalog image
 export const updateCatalogImage = (imageId, formData) => async (dispatch) => {
     dispatch({ type: UPDATE_CATALOG_IMAGE_REQUEST });
     try {

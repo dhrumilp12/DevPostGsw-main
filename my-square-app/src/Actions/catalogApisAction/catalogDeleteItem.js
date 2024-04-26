@@ -1,22 +1,24 @@
 import axios from 'axios';
 import { DELETE_CATALOG_ITEM_START, DELETE_CATALOG_ITEM_SUCCESS, DELETE_CATALOG_ITEM_FAILURE } from '../actionTypes';
 
+// Action to start the deletion process of a catalog item
 export const deleteCatalogItemStart = () => ({
   type: DELETE_CATALOG_ITEM_START,
 });
 
+// Action for successful deletion of a catalog item
 export const deleteCatalogItemSuccess = (deletedItemId) => ({
   type: DELETE_CATALOG_ITEM_SUCCESS,
   payload: deletedItemId,
 });
 
+// Action for handling failures in deleting a catalog item
 export const deleteCatalogItemFailure = (error) => ({
   type: DELETE_CATALOG_ITEM_FAILURE,
   payload: error,
 });
 
-// Import statements as before...
-
+// Thunk function to delete a catalog item by ID
 export const deleteCatalogItem = (itemId) => async (dispatch) => {
   dispatch(deleteCatalogItemStart());
   try {

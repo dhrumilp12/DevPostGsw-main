@@ -5,20 +5,24 @@ import {
   UPDATE_BOOKING_FAILURE,
 } from '../actionTypes';
 
+// Action to signify the start of booking update
 export const updateBookingStart = () => ({
   type: UPDATE_BOOKING_START,
 });
 
+// Action to handle successful booking update
 export const updateBookingSuccess = (booking) => ({
   type: UPDATE_BOOKING_SUCCESS,
   payload: booking,
 });
 
+// Action to handle failure in booking update
 export const updateBookingFailure = (error) => ({
   type: UPDATE_BOOKING_FAILURE,
   payload: error,
 });
 
+// Thunk function to update a booking by ID with new data
 export const updateBooking = (bookingId, bookingData) => async (dispatch) => {
   dispatch(updateBookingStart());
   try {

@@ -14,6 +14,7 @@ import {
   FETCH_PAYMENT_DETAILS_FAILURE
 } from '../actionTypes.js';
 
+// Actions related to processing a payment
 export const processPaymentStart = () => ({
   type: PROCESS_PAYMENT_START,
 });
@@ -28,8 +29,7 @@ export const processPaymentFailure = error => ({
   payload: error,
 });
 
-// ... other action creators ...
-
+// Thunk function to handle payment processing logic
 export const processPayment = (paymentData) => async (dispatch) => {
   dispatch(processPaymentStart());
   try {
@@ -49,7 +49,7 @@ export const processPayment = (paymentData) => async (dispatch) => {
 
 
 
-
+// Actions related to fetching payment history
 export const fetchPaymentsHistoryStart = () => ({
   type: FETCH_PAYMENTS_HISTORY_START,
 });
@@ -64,6 +64,7 @@ export const fetchPaymentsHistoryFailure = error => ({
   payload: error,
 });
 
+// Thunk function to fetch payments history
 export const fetchPaymentsHistory = () => async dispatch => {
   dispatch(fetchPaymentsHistoryStart());
   try {
@@ -74,6 +75,8 @@ export const fetchPaymentsHistory = () => async dispatch => {
   }
 };
 
+
+// Actions related to refunding a payment
 export const refundPaymentStart = () => ({
   type: REFUND_PAYMENT_START,
 });
@@ -88,6 +91,7 @@ export const refundPaymentFailure = error => ({
   payload: error,
 });
 
+// Actions related to fetching details of a specific payment
 export const fetchPaymentDetailsStart = () => ({
   type: FETCH_PAYMENT_DETAILS_START,
 });
@@ -102,7 +106,7 @@ export const fetchPaymentDetailsFailure = error => ({
   payload: error,
 });
 
-// Fetch Payment Details
+// Thunk function to fetch details of a specific payment
 export const fetchPaymentDetails = (paymentId) => async (dispatch) => {
   dispatch({ type: FETCH_PAYMENT_DETAILS_START });
   try {
