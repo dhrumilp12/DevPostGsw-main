@@ -25,7 +25,7 @@
   
   "scripts": {
     "clean": "rm -rf my-square-app/build",
-    "build": "cd my-square-app && npm install -force && npm run build",
+    "build": "cd my-square-app && npm install --legacy-peer-deps && npm run build",
     "heroku-postbuild": "cd my-square-app && npm install -force && npm run build",
 
     "start": "node server.js",
