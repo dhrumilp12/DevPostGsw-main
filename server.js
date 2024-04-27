@@ -56,7 +56,7 @@ app.use('/api/inventory',  inventoryRoutes);
 app.use('/api/loyalty', loyaltyRoutes); 
 app.use('/api/teams', teamRoutes);
 app.use('/api/location',locationRoutes)
-app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, './src/uploads')));
 
 
 /* they need HTTPS
