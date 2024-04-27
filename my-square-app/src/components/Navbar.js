@@ -11,7 +11,7 @@ import { logout } from '../Actions/customerApisAction/registerLoginAction';
 import logo from '../assets/1.jpg'
 import {catalogSearch} from '../Actions/catalogApisAction/catalogSearch';
 import { fetchCustomerDetails } from '../Actions/customerApisAction/customerDetailsAction';  // Check the correct path
-import { useTheme } from './themeContext';
+import { useTheme } from 'themeContext';
 
 const NavigationBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
