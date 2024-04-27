@@ -6,7 +6,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { cancelBooking } from '../../Actions/bookingApisAction/bookingCancelAction';
 import { Button, Spinner } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const CancelBookingButton = ({ bookingId, bookingVersion, bookingStatus }) => {
@@ -27,6 +27,7 @@ const CancelBookingButton = ({ bookingId, bookingVersion, bookingStatus }) => {
                 await dispatch(cancelBooking(bookingId, Number(bookingVersion)));
                 toast.success("Booking cancelled successfully.");
             } catch (error) {
+                
                 console.error('Error cancelling booking:', error);
                 toast.error(`Error cancelling booking: ${error.message}`);
             }
@@ -37,7 +38,7 @@ const CancelBookingButton = ({ bookingId, bookingVersion, bookingStatus }) => {
     
     return (
         <>
-            
+            <ToastContainer />
             <Button variant="danger" onClick={handleCancel} disabled={loading || bookingStatus === 'CANCELLED_BY_SELLER'}>
                 {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Cancel Booking'}
             </Button>

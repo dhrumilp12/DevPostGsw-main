@@ -58,6 +58,12 @@ app.use('/api/teams', teamRoutes);
 app.use('/api/location',locationRoutes)
 app.use('/uploads', express.static(path.join(__dirname, './src/uploads')));
 
+/* they need HTTPS
+app.post('/webhooks/square', (req, res) => {
+    console.log('Webhook received:', req.body);
+    // Process webhook data here
+    res.status(200).send('Received');
+});*/
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

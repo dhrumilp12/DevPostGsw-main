@@ -101,9 +101,12 @@ const BookingForm = ({ initialBookingDetails, onBookingConfirmed}) => {
         toast.error("Please fill all required fields correctly.");
         return;
     }
-
+    const newBookingDetails = {
+      ...bookingDetails,
+      version: 1  // Ensure the version is set during the creation
+  };
     // Wrap dispatch in parentheses to correctly chain then and catch
-    dispatch(createBooking({ booking: bookingDetails }))
+    dispatch(createBooking(newBookingDetails))
     .then(() => {
         toast.success('Booking successful!');
         onBookingConfirmed(); // Trigger the callback passed as prop

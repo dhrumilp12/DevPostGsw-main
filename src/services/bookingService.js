@@ -26,9 +26,15 @@ async function createBooking(bookingData) {
 
     const formattedBookingData = {
         ...bookingData.booking,
+        version: 1,  // Initialize version to 1
         startAt: new Date(bookingData.booking.startAt).toISOString(),
-        appointmentSegments: formattedAppointmentSegments
+        appointmentSegments: bookingData.booking.appointmentSegments.map(segment => ({
+            ...segment,
+            serviceVariationVersion: BigInt(segment.serviceVariationVersion),
+            durationMinutes: parseInt(segment.durationMinutes, 10)
+        }))
     };
+
 
     console.log("Formatted Booking Data for API:", formattedBookingData);
 
@@ -76,7 +82,7 @@ async function cancelBooking(bookingId, details) {
     // Log the specific received version to check it
     console.log("Received bookingVersion for cancellation:", details.bookingVersion);
 
-    if (!details.bookingVersion || typeof details.bookingVersion !== 'number' || !Number.isInteger(details.bookingVersion)) {
+    if (details.bookingVersion === undefined || typeof details.bookingVersion !== 'number' || !Number.isInteger(details.bookingVersion)) {
         console.error("Invalid or missing booking version for booking ID:", bookingId, "Received:", details.bookingVersion);
         throw new Error("Booking version is required and must be an integer.");
     }
@@ -89,7 +95,7 @@ async function cancelBooking(bookingId, details) {
     try {
         const response = await bookingApi.cancelBooking(bookingId, requestBody);
         console.log("Cancellation successful:", response);
-        return response;
+        return serializeBigInts(response);
     } catch (error) {
         console.error("Failed to cancel booking:", error);
         throw error;

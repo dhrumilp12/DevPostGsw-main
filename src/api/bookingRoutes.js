@@ -51,7 +51,7 @@ router.post('/cancel-booking/:bookingId', async (req, res) => {
     console.log("Handling cancel for bookingId:", bookingId, "with version:", bookingVersion);
 
     if (bookingVersion === undefined || typeof bookingVersion !== 'number' || !Number.isInteger(bookingVersion)) {
-        console.error("Invalid or missing booking version for booking ID:", bookingId);
+        console.error("Invalid or missing booking version for booking ID:", bookingId, "Received:", bookingVersion);
         return res.status(400).json({ error: 'Booking version is required and must be an integer.' });
     }
 
