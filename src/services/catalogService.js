@@ -250,7 +250,7 @@ async function listItems() {
           fs.existsSync(path.join(uploadsDir, `${item.id}${ext}`))
         );
         if (existingFile) {
-          item.imageUrl = `http://localhost:3000/uploads/${item.id}${existingFile}`;
+          item.imageUrl = item.imageUrl = `${process.env.BASE_URL}/uploads/${item.id}${existingFile}`;
         } else {
           item.imageUrl = null; // or set a default placeholder image URL
         }
