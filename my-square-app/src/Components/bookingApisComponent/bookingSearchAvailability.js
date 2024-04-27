@@ -10,6 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { FaSearch } from 'react-icons/fa';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { fetchCatalog } from '../../Actions/catalogApisAction/catalogListAction'; // Import the fetchCatalog action if not already imported
 
 const SearchAvailabilityForm = () => {
   const [searchCriteria, setSearchCriteria] = useState({
@@ -24,6 +25,11 @@ const SearchAvailabilityForm = () => {
   const [locations, setLocations] = useState([]);
   const [teamMembers, setTeamMembers] = useState([]);
   const { availabilities, loading, error } = useSelector((state) => state.bookingAvailabilitySearch);
+  const { catalog } = useSelector(state => state.catalogList); // Assuming you have catalogList in your Redux state
+  
+  useEffect(() => {
+    dispatch(fetchCatalog()); // Fetch catalog items on component mount
+  }, [dispatch]);
 
   useEffect(() => {
     fetch('/api/teams/members/search', {
@@ -76,8 +82,31 @@ const SearchAvailabilityForm = () => {
   }, []);
 
   const handleChange = (e) => {
-    setSearchCriteria({ ...searchCriteria, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setSearchCriteria({ ...searchCriteria, [name]: value });
+  
+    if (name === 'serviceVariationId') {
+      // Find the selected service variation in the catalog
+      const selectedVariation = catalog.find(item => item.id === value);
+      if (selectedVariation && selectedVariation.itemVariationData.teamMemberIds.length === 1) {
+        // Automatically set the teamMemberId if there is only one
+        setSearchCriteria(prev => ({
+          ...prev,
+          [name]: value,
+          teamMemberId: selectedVariation.itemVariationData.teamMemberIds[0]
+        }));
+      } else {
+        // Reset teamMemberId if more than one or no team members are associated
+        setSearchCriteria(prev => ({
+          ...prev,
+          [name]: value,
+          teamMemberId: ''
+        }));
+      }
+    }
   };
+  
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -145,16 +174,27 @@ const SearchAvailabilityForm = () => {
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label>Service Variation ID</Form.Label>
-                  <Form.Control type="text" name="serviceVariationId" value={searchCriteria.serviceVariationId} onChange={handleChange} />
+                  <Form.Control as="select" name="serviceVariationId" value={searchCriteria.serviceVariationId} onChange={handleChange}>
+                  <option value="">Select Service Variation</option>
+                  {catalog.map(item => (
+                    <option key={item.id} value={item.id}>
+                      {item.itemVariationData.name} - {item.id}
+                    </option>
+                  ))}
+                </Form.Control>
                 </Form.Group>
+
                 <Form.Group className="mb-3">
                   <Form.Label>Team Member ID</Form.Label>
                   <Form.Control as="select" name="teamMemberId" value={searchCriteria.teamMemberId} onChange={handleChange}>
-                    <option value="">Select Team Member</option>
-                    {teamMembers.map(member => (
-                      <option key={member.id} value={member.id}>{member.givenName} {member.familyName} - {member.id}</option>
-                    ))}
-                  </Form.Control>
+                <option value="">Select Team Member</option>
+                {teamMembers.filter(member => {
+                  const selectedVariation = catalog.find(item => item.id === searchCriteria.serviceVariationId);
+                  return selectedVariation ? selectedVariation.itemVariationData.teamMemberIds.includes(member.id) : true;
+                }).map(member => (
+                  <option key={member.id} value={member.id}>{member.givenName} {member.familyName} - {member.id}</option>
+                ))}
+              </Form.Control>
                 </Form.Group>
                 <Button type="submit" variant="primary" className="w-100" disabled={loading}>
                   {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : <><FaSearch className="me-2" />Search</>}
