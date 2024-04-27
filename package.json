@@ -10,7 +10,7 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "form-data": "^4.0.0",
-    "fs": "^0.0.1-security",
+   
     "jose": "^5.2.3",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
@@ -25,8 +25,9 @@
   
   "scripts": {
     "clean": "rm -rf my-square-app/build",
-    "build": "cd my-square-app && npm install -force && npm run build",
-    "heroku-postbuild": "cd my-square-app && npm install -force && npm run build",
+    "build": "cd my-square-app && npm install && npm run build",
+    "heroku-postbuild": "cd my-square-app && npm install && npm run build",
+
 
     "start": "node server.js",
     "test": "jest"

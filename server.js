@@ -64,11 +64,12 @@ app.post('/webhooks/square', (req, res) => {
     // Process webhook data here
     res.status(200).send('Received');
 });*/
+// Serve static files from the React app build directory in production
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, './my-square-app/build')));
-
+    app.use(express.static(path.join(__dirname, 'my-square-app/build')));
+    
     app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, './my-square-app/build', 'index.html'));
+      res.sendFile(path.join(__dirname, 'my-square-app/build', 'index.html'));
     });
 }
 
