@@ -7,8 +7,12 @@ const isProduction = process.env.SQUARE_ENVIRONMENT === 'production';
 const accessToken = process.env.PRODUCTION_ACCESS_TOKEN;
 const squareClient = new Client({
     accessToken: accessToken,
+    
     environment: isProduction ? Environment.Production : Environment.Sandbox,
 });
+if (!accessToken) {
+    console.error('Access Token is undefined');
+  }
 
 const axiosInstance = axios.create({
   baseURL: 'https://connect.squareup.com',
