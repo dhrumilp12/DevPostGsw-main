@@ -46,7 +46,7 @@ export const fetchItemVariationFailure = (error) => ({
 export const fetchCatalogItem = (itemId) => async (dispatch) => {
   dispatch({ type: 'FETCH_CATALOG_ITEM_START' });
   try {
-    const response = await axios.get(`http://localhost:3000/api/catalogs/search-item/${itemId}`);
+    const response = await axios.get(`/api/catalogs/search-item/${itemId}`);
     dispatch({ type: 'FETCH_CATALOG_ITEM_SUCCESS', payload: response.data });
   } catch (error) {
     dispatch({ type: 'FETCH_CATALOG_ITEM_FAILURE', payload: error.response?.data?.error || 'Failed to fetch item' });
@@ -57,7 +57,7 @@ export const fetchCatalogItem = (itemId) => async (dispatch) => {
 export const fetchItemVariation = (itemId) => async (dispatch) => {
   dispatch(fetchItemVariationStart());
   try {
-    const response = await axios.get(`http://localhost:3000/api/catalogs/search-item/${itemId}`);
+    const response = await axios.get(`/api/catalogs/search-item/${itemId}`);
     dispatch(fetchItemVariationSuccess(response.data));
   } catch (error) {
     dispatch(fetchItemVariationFailure(error.response?.data?.error || 'Failed to fetch item variation'));
