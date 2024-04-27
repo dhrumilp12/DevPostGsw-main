@@ -50,7 +50,7 @@ import PaymentForm from './Components/paymentApisComponents/paymentForm.js';
 import PaymentStatus from './Components/paymentApisComponents/paymentStatus.js';
 import PaymentHistory from './Components/paymentApisComponents/paymentHistory.js';
 import PaymentDetails from './Components/paymentApisComponents/paymentDetails.js';
-import Navbar from './components/Navbar';
+import Navbar from './Components/Navbar';
 import Footer from './Components/footer';
 
 
