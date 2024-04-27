@@ -22,8 +22,11 @@
     "winston": "^3.13.0"
   },
   "scripts": {
-    "test": "jest",
-    "start": "node server.js"
+    "clean": "rm -rf my-square-app/build",
+    "build": "cd my-square-app && npm install && npm run build",
+    "heroku-postbuild": "npm run clean && npm run build",
+    "start": "node server.js",
+    "test": "jest"
   },
   "devDependencies": {
     "jest": "^29.7.0",
