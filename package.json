@@ -1,4 +1,5 @@
 {
+  
   "dependencies": {
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
@@ -21,10 +22,12 @@
     "square": "^36.0.0",
     "winston": "^3.13.0"
   },
+  
   "scripts": {
     "clean": "rm -rf my-square-app/build",
-    "build": "cd my-square-app && npm install && npm run build",
-    "heroku-postbuild": "npm run clean && npm run build",
+    "build": "cd my-square-app && npm install -force && npm run build",
+    "heroku-postbuild": "cd my-square-app && npm install -force && npm run build",
+
     "start": "node server.js",
     "test": "jest"
   },
@@ -39,6 +42,9 @@
   "directories": {
     "test": "tests"
   },
+  "engines": {
+    "node": "14.x"
+  },  
   "keywords": [],
   "author": "",
   "license": "ISC"
