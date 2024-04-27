@@ -10,7 +10,7 @@ function TeamMembers() {
 
     useEffect(() => {
         // Use POST request to match the updated backend endpoint
-        fetch('http://localhost:3000/api/teams/members/search', {
+        fetch('/api/teams/members/search', {
             method: 'POST',  // Change method to POST
             headers: {
                 'Content-Type': 'application/json',

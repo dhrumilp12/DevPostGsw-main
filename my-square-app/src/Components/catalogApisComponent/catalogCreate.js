@@ -30,17 +30,42 @@ const CatalogCreate = () => {
 });
 
 
-
-
+  
+const [teamMembers, setTeamMembers] = useState([]);// This state will be updated
   const dispatch = useDispatch();
   const navigate = useNavigate(); 
   const { loading, error } = useSelector((state) => state.catalogCreate);
 
   useEffect(() => {
+    // Fetch team members when component mounts
+    fetch('/api/teams/members/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.PRODUCTION_ACCESS_TOKEN}`,
+      },
+      body: JSON.stringify({
+        query: {
+          filter: {
+            status: "ACTIVE"
+          }
+        },
+        limit: 10
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      setTeamMembers(data);  // Update teamMembers state with fetched data
+    })
+    .catch(err => {
+      toast.error('Failed to fetch team members');
+      console.error(err);
+    });
+
     if (error) {
       toast.error(`Error: ${error}`);
     }
-  }, [error]);
+  }, [error])
   
   const handleChange = (e, index, fieldName) => {
     const { name, value } = e.target;
@@ -51,8 +76,8 @@ const CatalogCreate = () => {
           } else if (name === 'serviceDuration') {
             // Convert minutes to milliseconds
             updatedVariations[index][name] = Number(value) * 60000;
-          } else if (name === 'teamMemberIds') {
-            updatedVariations[index].teamMemberIds = value.split(',').map(id => id.trim());
+          } else if (fieldName === 'teamMemberIds') {
+            updatedVariations[index].teamMemberIds = Array.from(e.target.selectedOptions, option => option.value);
         } else {
             updatedVariations[index][name] = value;
         }
@@ -148,14 +173,13 @@ const handleSubmit = async (e) => { // Mark function as async
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label>Team Member IDs</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="teamMemberIds"
-                    value={variation.teamMemberIds.join(',')}
-                    onChange={(e) => handleChange(e, index, 'teamMemberIds')}
-                    placeholder="Enter Team Member IDs, separated by commas"
-                    className="form-modern"
-                  />
+                  <Form.Control as="select" multiple value={variation.teamMemberIds} onChange={(e) => handleChange(e, index, 'teamMemberIds')}>
+                    {teamMembers.map(member => (
+                      <option key={member.id} value={member.id}>
+                        {member.givenName} {member.familyName}
+                      </option>
+                    ))}
+                  </Form.Control>
                 </Form.Group>
               </div>
             ))}

@@ -9,7 +9,7 @@ function LocationsComponent({ onChange, value }) {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        fetch('http://localhost:3000/api/location/locations', {
+        fetch('/api/location/locations', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

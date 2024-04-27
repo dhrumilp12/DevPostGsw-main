@@ -26,11 +26,11 @@ const SearchAvailabilityForm = () => {
   const { availabilities, loading, error } = useSelector((state) => state.bookingAvailabilitySearch);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/teams/members/search', {
+    fetch('/api/teams/members/search', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer EAAAll40XS3OFGqEFTGfKovs3albhQW59-U0yIuGM_kxI6qXHVPIZM5WHWyBBbkV'
+            'Authorization': `Bearer ${process.env.PRODUCTION_ACCESS_TOKEN}`,
         },
         body: JSON.stringify({
             query: {
@@ -55,11 +55,11 @@ const SearchAvailabilityForm = () => {
   }, []);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/location/locations', {
+    fetch('/api/location/locations', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer EAAAll40XS3OFGqEFTGfKovs3albhQW59-U0yIuGM_kxI6qXHVPIZM5WHWyBBbkV'
+            'Authorization': `Bearer ${process.env.PRODUCTION_ACCESS_TOKEN}`,
         }
     })
     .then(response => response.json())
