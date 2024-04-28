@@ -26,9 +26,7 @@ const Catalog = () => {
   const [showBulkRetrieveModal, setShowBulkRetrieveModal] = useState(false);
   const user = useSelector((state) => state.registerLogin.user?.user); // Access user details from the state
   const [sortKey, setSortKey] = useState('name');
-  const [selectedFile, setSelectedFile] = useState(null);
-  const[objectId, setObjectId] = useState(null);
-  const [filename, setFilename] = useState('');
+  const [fileInfo, setFileInfo] = useState({ file: null, itemId: null, filename: '' });
   
   useEffect(() => {
     dispatch(fetchCatalog());
@@ -46,9 +44,11 @@ const Catalog = () => {
     dispatch(sortCatalog(newSortKey)); 
   };
   const handleFileChange = (file, itemId) => {
-    setSelectedFile(file);
-    setObjectId(itemId);
-    setFilename(file.name);
+    setFileInfo({
+      file: file,
+      itemId: itemId,
+      filename: file.name
+    });
   };
 
   const handleClose = () => {
@@ -57,7 +57,7 @@ const Catalog = () => {
   };
 
   const handleUploadImage = () => {
-    if (!selectedFile || !objectId) {
+    if (!fileInfo.file || !fileInfo.itemId) {
       toast.error('File or item ID missing');
       return;
     }
@@ -65,16 +65,17 @@ const Catalog = () => {
     
     
     const formData = new FormData();
-    formData.append('image', selectedFile);
-    formData.append('objectId', objectId);
+    formData.append('image', fileInfo.file);
+    formData.append('objectId', fileInfo.itemId);
     
-    const url = `/api/catalogs/images?objectId=${objectId}`;
-    dispatch(createCatalogImage(url, formData));
-    
-    setSelectedFile(null);
-    setObjectId(null);
-    setFilename('');
-    };
+    const url = `/api/catalogs/images?objectId=${fileInfo.itemId}`;
+    dispatch(createCatalogImage(url, formData, () => {
+      // Callback function to refetch the catalog after successful upload
+      dispatch(fetchCatalog());
+      setFileInfo({ file: null, itemId: null, filename: '' });  // Reset file info
+      toast.success('Image uploaded successfully!');
+    }));
+  };
 
   // Function to display top three featured items in a carousel
   const renderFeaturedItems = () => (
@@ -203,12 +204,11 @@ const Catalog = () => {
                     <>
                       <input type="file" onChange={(e) => handleFileChange(e.target.files[0], item.id)} hidden id={`file-upload-${item.id}`} />
                       <label htmlFor={`file-upload-${item.id}`} className="btn btn-sm btn-secondary">Upload Image <FaUpload /></label>
-                      {filename && (
-                        <div className="text-light small" style={{ marginTop: '10px', backgroundColor: '#343a40', padding: '5px', borderRadius: '5px' }}>
-                            Selected file: <span className="text-warning">{filename}</span>
-                        </div>
-                    )}
-
+                      {fileInfo.itemId === item.id && fileInfo.filename && (
+                    <div className="text-light small" style={{ marginTop: '10px', backgroundColor: '#343a40', padding: '5px', borderRadius: '5px' }}>
+                      Selected file: <span className="text-warning">{fileInfo.filename}</span>
+                    </div>
+                  )}
                     </>
                   )}
                 </Card.Header>

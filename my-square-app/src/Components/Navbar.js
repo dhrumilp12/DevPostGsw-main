@@ -108,8 +108,21 @@ const NavigationBar = () => {
         .navbar-modern {
           background-color: #1a2035;
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
+          position: fixed;
+            top: 0;
+            left: 0; /* Ensures alignment to the left */
+            right: 0; /* Ensures alignment to the right */
+            z-index: 1030; /* Standard z-index for fixed navbars in Bootstrap */
+          }
+
+          .container-fluid {
+            width: 100vw; /* Ensures the container inside the navbar takes full viewport width */
+            max-width: none; /* Overrides any max-width that might be set by frameworks */
+          }
+
+          .content-wrap {
+            padding-top: 70px; /* Adjust based on your navbar's actual height */
+          }
         .navbar-modern .navbar-brand {
           font-size: 1.8em;
           color: #FFF;

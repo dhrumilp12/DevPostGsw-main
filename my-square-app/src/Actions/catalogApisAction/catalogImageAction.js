@@ -9,11 +9,12 @@ import {
 } from '../actionTypes';
 
 // Function to create a catalog image
-export const createCatalogImage = (url, formData) => async (dispatch) => {
+export const createCatalogImage = (url, formData, callback) => async (dispatch) => {
     dispatch({ type: CREATE_CATALOG_IMAGE_REQUEST });
     try {
         const response = await axios.post(url, formData, );
         dispatch({ type: CREATE_CATALOG_IMAGE_SUCCESS, payload: response.data });
+        callback();
     } catch (error) {
         dispatch({ type: CREATE_CATALOG_IMAGE_FAILURE, payload: error.response?.data?.error || error.message });
     }
