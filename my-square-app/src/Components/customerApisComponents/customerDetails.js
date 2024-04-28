@@ -100,7 +100,7 @@ const CustomerDetails = () => {
                           <strong>Last Updated:</strong> {new Date(customer.updatedAt).toLocaleString()}
                         </ListGroup.Item>
                         <ListGroup.Item>
-                          <strong>Note:</strong> {customer.note ? customer.note : 'No note available.'}
+                          <strong>Password:</strong> {customer.note ? customer.note : 'No note available.'}
                         </ListGroup.Item>
                       </ListGroup>
                     </Card.Body>
