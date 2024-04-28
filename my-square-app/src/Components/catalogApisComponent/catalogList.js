@@ -28,7 +28,7 @@ const Catalog = () => {
   const [sortKey, setSortKey] = useState('name');
   const [selectedFile, setSelectedFile] = useState(null);
   const[objectId, setObjectId] = useState(null);
-
+  const [filename, setFilename] = useState('');
   
   useEffect(() => {
     dispatch(fetchCatalog());
@@ -48,7 +48,9 @@ const Catalog = () => {
   const handleFileChange = (file, itemId) => {
     setSelectedFile(file);
     setObjectId(itemId);
+    setFilename(file.name);
   };
+
   const handleClose = () => {
     setShowSearchAvailabilityModal(false);
     setShowBulkRetrieveModal(false);
@@ -71,6 +73,7 @@ const Catalog = () => {
     
     setSelectedFile(null);
     setObjectId(null);
+    setFilename('');
     };
 
   // Function to display top three featured items in a carousel
@@ -200,6 +203,12 @@ const Catalog = () => {
                     <>
                       <input type="file" onChange={(e) => handleFileChange(e.target.files[0], item.id)} hidden id={`file-upload-${item.id}`} />
                       <label htmlFor={`file-upload-${item.id}`} className="btn btn-sm btn-secondary">Upload Image <FaUpload /></label>
+                      {filename && (
+                        <div className="text-light small" style={{ marginTop: '10px', backgroundColor: '#343a40', padding: '5px', borderRadius: '5px' }}>
+                            Selected file: <span className="text-warning">{filename}</span>
+                        </div>
+                    )}
+
                     </>
                   )}
                 </Card.Header>
@@ -232,8 +241,3 @@ const Catalog = () => {
 };
 
 export default Catalog;
-
-
-
-
-

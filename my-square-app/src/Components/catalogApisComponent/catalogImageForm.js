@@ -9,9 +9,18 @@ import { Button, TextField, Typography, Box, Paper } from '@mui/material';
 
 const CatalogImageForm = () => {
     const [file, setFile] = useState(null);
+    const [filename, setFilename] = useState('');
     const [objectId, setObjectId] = useState('');
     const [imageId, setImageId] = useState(''); // Added state for imageId
     const dispatch = useDispatch();
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setFile(file);
+            setFilename(file.name);  // Save the filename when file is selected
+        }
+    };
 
     const handleCreateImageSubmit = (e) => {
         e.preventDefault();
@@ -88,9 +97,14 @@ const CatalogImageForm = () => {
                         <input
                             type="file"
                             hidden
-                            onChange={(e) => setFile(e.target.files[0])}
+                            onChange={handleFileChange}
                         />
                     </Button>
+                    {filename && (
+                        <Typography sx={{ mt: 2, backgroundColor: '#f0f0f0', padding: '10px', borderRadius: '5px' }}>
+                            File Selected: <strong>{filename}</strong>
+                        </Typography>
+                    )}
                     <Box display="flex" justifyContent="space-between" mt={2}>
                         <Button color="primary" variant="contained" onClick={handleCreateImageSubmit}>
                             Create Image
