@@ -66,8 +66,8 @@ const PaymentForm = () => {
                 </p>
               </div>
           <SquarePaymentForm
-            applicationId="sq0idp-78KXxKm_tHlqBRbX5gvc1A"
-            locationId="L7X4FSM2Z2H0B"
+            applicationId="sq0idp-z_5hxdVLZMkrItgpG4s0hg"
+            locationId="LN5DGWQC555CT"
             cardTokenizeResponseReceived={handlePayment}
           >
             <CreditCard />
