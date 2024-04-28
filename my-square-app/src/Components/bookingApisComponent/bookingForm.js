@@ -40,7 +40,7 @@ const BookingForm = ({ initialBookingDetails, onBookingConfirmed}) => {
 
   useEffect(() => {
     // Use POST request to match the updated backend endpoint
-    fetch('http://localhost:3000/api/teams/members/search', {
+    fetch('/api/teams/members/search', {
         method: 'POST',  // Change method to POST
         headers: {
             'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ const BookingForm = ({ initialBookingDetails, onBookingConfirmed}) => {
 
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/location/locations', {
+    fetch('/api/location/locations', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
