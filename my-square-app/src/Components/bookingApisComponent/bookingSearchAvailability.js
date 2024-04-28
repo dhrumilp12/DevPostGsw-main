@@ -28,8 +28,11 @@ const SearchAvailabilityForm = () => {
   const { catalog } = useSelector(state => state.catalogList); // Assuming you have catalogList in your Redux state
   
   useEffect(() => {
-    dispatch(fetchCatalog()); // Fetch catalog items on component mount
-  }, [dispatch]);
+    if (!catalog.length) { // Only fetch if catalog is empty or under certain conditions
+      dispatch(fetchCatalog());
+    }
+  }, [dispatch, catalog.length]); // Depend on catalog.length to avoid unnecessary re-fetches
+  
 
   useEffect(() => {
     fetch('/api/teams/members/search', {
