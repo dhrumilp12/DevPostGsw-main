@@ -1,3 +1,6 @@
+// Main server configuration file for setting up middleware, routes, and starting the server.
+
+// Load environment configurations and required modules.
 require('dotenv').config();
 const express = require('express');
 const passport = require('passport');
@@ -18,9 +21,11 @@ const cors = require('cors');
 const app = express();
 const morgan = require('morgan');
 
+// Enable Cross-Origin Resource Sharing (CORS).
 app.use(cors());
 
-// Set up session handling
+
+// Session middleware for handling browser sessions with cookie settings.
 app.use(session({
     secret: process.env.SESSION_SECRET || 'your_secret_key_here',
     resave: false,
@@ -28,13 +33,18 @@ app.use(session({
     cookie: { secure: 'auto' }
 }));
  
-// Initialize Passport and OAuth
+
+// Initialize Passport for OAuth and session management.
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Use morgan for logging HTTP requests.
 app.use(morgan('combined'));
+
+// Parse incoming request bodies as JSON.
 app.use(bodyParser.json());
 
-// Error handling for JSON parsing errors
+// Handle JSON parsing errors gracefully.
 app.use((err, req, res, next) => {
     if (req.method === "POST" || req.method === "PUT") {
         if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
@@ -46,7 +56,7 @@ app.use((err, req, res, next) => {
 });
 
   
-
+// Register API routes for various functionalities.
 app.use(express.json());
 app.use('/api/catalogs', catalogRoutes);
 app.use('/api/payments',paymentRoutes);
@@ -59,13 +69,7 @@ app.use('/api/location',locationRoutes)
 app.use('/uploads', express.static(path.join(__dirname, './src/uploads')));
 
 
-/* they need HTTPS
-app.post('/webhooks/square', (req, res) => {
-    console.log('Webhook received:', req.body);
-    // Process webhook data here
-    res.status(200).send('Received');
-});*/
-// Serve static files from the React app build directory in production
+// Serve static files from the React application in production.
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, 'my-square-app/build')));
     
@@ -74,9 +78,11 @@ if (process.env.NODE_ENV === 'production') {
     });
 }
 
+// Start the server on the configured port.
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 
+// Export the configured Express app for potential further use.
 module.exports = app;

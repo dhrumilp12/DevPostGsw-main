@@ -1,6 +1,9 @@
+// customerService.js provides functions to interact with the customer-related data store or external APIs.
 const { customersApi } = require('../api/squareClient');
 
+// List all customers from the database or API with optional pagination.
 async function listCustomers(cursor) {
+    // Implements logic to fetch customers, potentially handling cursor-based pagination.
     try {
         const response = await customersApi.listCustomers(cursor || undefined);
         console.log("Square API response:", response); // Log the raw API response
@@ -17,7 +20,10 @@ async function listCustomers(cursor) {
     }
 }
 
+
+// Retrieve details for a specific customer by ID.
 async function getCustomerDetails(customerId) {
+    // Fetches detailed information about a specific customer, potentially including sensitive data handling.
     try {
         const response = await customersApi.retrieveCustomer(customerId);
 
@@ -44,7 +50,10 @@ async function getCustomerDetails(customerId) {
     }
 }
 
+
+// Create a new customer in the database or via an external API.
 async function createCustomer(customerData) {
+    // Saves a new customer record, ensuring data validation and error handling.
     try {
         console.log('Square Access Token used:', process.env.SQUARE_ACCESS_TOKEN);
         const response = await customersApi.createCustomer({
@@ -64,7 +73,10 @@ async function createCustomer(customerData) {
     }
 }
 
+
+// Update an existing customer's details.
 async function updateCustomer(customerId, customerData) {
+    // Updates customer information in the data store, handling data validation and concurrency issues.
     try {
         console.log('Updating customer:', customerId, 'with data:', customerData);
         const response = await customersApi.updateCustomer(customerId, customerData);
@@ -90,7 +102,11 @@ async function updateCustomer(customerId, customerData) {
         throw error;
     }
 }
+
+
+// Handle customer login and authentication.
 async function findCustomerByEmail(email) {
+     // Searches for a customer by email to support login functionality, includes security measures against data leaks.
   try {
     const response = await customersApi.listCustomers();
     const customers = response.result.customers || [];
@@ -101,6 +117,9 @@ async function findCustomerByEmail(email) {
   }
 }
 
+
+
+// Export functions for use in route handlers.
 module.exports = {
   listCustomers,
   getCustomerDetails,

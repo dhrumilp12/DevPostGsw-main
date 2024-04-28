@@ -1,8 +1,11 @@
+// Routes for handling payment transactions including processing payments and retrieving payment details.
 const express = require('express');
 const router = express.Router();
 const paymentService = require('../services/paymentService.js');
 
+// Route to process a payment.
 router.post('/process-payment', async (req, res) => {
+     // Validates payment details, processes the payment using the payment service, and handles the response and errors.
     const { sourceId, amountMoney, idempotencyKey } = req.body;
 
     // Validate the request body
@@ -20,7 +23,9 @@ router.post('/process-payment', async (req, res) => {
 });
     
 
+// Route to retrieve details of a specific payment by ID.
 router.get('/payment-details/:paymentId', async (req, res) => {
+    // Retrieves payment details, handles the response including BigInt serialization, and manages errors.
     try {
         console.log("requested id:",req.params);
         const { paymentId } = req.params;
@@ -33,7 +38,9 @@ router.get('/payment-details/:paymentId', async (req, res) => {
     }
 });
 
+// Route to list all payments with optional filtering and pagination.
 router.get('/list-payments', async (req, res) => {
+    // Lists payments based on query parameters, handles serialization of BigInts, and manages responses and errors.
     try {
       const paymentsList = await paymentService.listPayments(req.query);
       console.log('Payment List:', paymentsList);

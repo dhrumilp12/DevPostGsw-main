@@ -1,10 +1,17 @@
+// Configures the Square SDK client and axios instance for API calls.
+
+// Load environment variables.
 require('dotenv').config();
+
+// Import necessary modules from the Square SDK and axios for HTTP requests.
 const { Client, Environment } = require('square');
 const axios = require('axios');
 
-// Check if the environment is set to production
+// Check the environment and set the appropriate Square environment.
 const isProduction = process.env.SQUARE_ENVIRONMENT === 'production';
 const accessToken = process.env.PRODUCTION_ACCESS_TOKEN;
+
+// Initialize the Square client with the access token and environment settings.
 const squareClient = new Client({
     accessToken: accessToken,
     
@@ -14,6 +21,7 @@ if (!accessToken) {
     console.error('Access Token is undefined');
   }
 
+// Create a pre-configured axios instance for API requests.
 const axiosInstance = axios.create({
   baseURL: 'https://connect.squareup.com',
   headers: {
@@ -23,7 +31,7 @@ const axiosInstance = axios.create({
   }
 });
   
-  
+// Export Square client, axios instance, and specific API clients for easy access.
 module.exports = { 
     axiosInstance,
     squareClient,

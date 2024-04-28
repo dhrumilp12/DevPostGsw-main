@@ -1,7 +1,11 @@
+// inventoryService.js handles inventory data interactions, such as retrieving and updating stock levels.
 const crypto = require('crypto'); // For generating idempotency keys
 const { inventoryApi } = require('../api/squareClient');
 
+
+// Retrieve inventory counts for specified item IDs.
 async function batchRetrieveInventoryCounts(itemIds) {
+    // Calls external API to get current inventory levels for a list of item IDs, handles API errors and data format.
     try {
         const response = await inventoryApi.batchRetrieveInventoryCounts({ catalogObjectIds: itemIds });
         return response.result.counts || [];
@@ -11,7 +15,9 @@ async function batchRetrieveInventoryCounts(itemIds) {
     }
 }
 
+// Adjust inventory counts based on specified changes.
 async function batchChangeInventory(changes, locationId) {
+    // Submits inventory adjustments to the API and handles the response, including error management and confirmation of changes.
     try {
         const response = await inventoryApi.batchChangeInventory({
             idempotencyKey: crypto.randomUUID(),
@@ -37,7 +43,7 @@ async function batchChangeInventory(changes, locationId) {
     }
 }
 
-
+// Export inventory management functions.
 module.exports = {
     batchRetrieveInventoryCounts,
     batchChangeInventory

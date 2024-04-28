@@ -1,10 +1,10 @@
+// This service is responsible for managing team member data via the team API.
 const { teamApi } = require('../api/squareClient');
 
 
-
-
-
+// Searches for team members with a status of "ACTIVE" and other possible filters.
 async function searchTeamMembers() {
+  // Submits a search query to retrieve team members, handling pagination and API response.
     const body = {
         query: {
             filter: {

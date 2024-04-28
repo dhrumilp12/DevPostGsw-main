@@ -1,8 +1,11 @@
+// This service handles all payment processing functionalities.
 const { paymentsApi } = require('../api/squareClient');
 const crypto = require('crypto');
 
 
+// Processes a payment with given details such as source ID and amount.
 async function processPayment(sourceId, amount, currency = 'USD', idempotencyKey = crypto.randomUUID()) {
+  // Constructs the payment request and submits it to the payment API, handling all aspects of the transaction.
   const requestBody = {
       sourceId,
       amountMoney: {
@@ -67,7 +70,9 @@ function validateAndFormatDate(dateStr, startOfDay = false) {
 }
 
 
+// Lists payments based on given query parameters like date range and sort order.
 async function listPayments(queryParams) {
+  // Retrieves a list of payments from the API based on provided parameters, ensuring date formatting and pagination handling.
   try {
     // Validate and format dates
     const beginTime = validateAndFormatDate(queryParams.beginTime, true);
@@ -102,7 +107,9 @@ async function listPayments(queryParams) {
 }
 
 
+// Retrieves detailed information about a specific payment by its ID.
 async function getPaymentDetails(paymentId) {
+    // Fetches and returns detailed payment information, ensuring proper handling of large numerical values and API errors.
     try {
       const response = await paymentsApi.getPayment(paymentId);
       if (!response || !response.result) {

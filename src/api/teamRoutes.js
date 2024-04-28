@@ -1,12 +1,17 @@
+// Defines routes for team-related operations using express router.
+
+// Import necessary modules.
 const express = require('express');
 const router = express.Router();
 const { searchTeamMembers } = require('../services/teamService');
 
-// Route to list team members
+
+
+// POST route to search team members based on provided criteria in the request body.
 router.post('/members/search', async (req, res) => {
     try {
         const members = await searchTeamMembers(req.body);  // passing body if filters need to be dynamic
-        res.json(members);
+        res.json(members);// Return the list of team members as a JSON response.
     } catch (error) {
         res.status(500).json({ message: 'Error searching team members', error: error.message });
     }
@@ -22,4 +27,5 @@ router.post('/members/search', async (req, res) => {
     }
 });*/
 
-  module.exports = router;
+// Export the configured router.
+module.exports = router;

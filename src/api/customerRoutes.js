@@ -1,3 +1,4 @@
+// Defines routes for customer-related operations such as listing, retrieving, creating, and updating customer details.
 const express = require('express');
 const router = express.Router();
 const customerService= require('../services/customerService')
@@ -5,8 +6,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
-// Route to list all customers
+// Route to list all customers with optional pagination via cursor.
 router.get('/list-customers', async (req, res) => {
+  // Retrieves customers from the service and handles serialization of BigInt values.
   try {
     const cursor = req.query.cursor; // If your API supports pagination
     const customers = await customerService.listCustomers(cursor);
@@ -24,8 +26,10 @@ router.get('/list-customers', async (req, res) => {
   }
 });
 
-// Route to get details of a specific customer
+
+// Route to retrieve detailed information for a specific customer by ID.
 router.get('/customer-details/:customerId', async (req, res) => {
+  // Fetches customer details, converts BigInt to strings for compatibility, and handles potential errors or non-existent customers.
   try {
     const customerId = req.params.customerId;
     const customer = await customerService.getCustomerDetails(customerId);
@@ -45,16 +49,12 @@ router.get('/customer-details/:customerId', async (req, res) => {
   }
 });
 
-// Route to create a new customer
-/*{
-  "givenName": "Jane",
-  "familyName": "Doe",
-  "emailAddress": "jane.doe@example.com" 
-  "phoneNumber":  
-}*/
+
+
+// Route to create a new customer with necessary data provided in the request body.
 router.post('/create-customer', async (req, res) => {
+  // Creates a new customer, handles data serialization, and manages response with the newly created customer data.
   try {
-    
     const customerData = req.body;
     const newCustomer = await customerService.createCustomer(customerData);
     // Convert BigInt values to strings
@@ -72,7 +72,9 @@ router.post('/create-customer', async (req, res) => {
 });
 
 
+// Route to update existing customer details based on customer ID.
 router.put('/update-customer/:customerId', async (req, res) => {
+ // Updates customer information, logs the updated customer, and handles responses and errors.
   try {
     const customerId = req.params.customerId;
     const customerData = req.body;
@@ -85,7 +87,10 @@ router.put('/update-customer/:customerId', async (req, res) => {
   }
 });
 
+
+// Route for customer login, validates email and password, and handles authentication.
 router.post('/login', async (req, res) => {
+  // Handles customer login with basic validation and error management, providing session initiation or token generation.
   const { emailAddress, password } = req.body;
   try {
       const customer = await customerService.findCustomerByEmail(emailAddress);
@@ -104,7 +109,7 @@ router.post('/login', async (req, res) => {
           ...customer,
           version: customer.version.toString()
       };
-
+      
       // Log success message on terminal
       console.log(`User ${customer.givenName} with id:${customer.id} and email: ${customer.emailAddress} logged in successfully.`);
       console.log(customerWithConvertedBigInt);
