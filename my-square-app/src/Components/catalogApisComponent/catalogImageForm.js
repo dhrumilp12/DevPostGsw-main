@@ -67,8 +67,11 @@ const CatalogImageForm = () => {
     return (
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
             <Paper elevation={3} style={{ padding: '20px', width: '80%', maxWidth: '500px' }}>
-                <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom style={{ color: '#333', fontWeight: 'bold', textShadow: '1px 1px 2px rgba(0,0,0,0.1)' }}>
                     Upload or Update Catalog Image
+                </Typography>
+                <Typography variant="body2" style={{ marginBottom: '20px', fontSize: '1rem', lineHeight: '1.5', color: '#555', textShadow: '1px 1px 1px rgba(0,0,0,0.05)' }}>
+                    Uploading high-quality images enhances customer engagement and helps in better product visualization.
                 </Typography>
                 <form noValidate autoComplete="off">
                     <TextField
