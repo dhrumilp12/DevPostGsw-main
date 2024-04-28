@@ -152,7 +152,7 @@ async function createCatalogItem(itemData) {
             fs.existsSync(path.join(uploadsDir, `${item.id}${ext}`))
           );
           if (existingFile) {
-            item.imageUrl = `http://localhost:3000/uploads/${item.id}${existingFile}`;
+            item.imageUrl = `${process.env.BASE_URL}/uploads/${item.id}${existingFile}`;
           } else {
             item.imageUrl = null; // or set a default placeholder image URL
           }
@@ -201,7 +201,7 @@ async function createCatalogItem(itemData) {
             );
 
             if (existingFile) {
-                item.imageUrl = `http://localhost:3000/uploads/${itemId}${existingFile}`;
+                item.imageUrl = `${process.env.BASE_URL}/uploads/${item.id}${existingFile}`;
             } else {
                 item.imageUrl = null; // or set a default placeholder image URL
             }
