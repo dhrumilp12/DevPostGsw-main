@@ -155,9 +155,10 @@ console.log({ booking, error });
                 <Form.Label>Location ID:</Form.Label>
                 <Form.Control as="select" name="locationId" value={bookingDetails.locationId} onChange={handleChange}>
                     <option value="">Select Location</option>
-                    {locations.map(location => (
+                    {Array.isArray(locations) ? locations.map(location => (
                         <option key={location.id} value={location.id}>{location.name} - {location.id}</option>
-                    ))}
+                    )) : <option disabled>No locations available</option>}
+
                 </Form.Control>
             </Form.Group>
             <Form.Group className="mb-3">

@@ -6,7 +6,13 @@ const paymentService = require('../services/paymentService.js');
 // Route to process a payment.
 router.post('/process-payment', async (req, res) => {
      // Validates payment details, processes the payment using the payment service, and handles the response and errors.
-    const { sourceId, amountMoney, idempotencyKey } = req.body;
+     console.log("Received payment request with body:", req.body); // Log the incoming request body
+     const { sourceId, amountMoney, idempotencyKey } = req.body;
+            // In your paymentRoutes.js before calling processPayment
+        amountMoney.amount = parseInt(amountMoney.amount, 10);
+        if (isNaN(amountMoney.amount)) {
+        return res.status(400).json({ error: 'Invalid amount format' });
+        }
 
     // Validate the request body
     if (!sourceId || !amountMoney || typeof amountMoney.amount !== 'number' || amountMoney.amount <= 0) {
