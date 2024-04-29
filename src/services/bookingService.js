@@ -13,47 +13,40 @@ async function createBooking(bookingData) {
     console.log("Received Booking Data:", bookingData);
     // Validate booking data and reformat if necessary, especially handling BigInt serialization.
     // Try creating a booking using the Square API and handle potential errors or specific scenarios like cancellation by the seller.
-    if (!bookingData.booking || !Array.isArray(bookingData.booking.appointmentSegments)) {
-        console.error("Invalid booking data structure:", bookingData);
-        throw new Error("Invalid booking data structure");
-    }
-
-    const formattedAppointmentSegments = bookingData.booking.appointmentSegments.map(segment => ({
-        ...segment,
-        serviceVariationVersion: BigInt(segment.serviceVariationVersion),
-        durationMinutes: parseInt(segment.durationMinutes, 10)
-    }));
-
-    const formattedBookingData = {
-        ...bookingData.booking,
-        version: 1,  // Initialize version to 1
-        startAt: new Date(bookingData.booking.startAt).toISOString(),
-        appointmentSegments: bookingData.booking.appointmentSegments.map(segment => ({
-            ...segment,
-            serviceVariationVersion: BigInt(segment.serviceVariationVersion),
-            durationMinutes: parseInt(segment.durationMinutes, 10)
-        }))
-    };
-
-
-    console.log("Formatted Booking Data for API:", formattedBookingData);
-
-    try {
-        const response = await bookingApi.createBooking({ booking: formattedBookingData });
-        if (!response || !response.result) {
-            throw new Error("API call to create booking did not return expected result");
-        }
-        if (response.result.booking.status === "CANCELLED_BY_SELLER") {
-            console.warn("Booking was cancelled by the seller:", response.result.booking);
-            // Implement any specific logic or notifications related to cancelled bookings
-        }
-        return response.result.booking;
-    } catch (error) {
-        console.error("Failed to create booking:", error);
-        throw error; // Rethrowing the original error for accurate stack tracing
-    }
+   // Validate required fields
+   if (!bookingData.startAt || !bookingData.locationId || !bookingData.customerId || !Array.isArray(bookingData.appointmentSegments)) {
+    console.error("Invalid booking data structure or missing key fields:", bookingData);
+    throw new Error("Invalid booking data structure or missing key fields");
 }
 
+// Reformatting and Logging structured data
+const formattedAppointmentSegments = bookingData.appointmentSegments.map(segment => ({
+    teamMemberId: segment.teamMemberId,
+    serviceVariationId: segment.serviceVariationId,
+    serviceVariationVersion: BigInt(segment.serviceVariationVersion),
+    durationMinutes: parseInt(segment.durationMinutes, 10)
+}));
+
+const formattedBookingData = {
+    startAt: new Date(bookingData.startAt).toISOString(),
+    locationId: bookingData.locationId,
+    customerId: bookingData.customerId,
+    locationType: bookingData.locationType,
+    appointmentSegments: formattedAppointmentSegments,
+    version: bookingData.version
+};
+
+console.log("Formatted Booking Data for API call:", formattedBookingData);
+
+try {
+    const response = await bookingApi.createBooking({ booking: formattedBookingData });
+    console.log("API Response:", response);
+    return response;
+} catch (error) {
+    console.error("API call failed:", error);
+    throw error;
+}
+}
 
 
 // Function to update an existing booking with new data. It ensures that booking data is serialized to handle BigInt and handles API errors.

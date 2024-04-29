@@ -15,6 +15,7 @@ const BookingForm = ({ initialBookingDetails, onBookingConfirmed}) => {
     startAt: '',
     locationId: '',
     customerId: '',
+    locationType: 'BUSINESS_LOCATION',
     appointmentSegments: [{
       teamMemberId: '',
       serviceVariationId: '',
