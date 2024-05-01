@@ -1,5 +1,11 @@
 ## Event Spotlight and Reservation System.
 
+## Live Application
+The application is currently deployed and can be accessed at the following URL:
+
+Study Scheduler: study-schedular-d814462ae5eb.herokuapp.com
+Visit the link to interact with the live version of the Study Scheduler application.
+
 ## Project Description:
 Event Spotlight & Reservation System is designed to revolutionize the way local communities interact with events and businesses. Our application harnesses the power of Square's robust APIs to create a seamless, intuitive experience for both event organizers and attendees.
 
