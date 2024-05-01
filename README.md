@@ -3,7 +3,7 @@
 ## Live Application
 The application is currently deployed and can be accessed at the following URL:
 
-Study Scheduler: study-schedular-d814462ae5eb.herokuapp.com
+Event Spotlight and Reservation System: [study-schedular-d814462ae5eb.herokuapp.com](https://event-spotlight-8456c8fae13a.herokuapp.com/)
 Visit the link to interact with the live version of the Study Scheduler application.
 
 ## Project Description:
